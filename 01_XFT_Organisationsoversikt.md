@@ -42,12 +42,17 @@ Varje filmkund är en potentiell Expendo-kund. Säljteamets uppgift är att plan
 
 ## 2. Ledningen
 
+XFT Group AB har tre grundare och delägare som fattar strategiska beslut demokratiskt:
+
 | Person | Roll | Ansvar |
 |--------|------|--------|
-| **Antonio** | VD (CEO) | Ytterst ansvarig för bolaget. Ekonomi, juridik, strategiska beslut. |
-| **Martin** | COO | Operativt ansvarig. Äger Marketing-avdelningen. Client Lead för hybridkunder. |
+| **Antonio** | VD & grundare/delägare | Ytterst ansvarig för bolaget. Ekonomi, juridik, strategiska beslut. Rekrytering. |
+| **Leo** | Head of Sales & grundare/delägare | Säljstrategi, avtalsansvar, coaching. Chef över hela bolaget med operativt fokus på sälj. |
+| **Martin** | COO & grundare/delägare | Operativt ansvarig. Äger Marketing-avdelningen. Client Lead för hybridkunder. |
 
-**Beslutshierarki:** Strategiska beslut (ny tjänst, rekrytering, stora investeringar) fattas av Antonio med Martin som medbeslutare. Operativa beslut fattas av Martin.
+**Beslutshierarki:** Strategiska beslut (ny tjänst, rekrytering, stora investeringar, ägarfrågor) fattas demokratiskt av de tre grundarna. Operativa beslut fattas av Martin. Leo äger avtalsprocessen och säljorganisationen.
+
+**Ledningsgruppen** inkluderar även Natalie (Head of Production) och Jakob (Operations Controller) — de sitter med men är inte delägare.
 
 ---
 
@@ -59,7 +64,7 @@ Varje filmkund är en potentiell Expendo-kund. Säljteamets uppgift är att plan
 
 | Person | Roll | Primärt ansvar |
 |--------|------|---------------|
-| **Leo** | Head of Sales | Strategi, coachning, avtalsansvar, aktiv försäljning |
+| **Leo** | Head of Sales & grundare | Strategi, coachning, avtalsansvar, aktiv försäljning. Chef för hela bolaget. |
 | **Kevin** | Account Manager | Prospectering, möten, stängning, handoff |
 | **Felix** | Account Manager | Prospectering, möten, stängning, handoff |
 | **Johannes** | Booker | Boka möten för säljteamet (tidigare AM) |
@@ -148,24 +153,21 @@ Jakob rapporterar till Martin. Jakob har ingen chefsroll — han är ett operati
 ## 5. Organisationsschema
 
 ```
-Antonio (VD)
-    │
-Martin (COO)
-    │
-    ├── Sales (Leo)
-    │       ├── Kevin (AM)
-    │       ├── Felix (AM)
-    │       ├── Abel (Senior AM)
-    │       └── Johannes (Booker)
-    │
-    ├── Production (Natalie)
-    │       ├── Petrus (Head of Camera)
-    │       └── Kunta (Filmare, konsult)
-    │
-    ├── Marketing (Edgar)
-    │       └── Musse (Marknadsförare)
-    │
-    └── Operations (Jakob) ← tvärfunktionell
+Antonio (VD) ──── Leo (Säljchef) ──── Martin (COO)
+[Grundare & delägare — strategiska beslut fattas gemensamt]
+        │                 │                  │
+        │           Sales-teamet         Marketing
+        │           ├── Kevin (AM)       ├── Edgar (HoM)
+        │           ├── Felix (AM)       └── Musse (konsult)
+        │           ├── Abel (Senior AM)
+        │           ├── Johannes (Booker)
+        │           └── William (AM)
+        │
+        ├── Production (Natalie)
+        │       ├── Petrus (Head of Camera)
+        │       └── Kunta (Filmare, konsult)
+        │
+        └── Operations (Jakob) ← tvärfunktionell, kommunicerar med alla
 ```
 
 ---
