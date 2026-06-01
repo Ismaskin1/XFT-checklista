@@ -22,7 +22,7 @@ Natalie (Head of Production) — ansvarar för att hålla dokumentet aktuellt.
 |------|--------|-------------------|
 | Head of Production | Natalie | Kundrelation, manus, QA, slutgodkännande, upsells |
 | Head of Camera | Petrus | Shotlist, filmning, redigering, utrustning |
-| Filmare & redigerare | Kunta, Sam (+ konsulter) | Filmning, redigering, materialleverans |
+| Filmare & redigerare | Kunta (+ konsulter) | Filmning, redigering, materialleverans |
 | AM (sälj) | Kevin, Felix, Johannes, Abel, Leo | Startar processen med brief och handoff |
 
 ---
@@ -42,7 +42,7 @@ Natalie (Head of Production) — ansvarar för att hålla dokumentet aktuellt.
          ↓
 [STEG 5] Rekvisitamöte / förberedelsesamtal (3 dagar innan filmdag)
          ↓
-[STEG 6] Filmdag (Petrus + Kunta/Sam)
+[STEG 6] Filmdag (Petrus + Kunta)
          ↓
 [STEG 7] Redigering
          ↓
