@@ -1,14 +1,14 @@
 # XFT Group AB — Roadmap och Utvecklingsområden
 
-## Dokument 9 av 10
+## Dokument 9
 
-Detta dokument samlar identifierade förbättringsområden, pågående initiativ och den operativa roadmappen för XFT. Det är ett levande dokument — uppdateras löpande när saker löses eller prioriteringar skiftar.
+Detta dokument är XFT:s strategiska och operativa roadmap. Det täcker de tre strategiska skiften som krävs för att nå 300M SEK, identifierade intäktsläckor rankade efter ekonomisk påverkan, kapacitetsplanering och konkreta åtgärder. Revideras månadsvis.
 
 ---
 
 ## Senast uppdaterad
 
-2026-05-29
+2026-06-01
 
 ## Ägare
 
@@ -17,244 +17,305 @@ Ledningsgruppen godkänner prioriteringsordning.
 
 ---
 
-## 1. Systemutveckling
+## 1. De tre strategiska skiftena mot 300M SEK
 
-### 1.1 Internt CRM (Hög prioritet)
+XFT är idag på ~8M SEK/år. Vägen till 300M är inte att skala nuläget linjärt — det kräver tre strukturella förändringar i rätt ordning. Se Dok 11 för fullständig analys.
 
-**Status:** Under aktiv utveckling  
-**Mål:** Ersätta Pipedrive med ett skräddarsytt system för XFT:s säljprocess  
-**Drivs av:** Jakob (projektansvarig), Martin (kravställare)
+### Skifte 1 — Bygg hybrid-maskinen (Nu, 0 kr investering)
 
-**Problem med nuläge (Pipedrive):**
-- AM:s loggar inkonsekvent — svårt att hålla KPI-data tillförlitlig
-- Systemet är inte anpassat för XFT:s specifika pipeline
-- Rapporteringen kräver manuellt extrakt av Jakob
+**Vad:** En dokumenterad, repeterbar process som konverterar filmkunder till hybridkunder (Film + Expendo).  
+**Varför nu:** Det är bolagets billigaste tillväxt. Skillnaden mellan 10% och 30% konverteringsgrad = +2,6M SEK/år i MRR — utan att sälja ett enda nytt filmpaket.  
+**Nuläge:** Konverteringsgrad ~10%. Ingen dokumenterad process. "Natalie öppnar dörren, Martin tar vid" fungerar som ett personberoende, inte ett system.
 
-**Krav på nytt system:**
-- Daglig loggning för AM (samtal, möten, affärer) — enkelt och snabbt
-- Automatisk KPI-sammanställning → synlig för Leo och Jakob utan manuell extraktion
-- Handoff-flöde: signerat avtal → brief skickad → produktionsstart bekräftad
-- Notifieringar vid missade KPI-mål (t.ex. om AM inte har loggat på 24h)
-- Mobilanpassat (AM:s är ute på möten)
-- Integration med Google Kalender (filmdagar, onboardings)
+**Åtgärder:**
+- [ ] Natalie får ett färdigt manus för hybrid-samtalet vid onboarding, leverans och uppföljning
+- [ ] Tydlig eskaleringsrutin: Natalie identifierar intresse → meddelar Martin samma dag → Martin kontaktar kunden inom 48 timmar
+- [ ] Martin dokumenterar utfall i CRM/pipeline per tillfälle
+- [ ] Jakob mäter konverteringsgraden månadsvis (KPI: hybrid-konvertering %)
 
-**Teknikval:** Supabase (databas) + Lovable (frontend)  
-**Nästa steg:** Jakob definierar fullständig kravspec — Martin godkänner  
-**Tidslinje:** Mål Q3 2026 för MVP
+**Mål:** 30% konverteringsgrad inom 12 månader  
+**Ansvarig:** Martin (process och Martin-del), Natalie (trigger-punkter), Jakob (mätning)  
+**Tidslinje:** Triggerpunkter och manus klara senast 15 juni 2026
 
 ---
 
-### 1.2 Intranät / Kunskapsbase (Medium prioritet)
+### Skifte 2 — Expendo är skalmotor (0–18 månader)
 
-**Status:** Påbörjad — detta dokumentpaket (Dok 1–10) är grunden  
-**Mål:** Alla processer, riktlinjer och rollbeskrivningar ska vara lättillgängliga för hela teamet
+**Vad:** Expendo är bolagets intäktsmotor mot 300M. Inga geografiska begränsningar, bättre marginaler vid skalning och återkommande MRR som bygger bolagsvärde.  
+**Nuläge:** 29 kunder. Kapacitetstak ~40 kunder med Edgar + Musse. Nästa anställning måste planeras nu.
 
-**Nuläge:** MD-filer i GitHub (ismaskin1/xft-checklista)  
-**Problem:** Inte alla har tillgång till eller vana av GitHub  
-**Nästa steg:** Besluta om presentationsform — options:
-- Enkel intern webbsida (Notion, Confluence, eller custom Lovable-app)
-- Google Sites (enkelt, redan i Workspace)
-- Behåll MD i GitHub + ge alla access
+**Åtgärder:**
+- [ ] Definiera kapacitetstrappan: när anställs nästa marknadsförare? (se avsnitt 3)
+- [ ] Edgar + Martin utvärderar möjligheten till premium-tier (>15k/mån för större kunder)
+- [ ] Strukturerad onboarding för Expendo-kunder (koppla till Dok 6 eller eget dokument)
+- [ ] SEMrush-beslut (Edgar har begärt): Jakob och Martin beslutar senast juni 2026
 
-**Ansvarig för beslut:** Martin + Jakob  
+**Mål:** Nå 40+ Expendo-kunder med bibehållen leveranskvalitet  
+**Ansvarig:** Martin (strategi), Edgar (kapacitet), Jakob (mätning)  
+**Tidslinje:** Kapacitetsplan klar Q2 2026
+
+---
+
+### Skifte 3 — Skalbar filmproduktion via partnermodell (12–36 månader)
+
+**Vad:** 350 film shoots/månad (vid 300M) är omöjligt med ett internt team. Lösningen är att certifiera externa filmteam som levererar under XFT:s varumärke och standard.  
+**Varför det dröjer:** Kräver att Natalies QA-process och produktionsstandard är helt dokumenterad och repeterbar innan externa parter kan leverera under XFT-flagg.
+
+**Förberedande åtgärder (nu):**
+- [ ] Natalies QA-kriterier och produktionsstandard dokumenteras fullt ut (Dok 3 är grunden)
+- [ ] Petrus och Natalies shotlist- och manusprocess kodifieras så att en extern filmare kan följa den
+- [ ] Antonio och Martin diskuterar intäktsdelningsmodell (~40–50% till XFT av filmintäkt)
+
+**Mål:** Partnermodell-pilot Q1 2027  
+**Ansvarig:** Natalie (standard), Martin + Antonio (affärsmodell)
+
+---
+
+## 2. Identifierade intäktsläckor — rangordnade efter ekonomisk påverkan
+
+Dessa är rankade efter identifierad eller möjlig intäktspåverkan. Hög prioritet = åtgärdas omedelbart.
+
+| Rang | Läcka | Påverkan | Åtgärd | Ansvarig | Deadline |
+|------|-------|----------|--------|----------|---------|
+| **1** | Hybrid-konvertering 10% — ingen dokumenterad process | +2,6M SEK/år möjlig MRR vid 30% | Bygg hybrid-konverteringsprocess (avsnitt 1, Skifte 1) | Martin + Natalie | 15 juni 2026 |
+| **2** | Leo-beroende vid stängning — ~90% av avtal kräver Leo | Intäktstak och skalningshinder | Säljmanus + graderat stängningsansvar för AM (se Dok 12) | Leo + Jakob | Juni 2026 |
+| **3** | Produktion vid kapacitetstak — ingen assistent, 2-dagarsregeln ej implementerad | Varje missad filmdag = ~35 000 kr förlorat | Implementera 2-dagarsregel, utvärdera konsultassistent | Natalie + Petrus | Omedelbart |
+| **4** | Manus-kö 10 djup — försenade filmdagar = försenade fakturor | Cashflow-risk, kundmissnöje | Natalie delegerar eller begränsar intagstakt tills kön är hanterad | Natalie | Omedelbart |
+| **5** | Kvartalsrutin råmaterial körs inte systematiskt | Upsell-intäkt lämnas hos befintliga kunder | Jakob sätter kalenderevents, Natalie äger körningen | Jakob + Natalie | September 2026 (nästa körning) |
+| **6** | Felix — 3 månader utan budget | Kostnad utan intäkt | Strukturerat prestationssamtal + 30-dagarsplan (se avsnitt 4.3) | Leo + Jakob | Omedelbart |
+| **7** | Dubbel CRM-kostnad — Pipedrive + bygger eget | Onödig löpande kostnad | Accelerera CRM-bygget eller ta beslut om avveckling av Pipedrive | Jakob + Martin | Q3 2026 |
+
+---
+
+## 3. Kapacitetsplanering och anställningstriggers
+
+Produktionen når sitt tak innan säljteamet gör det. Om säljet lyckas fördubbla filmvolym utan att produktionen hinner skala → leveransförseningar → kundmissnöje → churn.
+
+| Funktion | Nuvarande kapacitet | Tak | Trigger för nästa åtgärd |
+|---|---|---|---|
+| Film (produktion) | 15–20 shoots/mån | ~20 shoots/mån | Vid >18 shoots/mån konsekvent → rekrytera konsultfilmare |
+| Expendo (marknadsföring) | ~30–40 kunder | ~40 kunder | Vid >35 kunder → rekrytera marknadsförare |
+| Sälj (stängning) | Begränsat av Leo | ~10–12 nya kontrakt/mån | Säljmanus klart → AM:s stänger självständigt |
+| Natalie (manus + QA) | ~15 projekt/mån | ~18–20 projekt/mån | Vid konstant kö >5 manus → delegera eller limitera intag |
+
+**Nästa anställning som triggas av nuläge:**
+- **Konsultfilmare/redigerare:** Utvärderas redan nu — produktionstakt är nära taket
+- **Marknadsförare:** Planeras när Expendo-kundbasen passerar 35 kunder
+
+---
+
+## 4. Organisatoriska åtgärder
+
+Rangordnade efter koppling till intäkt och kapacitet.
+
+### 4.1 Kunta — kontraktssituation (Hög prioritet)
+
+**Status:** Olöst — Jakob ska återkoppla  
+**Bakgrund:** Kunta är produktionens andra filmare/redigerare. Öppna frågor om kontraktsterm, semesterersättning och fortsättning påverkar produktionskapaciteten direkt.
+
+**Åtgärd:**
+- Jakob bokar möte med Kunta och/eller Natalie senast vecka 23
+- Klargör kontraktsterm, ersättning och eventuell formalisering
+- Antonio involveras vid avtalsfrågor
+
+**Ansvarig:** Jakob  
+**Deadline:** Senast 15 juni 2026
+
+---
+
+### 4.2 Leo-oberoendet vid stängning (Hög prioritet)
+
+**Status:** Strukturellt problem  
+**Bakgrund:** ~90% av avtal kräver Leo för att stängas. Det sätter ett hårt intäktstak och gör bolaget sårbart.
+
+**Åtgärd:**
+- Dok 12 (Säljmötets Playbook) är grunden — AM:s implementerar manus fullt ut
+- Leo definierar exakt vilka situationer som kräver hans inblandning (tre tydliga scenarios — se Dok 12)
+- Abel identifieras som TL-kandidat och tränas aktivt mot stängningsansvar
+- Leo mäter vilka AM:s som kan stänga självständigt och graderar ansvaret upp
+
+**Ansvarig:** Leo (implementation), Jakob (uppföljning)  
+**Deadline:** AM:s kör playbook-manus från juni 2026
+
+---
+
+### 4.3 Felix — prestationsuppföljning (Hög prioritet)
+
+**Status:** Kritisk — 3 månader utan budget  
+**Bakgrund:** Felix har tre månader i rad utan att uppnå säljbudget. Situationen är inte hållbar.
+
+**Åtgärd:**
+- Leo och Jakob genomför ett tydligt samtal med Felix: förväntningar, stöd, konsekvenser
+- Konkret 30-dagarsplan med mätbara mål (antal möten/vecka, antal affärer/månad)
+- Veckovis uppföljning Leo + Jakob
+- Om mål inte uppnås inom 30 dagar → eskalering till Antonio
+
+**Ansvarig:** Leo (primär), Jakob (stöd och dokumentation)  
+**Deadline:** Samtal genomförs denna vecka
+
+---
+
+### 4.4 Formalisera Petrus teamleadar-roll (Medium prioritet)
+
+**Status:** Ej kommunicerat till Natalie  
+**Bakgrund:** Petrus agerar informellt som teamleader för kamerateamet (Kunta + eventuella konsulter), men rollen är inte formellt kommunicerad.
+
+**Åtgärd:**
+- Jakob kommunicerar till Natalie att Petrus formellt är teamleader för kamerateamet
+- Natalie → Petrus → Kunta-hierarkin tydliggörs
+- Dok 4 är redan uppdaterat
+
+**Ansvarig:** Jakob  
+**Deadline:** Senast juni 2026
+
+---
+
+### 4.5 Abel — TL-track (Medium prioritet)
+
+**Status:** Ny i teamet, explicit TL-ambition  
+**Bakgrund:** Abel (Abbe) är 38 år, van säljare och har sagt att han vill bli TL innan provtidens slut.
+
+**Åtgärd:**
+- Leo definierar TL-trackens kriterier tydligt: vad krävs konkret?
+- Leo coachar Abel mot ledarrollen parallellt med säljarbetet
+- Abel pekas ut som kandidat för att minska Leo-oberoendet (se 4.2)
+
+**Ansvarig:** Leo (coaching), Jakob (onboarding och 1v1)  
+**Tidslinje:** Löpande Q2–Q3 2026
+
+---
+
+### 4.6 Johannes — Booker-roll (Medium prioritet)
+
+**Status:** Rollen ej fullt definierad  
+**Bakgrund:** Johannes är Booker efter att ha gått från AM-rollen. Ansvar, KPI:er och tidslinje för nästa steg är inte kommunicerade.
+
+**Åtgärd:**
+- Leo och Jakob definierar Booker-rollen tydligt (KPI: antal bokade möten per vecka)
+- Tydlig tidsram sätts: när utvärderas nästa steg?
+
+**Ansvarig:** Leo (rolldefinition), Jakob (kommunikation)  
+**Deadline:** Senast juni 2026
+
+---
+
+### 4.7 William — rollklarifiering (Medium prioritet)
+
+**Status:** Oklar roll  
+**Bakgrund:** William ingår i teamet som AM, men rollen är inte fullt definierad eller kommunicerad.
+
+**Åtgärd:**
+- Martin och Jakob klargör Williams roll, ansvar och KPI:er
+- Uppdatera Dok 1 och Dok 4
+
+**Ansvarig:** Martin + Jakob  
+**Deadline:** Juni 2026
+
+---
+
+## 5. Systemutveckling
+
+### 5.1 Internt CRM (Hög prioritet)
+
+**Status:** Under aktiv utveckling  
+**Koppling till intäktsläcka:** Läcka #7 — dubbelkostnad Pipedrive + bygger eget  
+**Drivs av:** Jakob (projektansvarig), Martin (kravställare)
+
+**Krav på nytt system:**
+- Daglig loggning för AM (samtal, möten, affärer) — enkelt och snabbt, mobilanpassat
+- Automatisk KPI-sammanställning synlig för Leo och Jakob utan manuell extraktion
+- Handoff-flöde: signerat avtal → brief skickad → produktionsstart bekräftad
+- Notifieringar vid missade KPI-mål
+- Integration med Google Kalender (filmdagar, onboardings)
+- Hybrid-konverteringspipeline för Martin (trigger → intresse → Martin-möte → utfall)
+
+**Teknikval:** Supabase (databas) + Lovable (frontend)  
+**Tidslinje:** MVP mål Q3 2026
+
+**Kortsiktig åtgärd (innan nytt CRM):**
+- Leo sätter daglig loggning i Pipedrive som icke-förhandlingsbar
+- Jakob gör veckovis kontroll av Pipedrive-aktivitet per AM
+
+---
+
+### 5.2 Lösenordshantering (Hög prioritet — säkerhetskritisk)
+
+**Status:** Ej påbörjad  
+**Problem:** Klartextlösenord för bolagets system finns lagrade i en Google Drive-fil.
+
+**Åtgärdsplan:**
+1. Jakob anskaffar lösenordshanterare (**1Password Teams** eller **Bitwarden Business**)
+2. Alla lösenord migreras
+3. Drive-filen raderas permanent
+4. Alla exponerade lösenord byts
+5. Rollbaserade rättigheter i lösenordshanteraren
+
+**Ansvarig:** Jakob (initierar), Antonio (godkänner kostnad)  
+**Deadline:** Klart inom 2 veckor
+
+---
+
+### 5.3 Intranät / Kunskapsbase (Medium prioritet)
+
+**Status:** Grunden klar — Dok 1–12 i GitHub (ismaskin1/xft-checklista)  
+**Problem:** Inte alla i teamet har vana av GitHub.
+
+**Alternativ:**
+- Enkel intern webbsida via Lovable (passar XFT:s teknikstack)
+- Google Sites (enkelt, ingen ny inlärning)
+- Notion (vanligast i liknande bolag)
+
+**Ansvarig:** Martin + Jakob  
 **Tidslinje:** Beslut Q2 2026, implementation Q3 2026
 
 ---
 
-### 1.3 Lösenordshantering (Hög prioritet — säkerhetskritisk)
-
-**Status:** Ej påbörjad  
-**Problem:** Klartextlösenord för bolagets system finns lagrade i en Google Drive-fil — detta är en säkerhetsrisk.
-
-**Åtgärdsplan:**
-1. Jakob anskaffar lösenordshanterare (rekommendation: **1Password Teams** eller **Bitwarden Business**)
-2. Alla lösenord migreras till lösenordshanteraren
-3. Drive-filen med lösenord raderas
-4. Alla exponerade lösenord uppdateras
-5. Varje person ges tillgång via lösenordshanteraren — rollbaserade rättigheter
-
-**Ansvarig:** Jakob (initierar), Antonio (godkänner kostnad)  
-**Tidslinje:** Omedelbart — ska vara klart inom 2 veckor
-
----
-
-## 2. Organisatorisk utveckling
-
-### 2.1 Formalisera Petrus teamleadar-roll (Medium prioritet)
-
-**Status:** Ej kommunicerat  
-**Bakgrund:** Petrus agerar informellt som teamleader för Production-teamet (Kunta + eventuella konsulter), men rollen är inte formellt kommunicerad till Natalie.
-
-**Åtgärd:**
-- Jakob kommunicerar till Natalie att Petrus formellt är teamleader för kamerateamet
-- Petrus får ett uppdaterat rollkort som reflekterar detta (Dok 4 redan uppdaterat)
-- Natalie → Petrus → Kunta-hierarki kommuniceras tydligt
-
-**Ansvarig:** Jakob initierar samtal med Natalie  
-**Tidslinje:** Snarast, senast juni 2026
-
----
-
-### 2.2 Kunta — kontraktssituation (Hög prioritet)
-
-**Status:** Olöst — Jakob ska återkoppla  
-**Bakgrund:** Kunta arbetar som konsult på XFT. Frågor är öppna kring:
-- Konsultavtalets fortsättning
-- Semesterersättning (huruvida den ingår eller inte)
-- Hur länge relationen fortsätter
-
-**Åtgärd:**
-- Jakob bokar möte med Kunta och/eller Natalie
-- Klargör kontraktsterm, ersättning och eventuell formalisering
-- Antonio involveras vid behov (avtalsfrågor)
-
-**Ansvarig:** Jakob  
-**Tidslinje:** Senast juni 2026
-
----
-
-### 2.3 Johannes — ny rollstruktur som Booker (Medium prioritet)
-
-**Status:** Pågående  
-**Bakgrund:** Johannes demoterades till Booker-roll efter 2 månader utan budget som AM. Den nya rollen är inte fullt definierad eller kommunicerad.
-
-**Åtgärd:**
-- Leo och Jakob definierar Booker-rollen tydligt: ansvar, KPI:er, syftet med rollen
-- Kommunicera förväntningarna till Johannes
-- Sätt en tydlig tidsram: när utvärderas nästa steg (tillbaka till AM eller annat)?
-
-**Ansvarig:** Leo (rolldefinition), Jakob (kommunikation och uppföljning)  
-**Tidslinje:** Senast juni 2026
-
----
-
-### 2.4 Felix — prestationsuppföljning (Hög prioritet)
-
-**Status:** Kritisk  
-**Bakgrund:** Felix har tre månader i rad utan att uppnå säljbudget. Fortsatt utebliven prestanda är inte acceptabelt.
-
-**Åtgärd:**
-- Leo och Jakob genomför ett tydligt samtal med Felix: förväntningar, stöd, konsekvenser
-- Konkret 30-dagars förbättringsplan med mätbara mål
-- Tät uppföljning (Leo + Jakob) varje vecka
-- Om mål inte uppnås inom 30 dagar → eskalering till Antonio
-
-**Ansvarig:** Leo (primär), Jakob (stöd och dokumentation)  
-**Tidslinje:** Omedelbart
-
----
-
-### 2.5 William — rollklarifiering (Medium prioritet)
-
-**Status:** Oklar roll  
-**Bakgrund:** William ingår i teamet men hans roll är inte tydligt definierad i bolagskartan.
-
-**Åtgärd:**
-- Jakob och Martin klargör Williams roll, ansvar och KPI:er
-- Uppdatera Dok 1 och Dok 4 med korrekt rollbeskrivning
-- Kommunicera tydliga förväntningar till William
-
-**Ansvarig:** Martin + Jakob  
-**Tidslinje:** Juni 2026
-
----
-
-### 2.6 Sales-CRM compliance (Hög prioritet)
-
-**Status:** Pågående problem  
-**Bakgrund:** AM:s loggar inkonsekvent i Pipedrive, vilket gör KPI-uppföljningen opålitlig.
-
-**Åtgärd (kort sikt):**
-- Leo sätter daglig loggning som icke-förhandlingsbar — kommuniceras tydligt på nästa sales-möte
-- Jakob gör veckovis kontroll av Pipedrive-aktivitet per AM
-- Brist på loggning tas upp i Leo + Jakob 1v1 och åtgärdas omedelbart
-
-**Åtgärd (lång sikt):**
-- Det nya CRM-systemet (se 1.1) designas för att göra loggning enklare och snabbare
-- Minska friktionen → ökar compliance
-
-**Ansvarig:** Leo (compliance), Jakob (uppföljning och kontroll)  
-**Tidslinje:** Omedelbart (kortsiktig åtgärd), Q3 2026 (systemlösning)
-
----
-
-### 2.7 Abel — integration och TL-track (Låg prioritet, men viktig)
-
-**Status:** Ny i teamet  
-**Bakgrund:** Abel (Abbe) är ny Senior AM med explicit mål att bli Team Leader innan provtidens slut. Han är 38 år och vana säljare.
-
-**Åtgärd:**
-- Tydliggör TL-trackens kriterier: vad krävs för att bli TL?
-- Leo coachar Abel mot ledarrollen parallellt med säljarbetet
-- Jakob håller extra tätt 1v1 under onboarding-perioden
-
-**Ansvarig:** Leo (coaching), Jakob (onboarding och uppföljning)  
-**Tidslinje:** Löpande under Q2–Q3 2026
-
----
-
-## 3. Processförbättringar
-
-### 3.1 Sales-rapportering (standardisering)
-
-**Problem:** Daglig loggning sker i Google Sheets (temporärt) utan tydlig struktur.  
-**Åtgärd:** Jakob standardiserar Sheet-mallen och kommunicerar exakt format → ersätts av nytt CRM.  
-**Tidslinje:** Omedelbart (interim), Q3 2026 (permanent)
-
-### 3.2 Handoff-kvalitet (brief-completeness)
-
-**Problem:** Natalie och Martin rapporterar att briefs från AM:s ibland saknar information, vilket kräver kompletterande kommunikation.  
-**Åtgärd:**
-- Jakob gör briefmallar (Dok 2 innehåller dessa) obligatoriska — inget avtal avslutas utan komplett brief
-- Natalie flaggar ofullständiga briefs till Leo direkt (inte bara till Jakob)
-- Loggning: antal "kompletteringsförfrågningar per brief" mäts och rapporteras månadsvis
-
-**Ansvarig:** Leo (AM-compliance), Jakob (mätning), Natalie/Martin (feedback)
-
-### 3.3 Utrustningsinventering (Production)
-
-**Problem:** Ingen formell veckoinventering av produktionsutrustning (sker informellt).  
-**Åtgärd:** Petrus inför en fysisk checklistalista (Google Sheets eller papper) — fylls i varje måndag.  
-**Ansvarig:** Petrus, Jakob skapar mallen  
-**Tidslinje:** Omedelbart
-
-### 3.4 Kvartalsvis råmaterialsrutin (standardisering)
-
-**Problem:** Processen för kvartalsvisa råmaterialgenomgångar finns i Dok 3 men har inte körts systematiskt.  
-**Åtgärd:** Jakob sätter ett återkommande Google Calendar-event (kvartalsvis) som påminnelse för Natalie.  
-**Ansvarig:** Natalie (kör processen), Jakob (påminnelse och logg)  
-**Tidslinje:** Nästa körning: september 2026
-
----
-
-## 4. Verktygsförändringar
+## 6. Verktygsförändringar
 
 | Verktyg | Status | Beslut |
 |---------|--------|--------|
 | Pipedrive → Internt CRM | Pågående migration | Jakob driver, mål Q3 2026 |
-| SEMrush | Ej beslutat | Edgar begärt, Jakob och Martin utvärderar |
-| Lösenordshanterare | Omedelbar åtgärd | Jakob anskaffar, Antonio godkänner |
+| SEMrush | Ej beslutat | Edgar begärt, Jakob och Martin beslutar senast juni 2026 |
+| Lösenordshanterare (1Password/Bitwarden) | Omedelbar åtgärd | Jakob anskaffar, Antonio godkänner |
 | Intranät/presentationsform | Under utvärdering | Beslut Q2 2026 |
 
 ---
 
-## 5. Rekryterings-roadmap
+## 7. Rekryterings-roadmap
 
-| Roll | Status | Prioritet |
-|------|--------|-----------|
-| Ekonomiansvarig | Ska tillsättas (Antonio driver) | Hög — Antonio är flaskhals |
-| Marketing Team Lead | Under utvärdering | Medium |
-| Ytterligare AM | Beror på Felix/Johannes-situation | Medium |
-| Filmare / redigerare (konsult) | Vid ökad produktionsvolym | Låg |
+Kopplad till kapacitetstaket i avsnitt 3.
+
+| Roll | Status | Trigger | Prioritet |
+|------|--------|---------|-----------|
+| Ekonomiansvarig | Ska tillsättas (Antonio driver) | Redan triggad — Antonio är flaskhals | Hög |
+| Konsultfilmare / redigerare | Bevakar | >18 shoots/mån konsekvent | Hög (nära triggerpunkt) |
+| Marknadsförare (Expendo) | Planeras | >35 Expendo-kunder | Medium (planera nu) |
+| Sales TL (Abel-spåret) | Löpande coaching | Abel uppfyller TL-kriterier | Medium |
+| Ytterligare AM | Beror på Felix/Johannes-situation | Felix-plan klar, sedan utvärdera | Medium |
+| Marketing Team Lead | Under utvärdering | Expendo >60 kunder | Låg |
 
 ---
 
-## 6. Uppföljning och revisionshistorik
+## 8. Tillväxttrappa — mål och kritiska åtgärder
+
+| Fas | Tidshorisont | Intäktsmål | Kritisk åtgärd |
+|-----|---|---|---|
+| **Fas 1** | Nu–12 mån | 15M SEK/år | Hybrid-konvertering 30%, Leo-oberoende i sälj, Expendo-kapacitet planerad |
+| **Fas 2** | 12–36 mån | 50M SEK/år | Fler marknadsförare, Expendo premium-tier, geografisk expansion |
+| **Fas 3** | 36–60 mån | 150M SEK/år | Partner-filmteam under XFT-standard, Norden/Europa för Expendo |
+| **Fas 4** | 60–120 mån | 300M SEK/år | Franchise/plattform film, Europa-dominans Expendo |
+
+**Fas 1 är det enda som räknas nu.** Allt annat är förberedelse eller distraktion.
+
+---
+
+## 9. Uppföljning och revisionshistorik
 
 | Datum | Uppdatering |
 |-------|------------|
-| 2026-05-29 | Dokumentet skapat — första versionen baserad på 1v1-data och bolagsgenomgång |
+| 2026-05-29 | Version 1 — baserad på 1v1-data och bolagsgenomgång |
+| 2026-06-01 | Version 2 — omskriven utifrån strategisk analys i Dok 11. Intäktsläckor rangordnade, tre strategiska skifte definierade, kapacitetsplanering tillagd, rekryterings-roadmap kopplad till kapacitetstak. |
 
 ---
 
-*Dokument 9 av 10. Ägs av Martin (COO) och Jakob (Operations Controller). Revideras månadsvis — eller omedelbart vid ny kritisk information. Ledningsgruppen godkänner prioriteringsförändringar.*
+*Dokument 9. Ägs av Martin (COO) och Jakob (Operations Controller). Revideras månadsvis — eller omedelbart vid ny kritisk information. Ledningsgruppen godkänner prioriteringsförändringar. Se Dok 11 för fullständig affärsmodellsanalys.*
