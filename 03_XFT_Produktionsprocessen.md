@@ -22,8 +22,8 @@ Natalie (Head of Production) — ansvarar för att hålla dokumentet aktuellt.
 |------|--------|-------------------|
 | Head of Production | Natalie | Kundrelation, manus, QA, slutgodkännande, upsells |
 | Head of Camera | Petrus | Shotlist, filmning, redigering, utrustning |
-| Filmare & redigerare | Kunta (+ konsulter) | Filmning, redigering, materialleverans |
-| AM (sälj) | Kevin, Felix, Johannes, Leo | Startar processen med brief och handoff |
+| Filmare & redigerare | Kunta, Sam (+ konsulter) | Filmning, redigering, materialleverans |
+| AM (sälj) | Kevin, Felix, Johannes, Abel, Leo | Startar processen med brief och handoff |
 
 ---
 
@@ -34,23 +34,25 @@ Natalie (Head of Production) — ansvarar för att hålla dokumentet aktuellt.
          ↓
 [STEG 1] Onboarding-möte med Natalie (ca 1 timme)
          ↓
-[STEG 2] Natalie skriver manus och segment
+[STEG 2] Mood-board — visuell riktning (bilder, färger, stil)
          ↓
-[STEG 3] Kunden granskar manus och godkänner
+[STEG 3] Natalie skriver manus och segment
          ↓
-[STEG 4] Rekvisitamöte / förberedelsesamtal (3 dagar innan filmdag)
+[STEG 4] Kunden granskar manus och godkänner
          ↓
-[STEG 5] Filmdag (Petrus + Kunta)
+[STEG 5] Rekvisitamöte / förberedelsesamtal (3 dagar innan filmdag)
          ↓
-[STEG 6] Redigering
+[STEG 6] Filmdag (Petrus + Kunta/Sam)
          ↓
-[STEG 7] Natalie QA-granskar
+[STEG 7] Redigering
          ↓
-[STEG 8] Kunden ger feedback (en runda)
+[STEG 8] Natalie QA-granskar
          ↓
-[STEG 9] Revision och slutleverans
+[STEG 9] Kunden ger feedback (en runda)
          ↓
-[STEG 10] Uppföljning och upsell-tillfälle
+[STEG 10] Revision och slutleverans
+         ↓
+[STEG 11] Uppföljning och upsell-tillfälle
 ```
 
 ---

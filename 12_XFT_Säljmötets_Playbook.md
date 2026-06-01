@@ -86,14 +86,21 @@ Du ska inte presentera och hoppas. Du ska leda kunden till ett ja. Det görs int
 - Hypea kundens egna idéer: "Det är faktiskt riktigt smart, det är precis vad som funkar."
 - Håll privata sidospår korta — lyssna, bekräfta, hitta tillbaka till tråden.
 
-**Frågorna (välj och anpassa):**
-- "Berätta lite om ert företag — vad gör ni och vem är er typiska kund?"
-- "Hur hittar era kunder er idag?"
-- "Vad gör ni för marknadsföring just nu — vad funkar och vad funkar inte?"
-- "Har ni arbetat med video eller annonser tidigare? Vad hände?"
-- "Vad är er primära målgrupp — jobbar ni mot privatpersoner, företag eller båda?"
-- "Vad är målet med en filmsatsning — fler kunder, starkare varumärke, båda?"
-- "Vad är ni beredda att investera i det här?"
+**De fem kärnfrågorna (från presentationen — lär in dessa):**
+
+| # | Fråga | Varför du ställer den |
+|---|-------|----------------------|
+| 1 | "Berätta lite kort om er" | Förstå verksamheten och vem de riktar sig till |
+| 2 | "Vad gör ni för att sticka ut mot konkurrenterna?" | Hittar den unika vinkeln — det som gör filminnehållet träffsäkert |
+| 3 | "Vad gör ni för marknadsföring idag?" | Bygga vidare på det som funkar, fylla luckorna |
+| 4 | "Har ni gjort reklamfilmer tidigare?" | Anpassa upplägg efter erfarenhet och förväntningar |
+| 5 | "Vad är viktigast för er att visa upp?" | Styr hela filmens riktning — budskap, känsla och format |
+
+**Följdfrågor på varje svar (mjölka ur):**
+- "Kan du berätta mer om det?"
+- "Hur ser det ut i praktiken?"
+- "Vad har ni provat som inte funkat?"
+- "Vad är ni nöjda med — och vad vill ni förbättra?"
 
 **Avsluta behovsanalysen med en sammanfattning:**
 > "Så om jag förstår rätt: ni vill [X], er målgrupp är [Y], och det viktigaste för er är [Z]. Stämmer det?"
@@ -157,12 +164,12 @@ Vid nej eller tvekan:
 
 > "När vi skriver avtal bokar vi samtidigt ett onboarding-möte med vår koordinator Natalie, som tar hand om hela produktionen, och en månad för filmning."
 
-Gå igenom processen kort:
-- Natalie håller onboarding-möte och lär känna kunden och deras verksamhet
-- Natalie skriver manus baserat på samtalet
-- Kunden granskar och godkänner
-- Filmdag — vi hanterar allt: manus, planering, filmning, redigering
-- En feedbackrunda ingår, sedan leverans
+Gå igenom de fem stegen från presentationen:
+1. **Onboarding** — Natalie kartlägger behov, målgrupp och känsla
+2. **Mood-board** — vi sätter den visuella riktningen: bilder, färger, stil
+3. **Brief & manus** — vi skapar plan med scener, vinklar och budskap
+4. **Produktion** — vi kommer till er med all utrustning, filmning tar 2–3 timmar
+5. **Redigering & leverans** — optimerat för respektive plattform, leverans inom 30 arbetsdagar
 
 > "Det enda kunden behöver göra är att vara tillgänglig på filmdagen och ge feedback på manuset. Vi hanterar resten."
 
