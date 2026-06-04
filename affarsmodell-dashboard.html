@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XFT Group AB — Affärsmodell Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0c0c0e;
+      --surface:   #141418;
+      --surface2:  #1c1c22;
+      --border:    #2a2a32;
+      --accent:    #4f8ef7;
+      --accent2:   #f7a34f;
+      --green:     #3ecf8e;
+      --red:       #f75f5f;
+      --text:      #f0f0f4;
+      --muted:     #7a7a8c;
+      --label:     #a0a0b4;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      padding: 40px 48px;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-left h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+    .header-left p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .header-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .badge-accent { background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+    .badge-warn   { background: rgba(247,163,79,0.12); color: var(--accent2); border: 1px solid rgba(247,163,79,0.3); }
+
+    /* ─── GRID HELPERS ───────────────────────────────── */
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .grid-1 { margin-bottom: 24px; }
+
+    /* ─── CARDS ──────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .card-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* ─── BIG METRIC CARDS ───────────────────────────── */
+    .metric-value {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text);
+      line-height: 1;
+    }
+    .metric-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .metric-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    .tag-green  { background: rgba(62,207,142,0.12); color: var(--green); }
+    .tag-blue   { background: rgba(79,142,247,0.12); color: var(--accent); }
+    .tag-orange { background: rgba(247,163,79,0.12); color: var(--accent2); }
+    .tag-red    { background: rgba(247,95,95,0.12);  color: var(--red); }
+
+    /* ─── SECTION LABEL ──────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      margin-top: 8px;
+    }
+
+    /* ─── REVENUE SPLIT BAR ──────────────────────────── */
+    .split-bar-wrap { margin: 16px 0 10px; }
+    .split-bar {
+      display: flex;
+      height: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      gap: 2px;
+    }
+    .split-bar-seg {
+      border-radius: 4px;
+      transition: opacity 0.2s;
+    }
+    .split-bar-legend {
+      display: flex;
+      gap: 20px;
+      margin-top: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--label);
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .legend-val { font-weight: 600; color: var(--text); margin-left: 2px; }
+
+    /* ─── MARGIN BARS ────────────────────────────────── */
+    .margin-row {
+      margin-bottom: 18px;
+    }
+    .margin-row-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .margin-row-label { color: var(--label); }
+    .margin-row-pct   { font-weight: 700; color: var(--text); }
+    .margin-bar-bg {
+      background: var(--surface2);
+      border-radius: 4px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .margin-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--accent);
+    }
+    .margin-note { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    /* ─── LTV TABLE ──────────────────────────────────── */
+    .ltv-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .ltv-table th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      padding: 0 12px 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .ltv-table td {
+      padding: 12px 12px 12px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--label);
+    }
+    .ltv-table tr:last-child td { border-bottom: none; }
+    .ltv-table .row-label { font-weight: 600; color: var(--text); }
+    .ltv-table .highlight-cell {
+      font-weight: 700;
+      color: var(--green);
+    }
+    .ltv-table .highlight-row td { background: rgba(62,207,142,0.04); }
+    .ltv-table .multiplier {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green);
+      background: rgba(62,207,142,0.12);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    /* ─── HYBRID CONVERSION ──────────────────────────── */
+    .conv-bars { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+    .conv-row { }
+    .conv-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .conv-label { color: var(--label); font-weight: 500; }
+    .conv-val   { font-weight: 700; color: var(--text); }
+    .conv-bar-bg {
+      background: var(--surface2);
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .conv-bar-fill {
+      height: 100%;
+      border-radius: 5px;
+    }
+    .conv-note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    /* ─── GROWTH LADDER ──────────────────────────────── */
+    .growth-track {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin-top: 8px;
+    }
+    .growth-step {
+      flex: 1;
+      position: relative;
+    }
+    .growth-step::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 20px;
+      width: 2px; height: 24px;
+      background: var(--border);
+    }
+    .growth-step:last-child::after { display: none; }
+    .growth-connector {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+    }
+    .growth-connector-line {
+      height: 2px;
+      flex: 1;
+      background: var(--border);
+    }
+    .growth-arrow { color: var(--muted); font-size: 14px; }
+    .growth-node {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 0 8px;
+    }
+    .growth-node.active {
+      border-color: var(--accent);
+      background: rgba(79,142,247,0.07);
+    }
+    .growth-node-fas  { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .growth-node-rev  { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); margin: 4px 0; }
+    .growth-node-time { font-size: 11px; color: var(--muted); }
+    .growth-node-key  { font-size: 11px; color: var(--label); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); line-height: 1.4; }
+    .growth-node.active .growth-node-rev { color: var(--accent); }
+
+    /* ─── LEAKAGES ───────────────────────────────────── */
+    .leak-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .leak-item:last-child { border-bottom: none; }
+    .leak-rank {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--border);
+      width: 28px;
+      flex-shrink: 0;
+      line-height: 1;
+      padding-top: 2px;
+    }
+    .leak-rank.r1 { color: var(--red); }
+    .leak-rank.r2 { color: var(--accent2); }
+    .leak-rank.r3 { color: var(--accent); }
+    .leak-body { flex: 1; }
+    .leak-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .leak-desc  { font-size: 12px; color: var(--muted); }
+    .leak-impact {
+      font-size: 13px;
+      font-weight: 700;
+      text-align: right;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+    .leak-impact.high   { color: var(--red); }
+    .leak-impact.medium { color: var(--accent2); }
+    .leak-impact.low    { color: var(--accent); }
+
+    /* ─── UNIT ECON ──────────────────────────────────── */
+    .unit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .unit-col-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .unit-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(42,42,50,0.5);
+    }
+    .unit-row:last-child { border-bottom: none; }
+    .unit-key { color: var(--muted); }
+    .unit-val { font-weight: 600; color: var(--text); }
+    .unit-val.green { color: var(--green); }
+    .unit-val.accent { color: var(--accent); }
+    .unit-val.orange { color: var(--accent2); }
+    .unit-divider { height: 1px; background: var(--border); margin: 10px 0; }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    @media print {
+      body { padding: 20px; background: #fff; color: #000; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>XFT Group AB — Affärsmodell</h1>
+    <p>Strategisk översikt · Maj 2026 · Intern</p>
+  </div>
+  <div class="header-right">
+    <span class="badge badge-warn">Nuläge: 8,1M SEK/år</span>
+    <span class="badge badge-accent">Mål: 300M SEK/år</span>
+  </div>
+</div>
+
+<!-- ROW 1: STORA METRICS -->
+<div class="grid-4">
+  <div class="card">
+    <div class="card-title">Total omsättning</div>
+    <div class="metric-value">673 000</div>
+    <div class="metric-sub">kr / månad</div>
+    <div class="metric-tag tag-green">≈ 8,1M SEK / år</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Expendo MRR</div>
+    <div class="metric-value">348 000</div>
+    <div class="metric-sub">kr / månad · 29 kunder</div>
+    <div class="metric-tag tag-blue">Snitt 12 000 kr / kund</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Film intäkt</div>
+    <div class="metric-value">325 000</div>
+    <div class="metric-sub">kr / månad · 9–10 kontrakt</div>
+    <div class="metric-tag tag-orange">Inkl. upsells ~45k</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Hybrid-konvertering</div>
+    <div class="metric-value">10%</div>
+    <div class="metric-sub">av filmkunder → hybrid</div>
+    <div class="metric-tag tag-red">Mål: 30% inom 12 mån</div>
+  </div>
+</div>
+
+<!-- ROW 2: INTÄKTSFÖRDELNING + ENHETSEKONOMI -->
+<div class="grid-2">
+
+  <!-- Intäktsfördelning -->
+  <div class="card">
+    <div class="card-title">Intäktsfördelning</div>
+    <div class="split-bar-wrap">
+      <div class="split-bar">
+        <div class="split-bar-seg" style="width:51.7%; background:var(--accent);"></div>
+        <div class="split-bar-seg" style="width:41.7%; background:var(--accent2);"></div>
+        <div class="split-bar-seg" style="width:6.6%;  background:var(--green);"></div>
+      </div>
+      <div class="split-bar-legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--accent);"></div>
+          Expendo MRR
+          <span class="legend-val">348k</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--accent2);"></div>
+          Film kontrakt
+          <span class="legend-val">280k</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--green);"></div>
+          Upsells
+          <span class="legend-val">45k</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:20px;">
+      <div class="margin-row">
+        <div class="margin-row-header">
+          <span class="margin-row-label">Expendo — est. bruttomarginal</span>
+          <span class="margin-row-pct">50–65%</span>
+        </div>
+        <div class="margin-bar-bg">
+          <div class="margin-bar-fill" style="width:57.5%; background:var(--accent);"></div>
+        </div>
+        <div class="margin-note">Digitalt arbete skalas utan linjär kostnadsökning</div>
+      </div>
+      <div class="margin-row">
+        <div class="margin-row-header">
+          <span class="margin-row-label">Film — bruttomarginal (före löner)</span>
+          <span class="margin-row-pct">~71%</span>
+        </div>
+        <div class="margin-bar-bg">
+          <div class="margin-bar-fill" style="width:71%; background:var(--accent2);"></div>
+        </div>
+        <div class="margin-note">Filmdag ~10 000 kr av 35 000 kr snittdeal. Netto 40–55% när löner inkluderas.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhetsekonomi -->
+  <div class="card">
+    <div class="card-title">Enhetsekonomi per produkt</div>
+    <div class="unit-grid">
+      <div>
+        <div class="unit-col-title">Film Small</div>
+        <div class="unit-row"><span class="unit-key">Listpris</span><span class="unit-val">40 000 kr</span></div>
+        <div class="unit-row"><span class="unit-key">Snitt efter förhandling</span><span class="unit-val">30 000 kr</span></div>
+        <div class="unit-row"><span class="unit-key">+ Upsells (snitt)</span><span class="unit-val orange">+5 000 kr</span></div>
+        <div class="unit-divider"></div>
+        <div class="unit-row"><span class="unit-key">Snittdeal inkl. upsells</span><span class="unit-val">35 000 kr</span></div>
+        <div class="unit-row"><span class="unit-key">Filmdag-kostnad</span><span class="unit-val">−10 000 kr</span></div>
+        <div class="unit-divider"></div>
+        <div class="unit-row"><span class="unit-key">Bruttomarginal</span><span class="unit-val green">~25 000 kr (71%)</span></div>
+        <div class="unit-row"><span class="unit-key">Nettomarginal (est.)</span><span class="unit-val accent">40–55%*</span></div>
+      </div>
+      <div>
+        <div class="unit-col-title">Expendo / mån</div>
+        <div class="unit-row"><span class="unit-key">Meta + Google</span><span class="unit-val">15 000 kr</span></div>
+        <div class="unit-row"><span class="unit-key">Meta only</span><span class="unit-val">10 000 kr</span></div>
+        <div class="unit-row"><span class="unit-key">Google only</span><span class="unit-val">10 000 kr</span></div>
+        <div class="unit-divider"></div>
+        <div class="unit-row"><span class="unit-key">Snitt per kund</span><span class="unit-val">~12 000 kr</span></div>
+        <div class="unit-row"><span class="unit-key">Bruttomarginal (est.)</span><span class="unit-val green">50–65%</span></div>
+        <div class="unit-divider"></div>
+        <div class="unit-row"><span class="unit-key">Bindningstid</span><span class="unit-val">Ingen</span></div>
+        <div class="unit-row"><span class="unit-key">Uppsägningstid</span><span class="unit-val orange">3 månader</span></div>
+      </div>
+    </div>
+    <div style="font-size:11px; color:var(--muted); margin-top:14px; padding-top:10px; border-top:1px solid var(--border);">
+      * Nettomarginal bekräftas när lönedata från Antonio är tillgänglig
+    </div>
+  </div>
+
+</div>
+
+<!-- ROW 3: LTV + HYBRID KONVERTERING -->
+<div class="grid-2">
+
+  <!-- LTV-tabell -->
+  <div class="card">
+    <div class="card-title">Kundlivstidsvärde (LTV)</div>
+    <table class="ltv-table">
+      <thead>
+        <tr>
+          <th>Kundtyp</th>
+          <th>6 mån</th>
+          <th>14 mån</th>
+          <th>24 mån</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label">Filmkund only</td>
+          <td>35 000</td>
+          <td>35 000</td>
+          <td>35 000</td>
+        </tr>
+        <tr>
+          <td class="row-label">Expendo only (10k/mån)</td>
+          <td>60 000</td>
+          <td>140 000</td>
+          <td>240 000</td>
+        </tr>
+        <tr>
+          <td class="row-label">Expendo only (15k/mån)</td>
+          <td>90 000</td>
+          <td>210 000</td>
+          <td>360 000</td>
+        </tr>
+        <tr class="highlight-row">
+          <td class="row-label" style="color:var(--green);">Hybridkund (film + 15k)</td>
+          <td class="highlight-cell">125 000</td>
+          <td class="highlight-cell">245 000</td>
+          <td>
+            <span style="font-weight:800; color:var(--green); font-size:15px;">395 000</span>
+            <span class="multiplier" style="margin-left:6px;">11x</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:12px; color:var(--muted); margin-top:14px; padding-top:10px; border-top:1px solid var(--border);">
+      En hybridkund på 24 månader är <strong style="color:var(--green);">11x mer värd</strong> än en filmkund. Det är bolagets viktigaste nyckeltal.
+    </div>
+  </div>
+
+  <!-- Hybrid konverteringseffekt -->
+  <div class="card">
+    <div class="card-title">Hybrid-konverteringseffekt — extra MRR/år</div>
+    <div style="font-size:12px; color:var(--muted); margin-bottom:16px;">
+      Med 15 filmleveranser/mån. Skillnaden 10%→30% = <strong style="color:var(--text);">+2,6M SEK/år</strong> utan nya filmaffärer.
+    </div>
+    <div class="conv-bars">
+      <div class="conv-row">
+        <div class="conv-header">
+          <span class="conv-label">10% konvertering — <em style="color:var(--red); font-style:normal;">idag</em></span>
+          <span class="conv-val">+1,3M SEK / år</span>
+        </div>
+        <div class="conv-bar-bg">
+          <div class="conv-bar-fill" style="width:33.3%; background:var(--red);"></div>
+        </div>
+        <div class="conv-note">1,5 nya Expendo-kunder / mån</div>
+      </div>
+      <div class="conv-row">
+        <div class="conv-header">
+          <span class="conv-label">20% konvertering</span>
+          <span class="conv-val">+2,6M SEK / år</span>
+        </div>
+        <div class="conv-bar-bg">
+          <div class="conv-bar-fill" style="width:66.6%; background:var(--accent2);"></div>
+        </div>
+        <div class="conv-note">3,0 nya Expendo-kunder / mån</div>
+      </div>
+      <div class="conv-row">
+        <div class="conv-header">
+          <span class="conv-label">30% konvertering — <em style="color:var(--green); font-style:normal;">mål</em></span>
+          <span class="conv-val">+3,9M SEK / år</span>
+        </div>
+        <div class="conv-bar-bg">
+          <div class="conv-bar-fill" style="width:100%; background:var(--green);"></div>
+        </div>
+        <div class="conv-note">4,5 nya Expendo-kunder / mån</div>
+      </div>
+    </div>
+    <div style="margin-top:20px; padding:14px; background:rgba(79,142,247,0.07); border:1px solid rgba(79,142,247,0.2); border-radius:8px;">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--accent); margin-bottom:6px;">Kritisk insikt</div>
+      <div style="font-size:13px; color:var(--label); line-height:1.6;">
+        Hybrid-konverteringen är bolagets <strong style="color:var(--text);">billigaste tillväxt</strong>. Ingen ny budget krävs — bara en dokumenterad process. Idag saknas den processen helt.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ROW 4: TILLVÄXTTRAPPA -->
+<div class="grid-1">
+  <div class="card">
+    <div class="card-title">Tillväxttrappa — vägen till 300M SEK</div>
+    <div style="display:flex; gap:0; align-items:stretch; margin-top:8px;">
+
+      <div style="flex:1; background:rgba(79,142,247,0.08); border:1px solid var(--accent); border-radius:10px; padding:16px 18px; margin-right:8px;">
+        <div style="font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.5px;">Fas 1 · Nu</div>
+        <div style="font-size:26px; font-weight:800; color:var(--accent); letter-spacing:-1px; margin:6px 0;">15M</div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">0 – 12 månader</div>
+        <div style="font-size:11px; color:var(--label); line-height:1.6; padding-top:8px; border-top:1px solid var(--border);">
+          Hybrid-konvertering 30%<br>Leo-oberoende i sälj<br>Expendo-kapacitet planerad
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; padding:0 4px; color:var(--border); font-size:20px;">→</div>
+
+      <div style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-right:8px;">
+        <div style="font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px;">Fas 2</div>
+        <div style="font-size:26px; font-weight:800; color:var(--text); letter-spacing:-1px; margin:6px 0;">50M</div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">12 – 36 månader</div>
+        <div style="font-size:11px; color:var(--label); line-height:1.6; padding-top:8px; border-top:1px solid var(--border);">
+          Fler marknadsförare<br>Expendo premium-tier<br>Geografisk expansion
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; padding:0 4px; color:var(--border); font-size:20px;">→</div>
+
+      <div style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-right:8px;">
+        <div style="font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px;">Fas 3</div>
+        <div style="font-size:26px; font-weight:800; color:var(--text); letter-spacing:-1px; margin:6px 0;">150M</div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">36 – 60 månader</div>
+        <div style="font-size:11px; color:var(--label); line-height:1.6; padding-top:8px; border-top:1px solid var(--border);">
+          Partnerfilmare-nätverk<br>Norden/Europa Expendo<br>XFT som standard
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; padding:0 4px; color:var(--border); font-size:20px;">→</div>
+
+      <div style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px 18px;">
+        <div style="font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px;">Fas 4</div>
+        <div style="font-size:26px; font-weight:800; color:var(--text); letter-spacing:-1px; margin:6px 0;">300M</div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">60 – 120 månader</div>
+        <div style="font-size:11px; color:var(--label); line-height:1.6; padding-top:8px; border-top:1px solid var(--border);">
+          Franchise / plattform film<br>Europa-dominans Expendo<br>SaaS-komponent
+        </div>
+      </div>
+
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-top:14px; text-align:center;">
+      300M kräver strukturella skifte — inte linjär skalning. Fas 1 är det enda som räknas nu.
+    </div>
+  </div>
+</div>
+
+<!-- ROW 5: TOP 3 INTÄKTSLÄCKOR + KAPACITETSTAK -->
+<div class="grid-2">
+
+  <!-- Intäktsläckor -->
+  <div class="card">
+    <div class="card-title">Topp 3 intäktsläckor — nu</div>
+    <div class="leak-item">
+      <div class="leak-rank r1">#1</div>
+      <div class="leak-body">
+        <div class="leak-title">Hybrid-konvertering 10% — ingen dokumenterad process</div>
+        <div class="leak-desc">Ingen repeterbar process finns. "Natalie öppnar dörren, Martin tar vid" är ett personberoende, inte ett system.</div>
+      </div>
+      <div class="leak-impact high">+2,6M/år<br><span style="font-size:10px; font-weight:400; color:var(--muted);">möjlig MRR</span></div>
+    </div>
+    <div class="leak-item">
+      <div class="leak-rank r2">#2</div>
+      <div class="leak-body">
+        <div class="leak-title">Leo-beroende — 90% av avtal kräver Leo</div>
+        <div class="leak-desc">Sätter ett hårt intäktstak. Säljteamet kan inte skala utan att Leo kliver ur flaskhalsen.</div>
+      </div>
+      <div class="leak-impact medium">Intäktstak<br><span style="font-size:10px; font-weight:400; color:var(--muted);">begränsar sälj</span></div>
+    </div>
+    <div class="leak-item">
+      <div class="leak-rank r3">#3</div>
+      <div class="leak-body">
+        <div class="leak-title">Produktion vid kapacitetstak — 2-dagarsregel ej implementerad</div>
+        <div class="leak-desc">Nära max. Varje filmdag som tappas p.g.a. kapacitetsbrist kostar direkt.</div>
+      </div>
+      <div class="leak-impact low">35 000 kr<br><span style="font-size:10px; font-weight:400; color:var(--muted);">per missad dag</span></div>
+    </div>
+  </div>
+
+  <!-- Kapacitetstak -->
+  <div class="card">
+    <div class="card-title">Kapacitetstak och anställningstriggers</div>
+    <div style="display:flex; flex-direction:column; gap:14px; margin-top:4px;">
+
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+          <span style="color:var(--label);">Film (Petrus + Kunta)</span>
+          <span style="color:var(--accent2); font-weight:600;">15–20 / 20 max</span>
+        </div>
+        <div class="margin-bar-bg">
+          <div class="margin-bar-fill" style="width:87.5%; background:var(--accent2);"></div>
+        </div>
+        <div class="margin-note">Trigger: &gt;18 shoots/mån konsekvent → rekrytera konsultfilmare</div>
+      </div>
+
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+          <span style="color:var(--label);">Expendo (Edgar + Musse)</span>
+          <span style="color:var(--green); font-weight:600;">29 / 40 max</span>
+        </div>
+        <div class="margin-bar-bg">
+          <div class="margin-bar-fill" style="width:72.5%; background:var(--green);"></div>
+        </div>
+        <div class="margin-note">Trigger: &gt;35 kunder → rekrytera marknadsförare</div>
+      </div>
+
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+          <span style="color:var(--label);">Natalie (manus + QA)</span>
+          <span style="color:var(--red); font-weight:600;">15 / 18–20 max</span>
+        </div>
+        <div class="margin-bar-bg">
+          <div class="margin-bar-fill" style="width:83%; background:var(--red);"></div>
+        </div>
+        <div class="margin-note">⚠ Kö på 10 manus (maj 2026). Trigger: kö &gt;5 → delegera</div>
+      </div>
+
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+          <span style="color:var(--label);">Sälj (stängning — Leo-begränsat)</span>
+          <span style="color:var(--accent2); font-weight:600;">10–12 / mån</span>
+        </div>
+        <div class="margin-bar-bg">
+          <div class="margin-bar-fill" style="width:60%; background:var(--accent2);"></div>
+        </div>
+        <div class="margin-note">Trigger: säljmanus klart → AM:s stänger självständigt</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>XFT Group AB · Konfidentiellt internt dokument</span>
+  <span>Affärsmodell & Enhetsekonomi · Dok 11 · Jakob Schneidler · Juni 2026</span>
+  <span>* Lönedata och retention-data läggs till när tillgänglig</span>
+</div>
+
+</body>
+</html>
