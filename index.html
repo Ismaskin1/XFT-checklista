@@ -137,6 +137,8 @@
   .success-title { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
   .success-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
   .success-screen .action-btn, .success-screen .action-btn-sec { max-width: 320px; }
+  .error-detail { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.85rem 1rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; line-height: 1.55; color: var(--text); text-align: left; overflow-wrap: anywhere; }
+  .error-detail-label { display: block; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 0.5rem; }
   .gels-row { padding: 0.875rem 1.25rem; border-top: 1px solid var(--border); }
   .gels-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 0.6rem; }
   .gels-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -163,7 +165,7 @@
   </div>
   <div class="header-sub">
     <span class="header-title">Utrustningschecklista — Filmteamet</span>
-    <span class="header-version">v3.3</span>
+    <span class="header-version">v3.4</span>
   </div>
 </header>
 
@@ -725,14 +727,16 @@ function reportUtresa(s) {
   fd.append('datum', s.utresa.date);
   fd.append('payload', JSON.stringify({ taken: takenItems(s).map(itemRef), gels: gelDisplays(s) }));
   fetch(BACKEND_URL, { method:'POST', body:fd })
-    .then(r => r.json())
-    .then(j => {
-      if (!j || j.ok === false) throw new Error('backend');
+    .then(r => r.text())
+    .then(text => {
+      let j = null;
+      try { j = JSON.parse(text); } catch (e) {}
+      if (!j || j.ok === false) throw new Error(j && j.error ? j.error : 'Oväntat svar från Google-skriptet');
       const s2 = load();
       if (s2.utresa.locked) { s2.utresaMailed = sig; save(s2); }
       toast('Utresa låst och loggad hos filmteamet');
     })
-    .catch(() => toast('Utresa låst. Loggningen kunde inte skickas nu — allt kommer med i slutrapporten.', true));
+    .catch(fel => toast('Utresa låst, men loggningen misslyckades: ' + (fel && fel.message ? fel.message : 'ingen kontakt') , true));
 }
 
 function submitKontor() {
@@ -813,39 +817,86 @@ function submitKontor() {
   sendReport(s, body, avvik, payload);
 }
 
-function sendReport(s, body, avvik, payload) {
+// Den senast byggda rapporten sparas så att den kan skickas om, skickas via
+// reservvägen eller kopieras ut om något strular — filmaren ska aldrig kunna fastna.
+let SISTA_RAPPORT = null;
+
+function skickarSkarm() {
   showOverlay('<div class="success-screen"><div class="success-icon" style="font-size:1.5rem;">⏳</div><div class="success-title" style="color:var(--muted);">Skickar rapport…</div><div class="success-sub">Stäng inte sidan.</div></div>');
-  const subject = 'Utrustningsrapport - ' + s.utresa.customer + ' - ' + s.utresa.date + (avvik ? ' - AVVIKELSER' : '');
-  let req;
-  if (BACKEND_URL) {
-    const fd = new FormData();
-    fd.append('type', 'rapport');
-    fd.append('tripId', s.tripId || '');
-    fd.append('filmare', s.utresa.filmer);
-    fd.append('kund', s.utresa.customer);
-    fd.append('datum', s.utresa.date);
-    fd.append('subject', subject);
-    fd.append('rapport', body);
-    fd.append('payload', JSON.stringify(payload));
-    req = fetch(BACKEND_URL, { method:'POST', body:fd })
-      .then(r => r.json())
-      .then(j => { if (!j || j.ok === false) throw new Error('server'); });
-  } else {
-    req = fetch(FORM_URL, { method:'POST', body:buildForm(subject, s, body), headers:{ 'Accept':'application/json' } })
-      .then(r => { if (!r.ok) throw new Error('server'); });
-  }
-  req
-    .then(() => {
-      localStorage.removeItem(STORE_KEY);
-      showOverlay('<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">Rapport skickad!</div><div class="success-sub">Skickad till filmteamet@xft.se</div><button class="action-btn" onclick="newSession()">+ Nytt uppdrag</button></div>');
-    })
-    .catch(err => showSendError(err && err.message === 'server'
-      ? 'Servern tog inte emot rapporten. Vänta en stund och försök igen — allt är kvar på den här enheten.'
-      : 'Rapporten kom inte fram. Kontrollera internet och försök igen — allt är kvar på den här enheten.'));
 }
 
-function showSendError(msg) {
-  showOverlay('<div class="success-screen"><div class="success-icon" style="border-color:var(--danger);background:var(--danger-dim);font-size:1.5rem;">!</div><div class="success-title" style="color:var(--danger);">Kunde inte skicka</div><div class="success-sub">' + msg + '</div><button class="action-btn" onclick="closeOverlay();submitKontor()">Försök igen</button><button class="action-btn-sec" onclick="closeOverlay()">Tillbaka</button></div>');
+function klarSkarm(extra) {
+  localStorage.removeItem(STORE_KEY);
+  showOverlay('<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">Rapport skickad!</div><div class="success-sub">Skickad till filmteamet@xft.se' + (extra || '') + '</div><button class="action-btn" onclick="newSession()">+ Nytt uppdrag</button></div>');
+}
+
+function sendReport(s, body, avvik, payload) {
+  const subject = 'Utrustningsrapport - ' + s.utresa.customer + ' - ' + s.utresa.date + (avvik ? ' - AVVIKELSER' : '');
+  SISTA_RAPPORT = { s: s, body: body, subject: subject };
+  skickarSkarm();
+  if (!BACKEND_URL) { skickaViaFormspree(); return; }
+  const fd = new FormData();
+  fd.append('type', 'rapport');
+  fd.append('tripId', s.tripId || '');
+  fd.append('filmare', s.utresa.filmer);
+  fd.append('kund', s.utresa.customer);
+  fd.append('datum', s.utresa.date);
+  fd.append('subject', subject);
+  fd.append('rapport', body);
+  fd.append('payload', JSON.stringify(payload));
+  fetch(BACKEND_URL, { method:'POST', body:fd })
+    .then(r => r.text())
+    .then(text => {
+      let j = null;
+      try { j = JSON.parse(text); } catch (e) {}
+      if (!j) throw { typ:'svar', detalj: text.slice(0, 300) };
+      if (j.ok === false) throw { typ:'server', detalj: j.error || '' };
+      klarSkarm(j.mailError ? '<br><br>Loggen i Google Sheet är uppdaterad, men mejlet gick inte iväg: ' + esc(j.mailError) : '');
+    })
+    .catch(fel => {
+      if (fel && fel.typ === 'server') {
+        showSendError('Google-skriptet tog emot rapporten men kunde inte spara den.', fel.detalj);
+      } else if (fel && fel.typ === 'svar') {
+        showSendError('Google-skriptet svarade med något oväntat. Kontrollera att webbappen är distribuerad med åtkomst för alla.', fel.detalj);
+      } else {
+        showSendError('Rapporten kom inte fram. Kontrollera internet och försök igen — allt är kvar på den här enheten.', '');
+      }
+    });
+}
+
+// Reservväg: mejlar rapporten via Formspree när Google-backenden inte fungerar.
+function skickaViaFormspree(arReserv) {
+  if (!SISTA_RAPPORT) { toast('Ingen rapport att skicka', true); return; }
+  const r = SISTA_RAPPORT;
+  skickarSkarm();
+  fetch(FORM_URL, { method:'POST', body:buildForm(r.subject, r.s, r.body), headers:{ 'Accept':'application/json' } })
+    .then(res => { if (!res.ok) throw new Error('server'); })
+    .then(() => klarSkarm(arReserv ? '<br><br>Skickad via reservvägen. Raden i Google Sheet saknas för det här uppdraget.' : ''))
+    .catch(() => showSendError(arReserv
+      ? 'Reservvägen fungerade inte heller. Kopiera rapporten nedan och mejla den manuellt.'
+      : 'Rapporten kom inte fram. Kontrollera internet och försök igen — allt är kvar på den här enheten.', ''));
+}
+
+function skickaReserv() { skickaViaFormspree(true); }
+
+function kopieraRapport() {
+  if (!SISTA_RAPPORT) { toast('Ingen rapport att kopiera', true); return; }
+  navigator.clipboard.writeText(SISTA_RAPPORT.body)
+    .then(() => toast('Rapporten kopierad — klistra in den i ett mejl'))
+    .catch(() => toast('Kunde inte kopiera automatiskt', true));
+}
+
+function showSendError(msg, detalj) {
+  let h = '<div class="success-screen"><div class="success-icon" style="border-color:var(--danger);background:var(--danger-dim);font-size:1.5rem;">!</div>';
+  h += '<div class="success-title" style="color:var(--danger);">Kunde inte skicka</div>';
+  h += '<div class="success-sub">' + msg + '<br><br>Allt du fyllt i är kvar på den här enheten.</div>';
+  if (detalj) h += '<div class="error-detail"><span class="error-detail-label">Meddelande från servern</span>' + esc(detalj) + '</div>';
+  h += '<button class="action-btn" onclick="closeOverlay();submitKontor()">Försök igen</button>';
+  if (BACKEND_URL) h += '<button class="action-btn-sec" onclick="skickaReserv()">Skicka som mejl i stället</button>';
+  h += '<button class="action-btn-sec" onclick="kopieraRapport()">Kopiera rapporten</button>';
+  h += '<button class="action-btn-sec" onclick="closeOverlay()">Tillbaka till checklistan</button>';
+  h += '</div>';
+  showOverlay(h);
 }
 
 function newSession() { localStorage.removeItem(STORE_KEY); location.reload(); }
