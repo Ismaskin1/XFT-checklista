@@ -22,6 +22,9 @@ function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
+    if (!SpreadsheetApp.getActiveSpreadsheet()) {
+      return json({ ok: false, error: 'Skriptet är inte kopplat till något kalkylark. Skapa skriptet inifrån arket via Tillägg → Apps Script och distribuera på nytt.' });
+    }
     const p = (e && e.parameter) || {};
     const typ = p.type === 'utresa' ? 'Utresa' : 'Rapport';
     const tripId = String(p.tripId || '');
@@ -47,13 +50,22 @@ function doPost(e) {
         + (c.skadad ? ', ' + c.skadad + ' skadade' : '')
         + (c.saknat ? ', ' + c.saknat + ' saknade' : '');
       skrivAvvikelser(payload, p, nu);
-      MailApp.sendEmail(MAIL_TO,
-        p.subject || ('Utrustningsrapport - ' + (p.kund || '') + ' - ' + (p.datum || '')),
-        p.rapport || '(tom rapport)');
     }
 
+    // Loggen skrivs före mejlet: ett mejl som inte går iväg får aldrig kosta oss raden i arket.
     logg.appendRow([nu, typ, tripId, p.datum || '', p.kund || '', p.filmare || '', status, sammanfattning, p.payload || '']);
-    return json({ ok: true });
+
+    let mailFel = '';
+    if (typ === 'Rapport') {
+      try {
+        MailApp.sendEmail(MAIL_TO,
+          p.subject || ('Utrustningsrapport - ' + (p.kund || '') + ' - ' + (p.datum || '')),
+          p.rapport || '(tom rapport)');
+      } catch (mfel) {
+        mailFel = String(mfel);
+      }
+    }
+    return json({ ok: true, mailError: mailFel });
   } catch (fel) {
     return json({ ok: false, error: String(fel) });
   } finally {
@@ -62,17 +74,24 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  const p = (e && e.parameter) || {};
-  if (ADMIN_KEY.indexOf('BYT-MIG') === 0) return json({ ok: false, error: 'ADMIN_KEY är inte utbytt i Code.gs — sätt en egen nyckel först.' });
-  if (String(p.key || '') !== ADMIN_KEY) return json({ ok: false, error: 'Fel nyckel.' });
+  try {
+    const p = (e && e.parameter) || {};
+    if (ADMIN_KEY.indexOf('BYT-MIG') === 0) return json({ ok: false, error: 'ADMIN_KEY är inte utbytt i Code.gs — sätt en egen nyckel först.' });
+    if (String(p.key || '') !== ADMIN_KEY) return json({ ok: false, error: 'Fel nyckel.' });
+    if (!SpreadsheetApp.getActiveSpreadsheet()) {
+      return json({ ok: false, error: 'Skriptet är inte kopplat till något kalkylark. Skapa skriptet inifrån arket via Tillägg → Apps Script och distribuera på nytt.' });
+    }
 
-  const logg = lasRader(hamtaBlad(LOGG_BLAD, LOGG_RUBRIKER)).map(function(r) {
-    return { tid: r[0], typ: r[1], uppdrag: r[2], datum: r[3], kund: r[4], filmare: r[5], status: r[6], sammanfattning: r[7], payload: tolkaJson(r[8]) };
-  });
-  const avvikelser = lasRader(hamtaBlad(AVVIK_BLAD, AVVIK_RUBRIKER)).map(function(r) {
-    return { tid: r[0], datum: r[1], kund: r[2], filmare: r[3], sak: r[4], grupp: r[5], serienummer: r[6], typ: r[7], kommentar: r[8], atgardad: r[9] };
-  });
-  return json({ ok: true, logg: logg, avvikelser: avvikelser });
+    const logg = lasRader(hamtaBlad(LOGG_BLAD, LOGG_RUBRIKER)).map(function(r) {
+      return { tid: r[0], typ: r[1], uppdrag: r[2], datum: r[3], kund: r[4], filmare: r[5], status: r[6], sammanfattning: r[7], payload: tolkaJson(r[8]) };
+    });
+    const avvikelser = lasRader(hamtaBlad(AVVIK_BLAD, AVVIK_RUBRIKER)).map(function(r) {
+      return { tid: r[0], datum: r[1], kund: r[2], filmare: r[3], sak: r[4], grupp: r[5], serienummer: r[6], typ: r[7], kommentar: r[8], atgardad: r[9] };
+    });
+    return json({ ok: true, logg: logg, avvikelser: avvikelser });
+  } catch (fel) {
+    return json({ ok: false, error: String(fel) });
+  }
 }
 
 // En rad per saknad, skadad eller sliten sak — per-prylshistoriken teamet vill kunna slå upp.

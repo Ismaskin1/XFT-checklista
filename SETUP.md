@@ -45,6 +45,21 @@ Så länge `BACKEND_URL` är tom fortsätter allt via Formspree precis som tidig
 1. Gör ett testuppdrag i checklistan: lås en utresa, bekräfta hemresan, slutför på kontoret.
 2. Kontrollera att raderna dyker upp i **Logg** (en Utresa-rad och en Rapport-rad), att mejlet kommer till filmteamet@xft.se och att uppdraget syns i adminvyn.
 
+## Om något inte fungerar
+
+Checklistan visar Google-skriptets eget felmeddelande på skärmen när sändningen misslyckas, och du kommer alltid vidare: **Skicka som mejl i stället** mejlar rapporten via reservvägen (Formspree), och **Kopiera rapporten** lägger hela texten i urklipp så att du kan mejla den för hand. Inget arbete går förlorat.
+
+Vanliga meddelanden och vad de betyder:
+
+| Meddelande på skärmen | Orsak | Åtgärd |
+|---|---|---|
+| `You do not have permission to call MailApp.sendEmail` | Behörigheten att skicka mejl godkändes aldrig | Öppna Apps Script, klicka **Kör** på funktionen `doGet` och godkänn behörigheterna. Distribuera sedan en ny version. |
+| `Skriptet är inte kopplat till något kalkylark` | Skriptet skapades fristående på script.google.com | Skapa skriptet inifrån arket via **Tillägg → Apps Script**, klistra in koden och distribuera på nytt |
+| `Google-skriptet svarade med något oväntat` | Webbappen är inte publik | Kontrollera i **Distribuera → Hantera distributioner** att **Vem har åtkomst** står på **Alla** |
+| `Fel nyckel` i adminvyn | Nyckeln i adminvyn stämmer inte med `ADMIN_KEY` i `Code.gs` | Tryck **Byt anslutning** i adminvyn och skriv in rätt nyckel |
+
+Uppdaterar du `Code.gs` måste du alltid distribuera om: **Distribuera → Hantera distributioner → pennikonen → Version: Ny version → Distribuera**. Adressen ändras inte.
+
 ## Bra att veta
 
 - **Mejlvolym:** endast slutrapporten mejlas (en per uppdrag). Utresan blir en rad i arket och syns direkt i adminvyn. Google Workspace tillåter 1 500 mejl per dag, så 30 uppdrag i månaden är inga problem — och Formspree-taket på 50 utskick per månad försvinner helt.
