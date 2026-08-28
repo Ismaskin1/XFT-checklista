@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="XFT Checklista">
 <title>XFT Utrustningschecklista</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300&display=swap" rel="stylesheet">
@@ -151,7 +154,7 @@
   </div>
   <div class="header-sub">
     <span class="header-title">Utrustningschecklista — Filmteamet</span>
-    <span class="header-version">v3</span>
+    <span class="header-version">v3.1</span>
   </div>
 </header>
 
@@ -891,6 +894,10 @@ function bindDraftFields() {
     switchTab(s.hemresa.locked ? 'kontor' : 'hemresa');
   } else {
     render();
+  }
+  // Offlinestöd: cachar appen så att den startar även utan uppkoppling
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() { navigator.serviceWorker.register('./sw.js').catch(function() {}); });
   }
 })();
 </script>
