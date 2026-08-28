@@ -18,8 +18,8 @@ Låsta steg kan alltid låsas upp med **Ändra**-knappen om något blev fel, uta
 
 - **Lagring:** `localStorage` med nyckeln `xft_v2`. Ett pågående uppdrag ligger kvar även om sidan stängs eller laddas om, och rensas först när rapporten är inlämnad.
 - **Inlämning:** utresa och slutrapport skickas till ett Google Apps Script (`BACKEND_URL` i `index.html`) som skriver dem i ett Google Sheet. Se [SETUP.md](SETUP.md). Inga mejl skickas — loggen och adminvyn är hela systemet.
-- **Adminvy:** `admin.html` (samma GitHub Pages-adress) visar vad som är ute i fält just nu, öppna avvikelser, status per pryl och senaste uppdrag. Kräver webbappens adress + admin-nyckeln, som anges en gång per webbläsare.
-- **Design:** mörkt tema med grön accent `#35e375`.
+- **Adminvy:** `admin.html` (samma GitHub Pages-adress) har tre flikar: **Översikt** svarar på vad som är ute i fält och vad som behöver åtgärdas, **Utrustning** är uppslagsverket med sök och status per pryl, och **Historik** listar inlämnade uppdrag. Anslutning och självtest ligger bakom ••• uppe till höger. Kräver webbappens adress + admin-nyckeln, som anges en gång per webbläsare.
+- **Design:** mörkt tema med grön accent `#35e375`. Checklistan och adminvyn delar formspråk — sektioner med hårfina linjer i stället för kort, en primär handling per vy, ark underifrån för korta uppgifter, och färg enbart för status.
 - **Offline:** `sw.js` cachar appen så att den startar utan uppkoppling. Sidan hämtas alltid från nätet när det går, så uppdateringar på GitHub Pages slår igenom som vanligt.
 - **Filer:** `index.html` (checklistan), `admin.html` (adminvyn), `apps-script/Code.gs` (Google-backenden), `SETUP.md` (installationsguide), `sw.js` (offlinestöd), `manifest.webmanifest` + ikonfiler (appikon och helskärmsläge).
 

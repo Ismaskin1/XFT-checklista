@@ -3,112 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0e0e0f">
+<meta name="theme-color" content="#0b0b0c">
 <title>XFT Adminvy — Utrustning</title>
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   :root {
-    --bg: #0e0e0f; --surface: #18181b; --surface2: #222226;
-    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.15);
-    --text: #f4f4f5; --muted: #a1a1aa;
+    --bg: #0b0b0c; --surface: #141416; --raise: #1c1c1f;
+    --line: rgba(255,255,255,0.07); --line2: rgba(255,255,255,0.13);
+    --text: #f5f5f6; --muted: #8e8e96; --faint: #63636b;
     --accent: #35e375; --accent-dim: rgba(53,227,117,0.12);
-    --danger: #ff4d4d; --danger-dim: rgba(255,77,77,0.1);
-    --success: #4ade80; --success-dim: rgba(74,222,128,0.1);
-    --warning: #fbbf24; --warning-dim: rgba(251,191,36,0.1);
-    --radius: 12px; --radius-lg: 18px;
+    --danger: #ff5a5a; --danger-dim: rgba(255,90,90,0.12);
+    --warn: #f5b83d; --warn-dim: rgba(245,184,61,0.12);
+    --r: 12px; --r-lg: 16px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; min-height: 100vh; }
-  header { padding: 1.25rem 1rem 1rem; border-bottom: 1px solid var(--border); }
-  .head-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
-  .head-logo { width: 64px; flex-shrink: 0; filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px rgba(255,255,255,0.35)); }
-  .head-logo svg { display: block; width: 100%; }
-  .head-titles { flex: 1; min-width: 180px; }
-  .head-title { font-size: 1.05rem; font-weight: 800; letter-spacing: 0.02em; }
-  .head-sub { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin-top: 2px; }
-  .head-actions { display: flex; align-items: center; gap: 0.5rem; }
-  .btn-sec { background: transparent; border: 1px solid var(--border2); color: var(--muted); border-radius: 10px; padding: 0.5rem 0.9rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; letter-spacing: 0.04em; }
-  .btn-sec:hover { color: var(--text); background: var(--surface2); }
-  .btn-main { background: var(--accent); border: none; color: #111; border-radius: 10px; padding: 0.55rem 1rem; font-size: 0.8rem; font-weight: 700; cursor: pointer; letter-spacing: 0.04em; text-transform: uppercase; }
-  .btn-main:active { opacity: 0.85; }
-  .updated { font-size: 0.7rem; color: var(--muted); }
-  .main { max-width: 860px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
-  .setup-card, .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
-  .setup-card h2 { font-size: 1rem; margin-bottom: 0.5rem; }
-  .setup-card p { color: var(--muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem; }
-  .field { margin-bottom: 0.9rem; }
-  .field label { display: block; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 0.35rem; }
-  .field input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.8rem 1rem; color: var(--text); font-size: 0.95rem; outline: none; }
-  .field input:focus { border-color: var(--accent); }
-  .error-banner { display: none; background: var(--danger-dim); border: 1px solid rgba(255,77,77,0.4); color: var(--danger); border-radius: var(--radius); padding: 0.8rem 1rem; font-size: 0.85rem; line-height: 1.5; margin-bottom: 1rem; }
-  .error-banner.show { display: block; }
-  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
-  @media (max-width: 560px) { .tiles { grid-template-columns: 1fr 1fr; } .tiles .tile:first-child { grid-column: 1 / -1; } }
-  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; }
-  .tile-num { font-size: 2rem; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
-  .tile-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-top: 0.3rem; }
-  .tile.warn-tile .tile-num { color: var(--danger); }
-  .tile.ok-tile .tile-num { color: var(--accent); }
-  .section-title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 1.4rem 0 0.6rem; }
-  .row { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.8rem 0; border-top: 1px solid var(--border); }
-  .row:first-child { border-top: none; padding-top: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  button, input { font-family: inherit; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px 4rem; }
+
+  .topbar { display: flex; align-items: center; gap: 12px; padding: 18px 0 16px; }
+  .mark { width: 44px; flex-shrink: 0; }
+  .mark svg { display: block; width: 100%; fill: #fff; }
+  .topbar h1 { flex: 1; font-size: 16px; font-weight: 650; letter-spacing: -.01em; }
+  .stamp { color: var(--faint); font-size: 12.5px; }
+  .icon-btn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line2); background: transparent; color: var(--muted); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .icon-btn:hover { color: var(--text); background: var(--surface); }
+  .menu-anchor { position: relative; }
+  .menu { display: none; position: absolute; right: 0; top: 40px; z-index: 60; min-width: 210px; background: var(--raise); border: 1px solid var(--line2); border-radius: 14px; padding: 6px; box-shadow: 0 12px 34px rgba(0,0,0,.6); }
+  .menu.open { display: block; }
+  .menu button { display: block; width: 100%; text-align: left; background: none; border: none; color: var(--text); font-size: 14.5px; padding: 11px 12px; border-radius: 9px; cursor: pointer; }
+  .menu button:hover { background: rgba(255,255,255,.06); }
+
+  .seg { display: flex; gap: 3px; background: rgba(255,255,255,.05); border-radius: 11px; padding: 3px; width: max-content; margin-bottom: 6px; }
+  .seg button { padding: 7px 16px; border: none; border-radius: 9px; background: none; color: var(--muted); font-size: 13.5px; font-weight: 550; cursor: pointer; }
+  .seg button.on { background: rgba(255,255,255,.10); color: var(--text); }
+
+  .view { display: none; }
+  .view.on { display: block; }
+
+  .hero { padding: 30px 0 6px; }
+  .hero .big { font-size: 34px; font-weight: 700; letter-spacing: -.028em; line-height: 1.14; }
+  .hero .sub { color: var(--muted); font-size: 14.5px; margin-top: 8px; }
+  .hero .flag { display: inline-flex; align-items: center; gap: 9px; margin-top: 16px; color: var(--danger); font-size: 14.5px; font-weight: 600; }
+  .hero .flag .pip { width: 7px; height: 7px; border-radius: 50%; background: var(--danger); flex-shrink: 0; }
+
+  h2 { font-size: 12.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--faint); font-weight: 700; margin: 34px 0 2px; }
+  .row { display: flex; align-items: flex-start; gap: 16px; padding: 15px 0; border-top: 1px solid var(--line); }
   .row-main { flex: 1; min-width: 0; }
-  .row-name { font-size: 0.92rem; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
-  .row-meta { font-size: 0.75rem; color: var(--muted); margin-top: 2px; line-height: 1.5; overflow-wrap: anywhere; }
-  .badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.63rem; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; font-weight: 700; margin-top: 2px; }
-  .b-ute { background: var(--accent-dim); color: var(--accent); }
-  .b-ok { background: var(--success-dim); color: var(--success); }
-  .b-slitage { background: var(--warning-dim); color: var(--warning); }
-  .b-skadad { background: var(--danger-dim); color: var(--danger); }
-  .b-saknad { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
-  .b-komplett { background: var(--success-dim); color: var(--success); }
-  .b-avvik { background: var(--danger-dim); color: var(--danger); }
-  .empty { color: var(--muted); font-size: 0.85rem; padding: 0.4rem 0; }
-  details.trip-items { margin-top: 0.4rem; }
-  details.trip-items summary { cursor: pointer; font-size: 0.75rem; color: var(--accent); user-select: none; }
-  details.trip-items ul { list-style: none; margin: 0.5rem 0 0; columns: 2; column-gap: 1.5rem; }
-  @media (max-width: 560px) { details.trip-items ul { columns: 1; } }
-  details.trip-items li { font-size: 0.78rem; color: var(--muted); padding: 2px 0; break-inside: avoid; }
-  .search { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.6rem 0.9rem; color: var(--text); font-size: 0.85rem; outline: none; margin-bottom: 0.75rem; }
+  .row-name { font-size: 15.5px; font-weight: 600; letter-spacing: -.01em; line-height: 1.35; overflow-wrap: anywhere; }
+  .row-meta { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.5; overflow-wrap: anywhere; }
+  .row-note { font-size: 13px; color: var(--faint); margin-top: 4px; line-height: 1.5; }
+  .rt { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .pill { font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .p-ok { color: var(--accent); background: var(--accent-dim); }
+  .p-bad { color: var(--danger); background: var(--danger-dim); }
+  .p-warn { color: var(--warn); background: var(--warn-dim); }
+  .p-ute { color: var(--muted); background: rgba(255,255,255,.07); }
+  .p-saknad { color: var(--danger); border: 1px solid rgba(255,90,90,.5); }
+  .empty { color: var(--muted); font-size: 14px; padding: 15px 0; border-top: 1px solid var(--line); }
+  .hint { font-size: 13px; color: var(--faint); line-height: 1.55; padding: 14px 0 0; }
+
+  details.trip { margin-top: 7px; }
+  details.trip summary { cursor: pointer; font-size: 13px; color: var(--accent); user-select: none; list-style: none; }
+  details.trip summary::-webkit-details-marker { display: none; }
+  details.trip ul { list-style: none; margin: 10px 0 0; columns: 2; column-gap: 24px; }
+  @media (max-width: 560px) { details.trip ul { columns: 1; } }
+  details.trip li { font-size: 13px; color: var(--muted); padding: 3px 0; break-inside: avoid; }
+
+  .search { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 11px 14px; color: var(--text); font-size: 14.5px; outline: none; margin: 22px 0 4px; }
   .search:focus { border-color: var(--accent); }
-  .hint { font-size: 0.75rem; color: var(--muted); line-height: 1.5; margin-top: 0.75rem; }
-  .test-rad { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.7rem 0; border-top: 1px solid var(--border); }
-  .test-rad:first-child { border-top: none; padding-top: 0; }
-  .test-ikon { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
-  .test-ok .test-ikon { background: var(--success-dim); color: var(--success); }
+  .search::placeholder { color: var(--faint); }
+
+  .calm { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding: 5rem 1rem; }
+  .calm .ring { width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid rgba(53,227,117,.35); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 21px; }
+  .calm .h { font-size: 19px; font-weight: 650; letter-spacing: -.015em; }
+  .calm .p { color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 340px; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; margin-top: 22px; }
+  .card h3 { font-size: 12.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--faint); font-weight: 700; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+  .field { margin-top: 16px; }
+  .field label { display: block; font-size: 12.5px; color: var(--muted); font-weight: 550; margin-bottom: 7px; }
+  .field input { width: 100%; background: var(--bg); border: 1px solid var(--line2); border-radius: var(--r); padding: 12px 14px; color: var(--text); font-size: 15px; outline: none; }
+  .field input:focus { border-color: var(--accent); }
+  .cta { height: 46px; padding: 0 22px; border-radius: 12px; border: none; background: var(--accent); color: #08120c; font-size: 15px; font-weight: 650; cursor: pointer; margin-top: 20px; }
+  .btn-quiet { background: none; border: 1px solid var(--line2); color: var(--muted); border-radius: 10px; padding: 7px 13px; font-size: 13px; font-weight: 550; cursor: pointer; }
+  .setup-p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-top: 8px; }
+
+  .banner { display: none; background: var(--danger-dim); border: 1px solid rgba(255,90,90,.4); color: var(--danger); border-radius: var(--r); padding: 13px 15px; font-size: 14px; line-height: 1.5; margin-bottom: 18px; }
+  .banner.show { display: block; }
+
+  .test-rad { display: flex; align-items: flex-start; gap: 13px; padding: 13px 0; border-top: 1px solid var(--line); }
+  .test-rad:first-child { border-top: none; padding-top: 4px; }
+  .test-ikon { flex-shrink: 0; width: 21px; height: 21px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-top: 1px; }
+  .test-ok .test-ikon { background: var(--accent-dim); color: var(--accent); }
   .test-fel .test-ikon { background: var(--danger-dim); color: var(--danger); }
   .test-fel .row-name { color: var(--danger); }
-  #app { display: none; }
-  .loading { color: var(--muted); font-size: 0.85rem; padding: 2rem 0; text-align: center; }
+  .loading { color: var(--muted); font-size: 14px; padding: 2.5rem 0; text-align: center; }
+  #app, #setup { display: none; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="head-inner">
-    <div class="head-logo">
-      <svg viewBox="0 0 704 215" xmlns="http://www.w3.org/2000/svg"><g fill="#ffffff" stroke="none"><path d="M 0.00 2.95 C 0.00 3.84 21.56 26.59 71.95 78.86 C 83.80 91.16 93.79 101.73 94.15 102.36 C 94.53 103.02 85.68 113.01 73.22 126.00 C 61.35 138.38 42.13 158.40 30.52 170.50 C 5.51 196.55 0.00 202.49 0.00 203.35 C 0.00 203.71 16.39 204.00 36.42 204.00 L 72.83 204.00 120.17 154.86 C 146.20 127.83 167.87 105.09 168.33 104.32 C 169.38 102.52 170.73 103.99 117.11 48.25 L 72.63 2.00 36.31 2.00 C 14.08 2.00 0.00 2.37 0.00 2.95 M 171.11 24.00 L 149.83 46.01 168.60 65.53 C 183.48 81.02 187.61 84.79 188.55 83.78 C 189.20 83.08 206.67 64.81 227.37 43.19 C 248.07 21.58 265.00 3.46 265.00 2.94 C 265.00 2.37 250.81 2.00 228.69 2.00 L 192.39 2.00 171.11 24.00 M 295.25 107.25 L 295.50 212.50 322.25 212.77 L 349.00 213.03 349.00 134.02 L 349.00 55.00 415.00 55.00 L 481.00 55.00 481.00 28.50 L 481.00 2.00 388.00 2.00 L 294.99 2.00 295.25 107.25 M 500.00 28.49 L 500.00 54.98 537.25 55.24 L 574.50 55.50 574.76 134.25 L 575.01 213.00 602.00 213.00 L 628.99 213.00 629.24 134.25 L 629.50 55.50 666.75 55.24 L 704.00 54.98 704.00 28.49 L 704.00 2.00 602.00 2.00 L 500.00 2.00 500.00 28.49 M 374.00 110.00 L 374.00 132.00 423.00 132.00 L 472.00 132.00 472.00 110.00 L 472.00 88.00 423.00 88.00 L 374.00 88.00 374.00 110.00 M 168.16 141.07 L 149.90 160.15 171.07 182.07 L 192.24 204.00 228.62 204.00 C 248.63 204.00 265.00 203.65 265.00 203.23 C 265.00 202.22 188.12 122.00 187.16 122.00 C 186.75 122.00 178.21 130.58 168.16 141.07"/></g></svg>
-    </div>
-    <div class="head-titles">
-      <div class="head-title">Adminvy — Utrustning</div>
-      <div class="head-sub">Expendo | Filmteamet</div>
-    </div>
-    <div class="head-actions" id="head-actions" style="display:none;">
-      <span class="updated" id="updated"></span>
-      <button class="btn-sec" onclick="korSjalvtest()">Testa anslutningen</button>
-      <button class="btn-sec" onclick="bytAnslutning()">Byt anslutning</button>
-      <button class="btn-main" onclick="loadData()">Uppdatera</button>
+<div class="wrap">
+  <div class="topbar">
+    <div class="mark"><svg viewBox="0 0 704 215" xmlns="http://www.w3.org/2000/svg"><path d="M 0.00 2.95 C 0.00 3.84 21.56 26.59 71.95 78.86 C 83.80 91.16 93.79 101.73 94.15 102.36 C 94.53 103.02 85.68 113.01 73.22 126.00 C 61.35 138.38 42.13 158.40 30.52 170.50 C 5.51 196.55 0.00 202.49 0.00 203.35 C 0.00 203.71 16.39 204.00 36.42 204.00 L 72.83 204.00 120.17 154.86 C 146.20 127.83 167.87 105.09 168.33 104.32 C 169.38 102.52 170.73 103.99 117.11 48.25 L 72.63 2.00 36.31 2.00 C 14.08 2.00 0.00 2.37 0.00 2.95 M 171.11 24.00 L 149.83 46.01 168.60 65.53 C 183.48 81.02 187.61 84.79 188.55 83.78 C 189.20 83.08 206.67 64.81 227.37 43.19 C 248.07 21.58 265.00 3.46 265.00 2.94 C 265.00 2.37 250.81 2.00 228.69 2.00 L 192.39 2.00 171.11 24.00 M 295.25 107.25 L 295.50 212.50 322.25 212.77 L 349.00 213.03 349.00 134.02 L 349.00 55.00 415.00 55.00 L 481.00 55.00 481.00 28.50 L 481.00 2.00 388.00 2.00 L 294.99 2.00 295.25 107.25 M 500.00 28.49 L 500.00 54.98 537.25 55.24 L 574.50 55.50 574.76 134.25 L 575.01 213.00 602.00 213.00 L 628.99 213.00 629.24 134.25 L 629.50 55.50 666.75 55.24 L 704.00 54.98 704.00 28.49 L 704.00 2.00 602.00 2.00 L 500.00 2.00 500.00 28.49 M 374.00 110.00 L 374.00 132.00 423.00 132.00 L 472.00 132.00 472.00 110.00 L 472.00 88.00 423.00 88.00 L 374.00 88.00 374.00 110.00 M 168.16 141.07 L 149.90 160.15 171.07 182.07 L 192.24 204.00 228.62 204.00 C 248.63 204.00 265.00 203.65 265.00 203.23 C 265.00 202.22 188.12 122.00 187.16 122.00 C 186.75 122.00 178.21 130.58 168.16 141.07"/></svg></div>
+    <h1>Utrustning</h1>
+    <span class="stamp" id="updated"></span>
+    <button class="icon-btn" id="refresh-btn" onclick="loadData()" title="Uppdatera">&#8635;</button>
+    <div class="menu-anchor">
+      <button class="icon-btn" id="menu-btn" onclick="toggleMenu(event)" title="Mer">&#8943;</button>
+      <div class="menu" id="menu">
+        <button onclick="korSjalvtest()">Testa anslutningen</button>
+        <button onclick="bytAnslutning()">Byt anslutning</button>
+      </div>
     </div>
   </div>
-</header>
 
-<div class="main">
-  <div class="error-banner" id="error-banner"></div>
+  <div class="banner" id="error-banner"></div>
 
-  <div class="setup-card" id="setup" style="display:none;">
-    <h2>Anslut till loggen</h2>
-    <p>Klistra in webappens adress från Apps Script (den som slutar på <code>/exec</code>) och admin-nyckeln du satte i <code>Code.gs</code>. Uppgifterna sparas bara i den här webbläsaren.</p>
+  <div class="card" id="setup">
+    <h3>Anslut till loggen</h3>
+    <p class="setup-p">Klistra in webbappens adress från Apps Script (den som slutar på /exec) och admin-nyckeln från Code.gs. Uppgifterna sparas bara i den här webbläsaren.</p>
     <div class="field">
       <label>Webbappens adress</label>
       <input type="url" id="cfg-url" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
@@ -117,41 +134,46 @@
       <label>Admin-nyckel</label>
       <input type="password" id="cfg-key" placeholder="Nyckeln från Code.gs" autocomplete="off">
     </div>
-    <button class="btn-main" onclick="sparaAnslutning()">Anslut</button>
+    <button class="cta" onclick="sparaAnslutning()">Anslut</button>
   </div>
 
-  <div class="section-card" id="sjalvtest-kort" style="display:none;">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;margin-bottom:0.9rem;">
-      <span style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:700;">Test av anslutningen</span>
-      <button class="btn-sec" onclick="document.getElementById('sjalvtest-kort').style.display='none'">Stäng</button>
+  <div class="card" id="sjalvtest-kort" style="display:none">
+    <div class="card-head">
+      <h3>Test av anslutningen</h3>
+      <button class="btn-quiet" onclick="document.getElementById('sjalvtest-kort').style.display='none'">Stäng</button>
     </div>
     <div id="sjalvtest-rader"></div>
   </div>
 
   <div id="app">
-    <div class="tiles">
-      <div class="tile" id="tile-ute"><div class="tile-num" id="num-ute">–</div><div class="tile-label">Uppdrag ute i fält nu</div></div>
-      <div class="tile" id="tile-avvik"><div class="tile-num" id="num-avvik">–</div><div class="tile-label">Öppna avvikelser</div></div>
-      <div class="tile" id="tile-30"><div class="tile-num" id="num-30">–</div><div class="tile-label">Uppdrag senaste 30 dagarna</div></div>
+    <div class="seg">
+      <button class="on" id="tab-oversikt" onclick="visaVy('oversikt')">Översikt</button>
+      <button id="tab-utrustning" onclick="visaVy('utrustning')">Utrustning</button>
+      <button id="tab-historik" onclick="visaVy('historik')">Historik</button>
     </div>
 
-    <div class="section-title">Ute i fält just nu</div>
-    <div class="section-card" id="sec-ute"></div>
+    <div class="view on" id="view-oversikt">
+      <div id="hero-wrap"></div>
+      <div id="oversikt-sektioner">
+        <h2>Ute i fält</h2>
+        <div id="sec-ute"></div>
+        <h2>Att åtgärda</h2>
+        <div id="sec-avvik"></div>
+      </div>
+    </div>
 
-    <div class="section-title">Öppna avvikelser</div>
-    <div class="section-card" id="sec-avvik"></div>
-
-    <div class="section-title">Utrustning — senaste kända status</div>
-    <div class="section-card">
-      <input class="search" id="sok" type="search" placeholder="Sök sak, grupp eller serienummer…" oninput="renderUtrustning()">
+    <div class="view" id="view-utrustning">
+      <input class="search" id="sok" type="search" placeholder="Sök sak, grupp eller serienummer" oninput="renderUtrustning()">
       <div id="sec-utrustning"></div>
     </div>
 
-    <div class="section-title">Senaste uppdrag</div>
-    <div class="section-card" id="sec-senaste"></div>
+    <div class="view" id="view-historik">
+      <h2>Inlämnade uppdrag</h2>
+      <div id="sec-senaste"></div>
+    </div>
   </div>
 
-  <div class="loading" id="loading" style="display:none;">Hämtar data…</div>
+  <div class="loading" id="loading" style="display:none">Hämtar data…</div>
 </div>
 
 <script>
@@ -161,27 +183,39 @@ let utrustningsLista = [];
 
 function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtDatum(v) { return String(v || '').slice(0, 10); }
+function kortDatum(v) {
+  const m = ['jan','feb','mars','april','maj','juni','juli','aug','sep','okt','nov','dec'];
+  const p = fmtDatum(v).split('-');
+  return p.length === 3 && m[parseInt(p[1], 10) - 1] ? (parseInt(p[2], 10) + ' ' + m[parseInt(p[1], 10) - 1]) : fmtDatum(v);
+}
 function parseTid(v) { if (!v) return null; const d = new Date(String(v).replace(' ', 'T')); return isNaN(d) ? null : d; }
-
 function cfg() { try { return JSON.parse(localStorage.getItem(CFG_KEY)) || null; } catch (e) { return null; } }
+
+function toggleMenu(e) { e.stopPropagation(); document.getElementById('menu').classList.toggle('open'); }
+document.addEventListener('click', function() { document.getElementById('menu').classList.remove('open'); });
 
 function visaFel(msg) { const b = document.getElementById('error-banner'); b.textContent = msg; b.classList.add('show'); }
 function doljFel() { document.getElementById('error-banner').classList.remove('show'); }
+
+function visaVy(namn) {
+  ['oversikt','utrustning','historik'].forEach(function(v) {
+    document.getElementById('view-' + v).classList.toggle('on', v === namn);
+    document.getElementById('tab-' + v).classList.toggle('on', v === namn);
+  });
+}
 
 function sparaAnslutning() {
   const url = document.getElementById('cfg-url').value.trim();
   const key = document.getElementById('cfg-key').value.trim();
   if (!url || !key) { visaFel('Fyll i både adressen och nyckeln.'); return; }
   localStorage.setItem(CFG_KEY, JSON.stringify({ url: url, key: key }));
-  doljFel();
-  visaApp();
-  loadData();
+  doljFel(); visaApp(); loadData();
 }
 
 function bytAnslutning() {
   const c = cfg() || {};
   document.getElementById('app').style.display = 'none';
-  document.getElementById('head-actions').style.display = 'none';
+  document.getElementById('sjalvtest-kort').style.display = 'none';
   document.getElementById('setup').style.display = 'block';
   document.getElementById('cfg-url').value = c.url || '';
   document.getElementById('cfg-key').value = '';
@@ -190,7 +224,6 @@ function bytAnslutning() {
 function visaApp() {
   document.getElementById('setup').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  document.getElementById('head-actions').style.display = 'flex';
 }
 
 function loadData() {
@@ -205,7 +238,7 @@ function loadData() {
       if (!j || j.ok === false) { visaFel(j && j.error ? 'Backenden svarade: ' + j.error : 'Backenden gav ett oväntat svar.'); return; }
       DATA = j;
       renderAllt();
-      document.getElementById('updated').textContent = 'Uppdaterad ' + new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('updated').textContent = new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
     })
     .catch(() => {
       document.getElementById('loading').style.display = 'none';
@@ -213,97 +246,110 @@ function loadData() {
     });
 }
 
-// Kontrollerar de tre saker som brukar fattas efter en utplacering: kopplingen till
-// arket, skrivbehörigheten och mejlbehörigheten.
+// Kontrollerar de saker som brukar fattas efter en utplacering
 function korSjalvtest() {
   const c = cfg();
   if (!c) return;
   const kort = document.getElementById('sjalvtest-kort');
   const rader = document.getElementById('sjalvtest-rader');
   kort.style.display = 'block';
-  rader.innerHTML = '<div class="empty">Testar…</div>';
+  rader.innerHTML = '<div class="empty" style="border:none">Testar…</div>';
   doljFel();
   fetch(c.url + '?key=' + encodeURIComponent(c.key) + '&test=1')
     .then(r => r.json())
     .then(j => {
       if (!j || j.ok === false) {
-        rader.innerHTML = '<div class="test-rad test-fel"><span class="test-ikon">✗</span><div><div class="row-name">Skriptet svarade med ett fel</div><div class="row-meta">' + esc(j && j.error ? j.error : 'okänt fel') + '</div></div></div>';
+        rader.innerHTML = felRad('Skriptet svarade med ett fel', j && j.error ? j.error : 'okänt fel');
         return;
       }
       if (!j.sjalvtest) {
-        rader.innerHTML = '<div class="test-rad test-fel"><span class="test-ikon">✗</span><div><div class="row-name">Gammal kod är utplacerad</div><div class="row-meta">Skriptet känner inte igen självtestet. Uppdatera Code.gs i Apps Script och distribuera en ny version.</div></div></div>';
+        rader.innerHTML = felRad('Gammal kod är utplacerad', 'Skriptet känner inte igen självtestet. Uppdatera Code.gs i Apps Script och distribuera en ny version.');
         return;
       }
-      const punkter = [
-        ['Kopplingen till kalkylarket', j.kalkylark],
-        ['Skriva i arket', j.skrivning]
-      ];
       let html = '';
-      punkter.forEach(function([rubrik, text]) {
-        const ok = String(text).indexOf('OK') === 0;
+      [['Kopplingen till kalkylarket', j.kalkylark], ['Skriva i arket', j.skrivning]].forEach(function(par) {
+        const ok = String(par[1]).indexOf('OK') === 0;
         html += '<div class="test-rad ' + (ok ? 'test-ok' : 'test-fel') + '"><span class="test-ikon">' + (ok ? '✓' : '✗') + '</span>';
-        html += '<div><div class="row-name">' + esc(rubrik) + '</div><div class="row-meta">' + esc(text) + '</div></div></div>';
+        html += '<div class="row-main"><div class="row-name">' + esc(par[0]) + '</div><div class="row-meta">' + esc(par[1]) + '</div></div></div>';
       });
       html += '<div class="hint">Utplacerad skriptversion: ' + esc(j.version || 'okänd') + '</div>';
       rader.innerHTML = html;
     })
     .catch(() => {
-      rader.innerHTML = '<div class="test-rad test-fel"><span class="test-ikon">✗</span><div><div class="row-name">Ingen kontakt med skriptet</div><div class="row-meta">Kontrollera webbappens adress och att den är distribuerad med åtkomst för alla.</div></div></div>';
+      rader.innerHTML = felRad('Ingen kontakt med skriptet', 'Kontrollera webbappens adress och att den är distribuerad med åtkomst för alla.');
     });
+}
+function felRad(rubrik, text) {
+  return '<div class="test-rad test-fel"><span class="test-ikon">✗</span><div class="row-main"><div class="row-name">' + esc(rubrik) + '</div><div class="row-meta">' + esc(text) + '</div></div></div>';
 }
 
 function renderAllt() {
   const logg = DATA.logg || [];
   const avvikelser = DATA.avvikelser || [];
+  const nu = Date.now();
 
-  // Pågående uppdrag: utresa utan matchande rapport
+  // Pågående uppdrag: en utresa utan matchande rapport
   const rapporterade = new Set(logg.filter(r => r.typ === 'Rapport').map(r => String(r.uppdrag)));
   const ute = logg.filter(r => r.typ === 'Utresa' && !rapporterade.has(String(r.uppdrag))).reverse();
-
   const oppna = avvikelser.filter(a => !a.atgardad).reverse();
+  const rapporter = logg.filter(r => r.typ === 'Rapport').reverse();
 
-  const nu = Date.now();
-  const dagar30 = logg.filter(r => { const t = parseTid(r.tid); return r.typ === 'Rapport' && t && (nu - t.getTime()) < 30 * 864e5; }).length;
-
-  document.getElementById('num-ute').textContent = ute.length;
-  document.getElementById('num-avvik').textContent = oppna.length;
-  document.getElementById('num-30').textContent = dagar30;
-  document.getElementById('tile-avvik').className = 'tile' + (oppna.length ? ' warn-tile' : ' ok-tile');
-  document.getElementById('tile-ute').className = 'tile';
+  // Sidan ska svara på det viktigaste först: vad är ute, och finns det något trasigt?
+  let saker = 0;
+  ute.forEach(r => { saker += ((r.payload || {}).taken || []).length; });
+  const heroWrap = document.getElementById('hero-wrap');
+  const sektioner = document.getElementById('oversikt-sektioner');
+  if (!ute.length && !oppna.length) {
+    const senast = rapporter[0];
+    heroWrap.innerHTML = '<div class="calm"><div class="ring">✓</div><div class="h">Allt är hemma</div>'
+      + '<div class="p">Ingen utrustning är ute i fält och det finns inget att åtgärda.'
+      + (senast ? ' Senaste uppdraget lämnades in ' + esc(kortDatum(senast.datum)) + '.' : '') + '</div></div>';
+    sektioner.style.display = 'none';
+  } else {
+    sektioner.style.display = 'block';
+    let h = '<div class="hero">';
+    h += '<div class="big">' + (ute.length
+      ? ute.length + (ute.length === 1 ? ' uppdrag ute i fält' : ' uppdrag ute i fält')
+      : 'Allt är hemma') + '</div>';
+    if (ute.length) h += '<div class="sub">' + saker + (saker === 1 ? ' sak är utlånad just nu' : ' saker är utlånade just nu') + '</div>';
+    if (oppna.length) h += '<div class="flag"><span class="pip"></span>' + oppna.length + (oppna.length === 1 ? ' avvikelse att åtgärda' : ' avvikelser att åtgärda') + '</div>';
+    h += '</div>';
+    heroWrap.innerHTML = h;
+  }
 
   // Ute i fält
-  const uteHtml = ute.map(function(r) {
+  document.getElementById('sec-ute').innerHTML = ute.map(function(r) {
     const p = r.payload || {};
-    const saker = (p.taken || []);
+    const lista = p.taken || [];
     const start = parseTid(r.tid);
-    const dagarUte = start ? Math.max(0, Math.round((nu - start.getTime()) / 864e5)) : null;
+    const dagar = start ? Math.max(0, Math.round((nu - start.getTime()) / 864e5)) : null;
     let h = '<div class="row"><div class="row-main">';
     h += '<div class="row-name">' + esc(r.kund) + '</div>';
-    h += '<div class="row-meta">' + esc(r.filmare) + ' · ' + esc(fmtDatum(r.datum)) + ' · ' + saker.length + ' saker' + (p.gels && p.gels.length ? ' · Gels: ' + esc(p.gels.join(', ')) : '') + '</div>';
-    if (saker.length) {
-      h += '<details class="trip-items"><summary>Visa utrustningen</summary><ul>';
-      saker.forEach(function(sak) { h += '<li>' + esc(sak.name) + (sak.serial ? ' · SN ' + esc(sak.serial) : '') + '</li>'; });
+    h += '<div class="row-meta">' + esc(r.filmare) + ' · ' + esc(kortDatum(r.datum)) + ' · ' + lista.length + ' saker'
+      + (p.gels && p.gels.length ? ' · Gels: ' + esc(p.gels.join(', ')) : '') + '</div>';
+    if (lista.length) {
+      h += '<details class="trip"><summary>Visa utrustningen</summary><ul>';
+      lista.forEach(function(sak) { h += '<li>' + esc(sak.name) + (sak.serial ? ' · SN ' + esc(sak.serial) : '') + '</li>'; });
       h += '</ul></details>';
     }
-    h += '</div><span class="badge b-ute">📦 Ute' + (dagarUte != null && dagarUte >= 1 ? ' · ' + dagarUte + ' dygn' : '') + '</span></div>';
+    h += '</div><span class="rt">' + (dagar ? dagar + (dagar === 1 ? ' dygn' : ' dygn') : 'i dag') + '</span></div>';
     return h;
-  }).join('');
-  document.getElementById('sec-ute').innerHTML = uteHtml || '<div class="empty">Ingen utrustning är ute just nu.</div>';
+  }).join('') || '<div class="empty">Ingen utrustning är ute just nu.</div>';
 
-  // Öppna avvikelser
-  const badgeFor = { 'Saknad': 'b-saknad', 'Skadad': 'b-skadad', 'Slitage': 'b-slitage' };
-  const ikonFor = { 'Saknad': '❓', 'Skadad': '❗', 'Slitage': '⚠️' };
-  const avvikHtml = oppna.map(function(a) {
+  // Att åtgärda
+  const pillFor = { 'Saknad': 'p-saknad', 'Skadad': 'p-bad', 'Slitage': 'p-warn' };
+  document.getElementById('sec-avvik').innerHTML = (oppna.map(function(a) {
     let h = '<div class="row"><div class="row-main">';
-    h += '<div class="row-name">' + esc(a.sak) + (a.serienummer ? ' <span style="color:var(--muted);font-weight:400;font-size:0.75rem;">SN ' + esc(a.serienummer) + '</span>' : '') + '</div>';
-    h += '<div class="row-meta">' + esc(a.grupp) + ' · ' + esc(a.kund) + ' · ' + esc(fmtDatum(a.datum)) + (a.kommentar ? '<br>”' + esc(a.kommentar) + '”' : '') + '</div>';
-    h += '</div><span class="badge ' + (badgeFor[a.typ] || 'b-skadad') + '">' + (ikonFor[a.typ] || '') + ' ' + esc(a.typ) + '</span></div>';
+    h += '<div class="row-name">' + esc(a.sak) + '</div>';
+    h += '<div class="row-meta">' + esc(a.grupp) + (a.serienummer ? ' · SN ' + esc(a.serienummer) : '')
+      + ' · ' + esc(a.kund) + ' · ' + esc(kortDatum(a.datum)) + '</div>';
+    if (a.kommentar) h += '<div class="row-note">' + esc(a.kommentar) + '</div>';
+    h += '</div><span class="pill ' + (pillFor[a.typ] || 'p-bad') + '">' + esc(a.typ) + '</span></div>';
     return h;
-  }).join('');
-  document.getElementById('sec-avvik').innerHTML = (avvikHtml || '<div class="empty">Inga öppna avvikelser — allt är helt.</div>')
-    + (oppna.length ? '<div class="hint">Löst något? Bocka i kolumnen Åtgärdad på raden i fliken Avvikelser i Google Sheet, så försvinner den härifrån.</div>' : '');
+  }).join('') || '<div class="empty">Inget att åtgärda.</div>')
+    + (oppna.length ? '<div class="hint">Löst? Bocka i kolumnen Åtgärdad i fliken Avvikelser i kalkylarket.</div>' : '');
 
-  // Utrustning: senaste kända status per sak, byggd ur händelserna i kronologisk ordning
+  // Utrustning: senaste kända status per sak, byggd ur händelserna i ordning
   const perSak = new Map();
   logg.forEach(function(r) {
     const p = r.payload || {};
@@ -311,10 +357,10 @@ function renderAllt() {
     (p.taken || []).forEach(function(sak) {
       const nyckel = sak.name + '|' + (sak.serial || '') + '|' + (sak.group || '');
       let post = perSak.get(nyckel);
-      if (!post) { post = { name: sak.name, group: sak.group || '', serial: sak.serial || '', antal: 0, senast: '', status: 'OK', kommentar: '' }; perSak.set(nyckel, post); }
+      if (!post) { post = { name: sak.name, group: sak.group || '', serial: sak.serial || '', antal: 0, senast: '', status: 'Hel', kommentar: '' }; perSak.set(nyckel, post); }
       if (r.typ === 'Utresa') post.antal++;
       if (datum > post.senast) post.senast = datum;
-      if (r.typ === 'Rapport') { post.status = 'OK'; post.kommentar = ''; }
+      if (r.typ === 'Rapport') { post.status = 'Hel'; post.kommentar = ''; }
     });
     if (r.typ === 'Rapport') {
       (p.damaged || []).forEach(function(sak) {
@@ -323,47 +369,45 @@ function renderAllt() {
       });
       (p.missing || []).forEach(function(sak) {
         const post = perSak.get(sak.name + '|' + (sak.serial || '') + '|' + (sak.group || ''));
-        if (post) { post.status = 'Saknad'; }
+        if (post) post.status = 'Saknad';
       });
     }
   });
   const uteNu = new Set();
   ute.forEach(function(r) { ((r.payload || {}).taken || []).forEach(function(sak) { uteNu.add(sak.name + '|' + (sak.serial || '') + '|' + (sak.group || '')); }); });
-  utrustningsLista = Array.from(perSak.entries()).map(function([nyckel, post]) { post.uteNu = uteNu.has(nyckel); return post; });
-  const ordning = { 'Saknad': 0, 'Skadad': 1, 'Slitage': 2, 'OK': 3 };
+  utrustningsLista = Array.from(perSak.entries()).map(function(par) { par[1].uteNu = uteNu.has(par[0]); return par[1]; });
+  const ordning = { 'Saknad': 0, 'Skadad': 1, 'Slitage': 2, 'Hel': 3 };
   utrustningsLista.sort(function(a, b) { return (ordning[a.status] - ordning[b.status]) || a.name.localeCompare(b.name, 'sv'); });
   renderUtrustning();
 
-  // Senaste uppdrag
-  const senaste = logg.filter(r => r.typ === 'Rapport').reverse().slice(0, 10);
-  const senasteHtml = senaste.map(function(r) {
-    const badge = r.status === 'KOMPLETT' ? '<span class="badge b-komplett">✔ Komplett</span>' : '<span class="badge b-avvik">❗ Avvikelser</span>';
+  // Historik
+  document.getElementById('sec-senaste').innerHTML = rapporter.slice(0, 40).map(function(r) {
+    const komplett = r.status === 'KOMPLETT';
     let h = '<div class="row"><div class="row-main">';
     h += '<div class="row-name">' + esc(r.kund) + '</div>';
-    h += '<div class="row-meta">' + esc(r.filmare) + ' · ' + esc(fmtDatum(r.datum)) + ' · ' + esc(r.sammanfattning || '') + '</div>';
-    h += '</div>' + badge + '</div>';
+    h += '<div class="row-meta">' + esc(r.filmare) + ' · ' + esc(kortDatum(r.datum)) + ' · ' + esc(r.sammanfattning || '') + '</div>';
+    h += '</div><span class="pill ' + (komplett ? 'p-ok' : 'p-bad') + '">' + (komplett ? 'Komplett' : 'Avvikelser') + '</span></div>';
     return h;
-  }).join('');
-  document.getElementById('sec-senaste').innerHTML = senasteHtml || '<div class="empty">Inga rapporter ännu.</div>';
+  }).join('') || '<div class="empty">Inga rapporter ännu.</div>';
 }
 
 function renderUtrustning() {
   const filter = (document.getElementById('sok').value || '').toLowerCase();
-  const träffar = utrustningsLista.filter(function(post) {
+  const traffar = utrustningsLista.filter(function(post) {
     return !filter || (post.name + ' ' + post.group + ' ' + post.serial).toLowerCase().includes(filter);
   });
-  const badgeFor = { 'OK': 'b-ok', 'Slitage': 'b-slitage', 'Skadad': 'b-skadad', 'Saknad': 'b-saknad' };
-  const ikonFor = { 'OK': '✔', 'Slitage': '⚠️', 'Skadad': '❗', 'Saknad': '❓' };
-  const html = träffar.map(function(post) {
+  const pillFor = { 'Hel': 'p-ok', 'Slitage': 'p-warn', 'Skadad': 'p-bad', 'Saknad': 'p-saknad' };
+  document.getElementById('sec-utrustning').innerHTML = traffar.map(function(post) {
     let h = '<div class="row"><div class="row-main">';
-    h += '<div class="row-name">' + esc(post.name) + (post.serial ? ' <span style="color:var(--muted);font-weight:400;font-size:0.75rem;">SN ' + esc(post.serial) + '</span>' : '') + '</div>';
-    h += '<div class="row-meta">' + esc(post.group) + ' · ' + post.antal + ' uppdrag · senast ' + esc(post.senast || '–') + (post.kommentar ? '<br>”' + esc(post.kommentar) + '”' : '') + '</div>';
+    h += '<div class="row-name">' + esc(post.name) + '</div>';
+    h += '<div class="row-meta">' + esc(post.group) + (post.serial ? ' · SN ' + esc(post.serial) : '')
+      + ' · ' + post.antal + ' uppdrag · senast ' + esc(kortDatum(post.senast) || '–') + '</div>';
+    if (post.kommentar) h += '<div class="row-note">' + esc(post.kommentar) + '</div>';
     h += '</div>';
-    if (post.uteNu) h += '<span class="badge b-ute">📦 Ute</span>';
-    h += '<span class="badge ' + badgeFor[post.status] + '">' + ikonFor[post.status] + ' ' + esc(post.status) + '</span></div>';
+    if (post.uteNu) h += '<span class="pill p-ute">Ute</span>';
+    h += '<span class="pill ' + pillFor[post.status] + '">' + esc(post.status) + '</span></div>';
     return h;
-  }).join('');
-  document.getElementById('sec-utrustning').innerHTML = html || '<div class="empty">' + (utrustningsLista.length ? 'Inget matchar sökningen.' : 'Ingen utrustning har loggats ännu.') + '</div>';
+  }).join('') || '<div class="empty">' + (utrustningsLista.length ? 'Inget matchar sökningen.' : 'Ingen utrustning har loggats ännu.') + '</div>';
 }
 
 (function init() {
