@@ -1,8 +1,8 @@
 // Service worker för XFT Utrustningschecklista.
 // Gör att appen startar även utan uppkoppling: sidan hämtas från nätet när det går
 // (så att uppdateringar alltid slår igenom) och från cachen när nätet saknas.
-const CACHE = 'xft-checklista-v3.4';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const CACHE = 'xft-checklista-v3.5';
+const ASSETS = ['./', './index.html', './admin.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   // Varje fil cachas för sig: en fil som tillfälligt inte går att hämta får inte
@@ -32,11 +32,13 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(req, { cache: 'no-cache' })
         .then(res => {
+          // Varje sida sparas under sin egen adress. Tidigare hamnade allt under
+          // index.html, så adminvyn skrev över checklistans cachade sida.
           const copy = res.clone();
-          caches.open(CACHE).then(c => c.put('./index.html', copy));
+          caches.open(CACHE).then(c => c.put(req, copy));
           return res;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(() => caches.match(req).then(hit => hit || caches.match('./index.html')))
     );
     return;
   }
