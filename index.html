@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0e0e0f">
+<meta name="theme-color" content="#0b0b0c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="XFT Checklista">
@@ -16,244 +16,300 @@
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0e0e0f; --surface: #18181b; --surface2: #222226;
-    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.15);
-    --text: #f4f4f5; --muted: #a1a1aa;
+    --bg: #0b0b0c; --surface: #141416; --raise: #1c1c1f;
+    --line: rgba(255,255,255,0.07); --line2: rgba(255,255,255,0.13);
+    --text: #f5f5f6; --muted: #8e8e96; --faint: #63636b;
     --accent: #35e375; --accent-dim: rgba(53,227,117,0.12);
-    --danger: #ff4d4d; --danger-dim: rgba(255,77,77,0.1);
-    --success: #4ade80; --success-dim: rgba(74,222,128,0.1);
-    --warning: #fbbf24; --warning-dim: rgba(251,191,36,0.1);
-    --radius: 12px; --radius-lg: 18px; --tab-h: 72px;
+    --danger: #ff5a5a; --danger-dim: rgba(255,90,90,0.12);
+    --warn: #f5b83d; --warn-dim: rgba(245,184,61,0.12);
+    --r: 12px; --r-lg: 16px; --nav-h: 62px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; min-height: 100vh; }
-  header { background: var(--bg); padding: 1.5rem 1rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border); }
-  .neon-logo-wrap { position: relative; text-align: center; padding: 0.5rem 0; }
-  .neon-svg-wrap { display: inline-block; width: clamp(200px, 55vw, 340px); opacity: 0; animation: neonFadeIn 1s ease forwards; filter: drop-shadow(0 0 2px #ffffff) drop-shadow(0 0 5px #ffffff) drop-shadow(0 0 17px rgba(255,255,255,0.19)); overflow: visible; padding: 16px; box-sizing: border-box; }
-  .neon-svg-wrap svg { overflow: visible; display: block; }
-  .neon-divider { width: 0%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), #35e475, rgba(255,255,255,0.4), transparent); margin: 6px auto 8px; box-shadow: 0 0 6px rgba(255,255,255,0.3); animation: expandLine 0.7s ease 1.1s forwards; }
-  .neon-subtitle { font-family: 'Exo 2', sans-serif; font-size: clamp(11px, 3vw, 16px); font-weight: 300; letter-spacing: 0.18em; opacity: 0; animation: neonFadeIn 0.7s ease 1.4s forwards; display: flex; align-items: center; justify-content: center; }
-  .neon-subtitle .part-expendo { color: #ffffff; filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px rgba(255,255,255,0.8)) drop-shadow(0 0 30px rgba(255,255,255,0.4)); animation: whitePulse 3s ease-in-out infinite; }
-  .neon-subtitle .sep { margin: 0 10px; color: rgba(255,255,255,0.25); }
-  .neon-subtitle .part-film { color: #35e475; filter: drop-shadow(0 0 5px #35e475) drop-shadow(0 0 12px #35e47580); animation: greenPulse 3s ease-in-out infinite; }
-  @keyframes whitePulse { 0%,100% { filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 12px rgba(255,255,255,0.7)) drop-shadow(0 0 25px rgba(255,255,255,0.3)); } 50% { filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 20px rgba(255,255,255,0.9)) drop-shadow(0 0 45px rgba(255,255,255,0.5)); } }
-  @keyframes greenPulse { 0%,100% { filter: drop-shadow(0 0 4px #35e475) drop-shadow(0 0 10px #35e47560); } 50% { filter: drop-shadow(0 0 7px #35e475) drop-shadow(0 0 18px #35e47590); } }
-  @keyframes neonFadeIn { to{opacity:1} }
-  @keyframes expandLine { to{width:100%} }
-  .header-sub { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-  .header-title { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
-  .header-version { font-size: 0.6rem; color: var(--muted); opacity: 0.7; letter-spacing: 0.08em; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--tab-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
-  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: none; background: transparent; color: var(--muted); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
-  .nav-btn .icon { font-size: 1.4rem; line-height: 1; }
-  .nav-btn.active { color: var(--accent); }
-  .nav-status { font-size: 0.55rem; color: var(--accent); height: 8px; }
-  .main { padding: 1.25rem 1rem calc(var(--tab-h) + var(--actions-h, 0px) + 2rem); max-width: 600px; margin: 0 auto; }
-  /* Huvudknappen ligger fast ovanför flikraden så att den aldrig hamnar utom synhåll
-     när utrustningslistan är lång. --actions-h mäts i syncActionBar(). */
-  .phase-actions { position: fixed; left: 0; right: 0; bottom: calc(var(--tab-h) + env(safe-area-inset-bottom)); z-index: 90; max-width: 600px; margin: 0 auto; padding: 0.7rem 1rem 0.85rem; background: var(--bg); border-top: 1px solid var(--border); box-shadow: 0 -10px 24px rgba(0,0,0,0.6); }
-  .phase-actions .action-btn { margin-top: 0; }
-  .actions-status { font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); font-weight: 600; text-align: center; margin-bottom: 0.55rem; }
-  .actions-status .done { color: var(--accent); }
-  .actions-status .todo { color: var(--warning); }
-  .top-actions { margin-bottom: 1rem; }
-  .top-actions .action-btn-sec { margin-top: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  button, input, textarea { font-family: inherit; }
+
+  /* ── Startskärmens varumärkesblock: enda platsen där neonloggan visas ── */
+  .brand { padding: 2rem 1.25rem 1.5rem; display: flex; flex-direction: column; align-items: center; }
+  .brand-mark { width: clamp(180px, 52vw, 260px); opacity: 0; animation: fadeIn 0.9s ease forwards; filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px rgba(255,255,255,0.55)) drop-shadow(0 0 18px rgba(255,255,255,0.18)); }
+  .brand-mark svg { display: block; width: 100%; fill: #fff; }
+  .brand-rule { width: 0; height: 1px; margin: 14px 0 10px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), var(--accent), rgba(255,255,255,.35), transparent); animation: rule .7s ease .9s forwards; }
+  .brand-sub { font-family: 'Exo 2', -apple-system, sans-serif; font-size: 12px; font-weight: 300; letter-spacing: .2em; opacity: 0; animation: fadeIn .7s ease 1.2s forwards; }
+  .brand-sub .w { color: #fff; }
+  .brand-sub .g { color: var(--accent); }
+  .brand-sub .s { color: rgba(255,255,255,.22); margin: 0 9px; }
+  .brand-ver { font-size: 11px; color: var(--faint); margin-top: 12px; opacity: 0; animation: fadeIn .7s ease 1.4s forwards; }
+  @keyframes fadeIn { to { opacity: 1 } }
+  @keyframes rule { to { width: 190px } }
+
+  /* ── Slimmat sidhuvud när ett uppdrag pågår ── */
+  .topbar { display: flex; align-items: center; gap: 12px; padding: 14px 20px 0; }
+  .topbar .mini { width: 42px; flex-shrink: 0; opacity: .9; }
+  .topbar .mini svg { display: block; width: 100%; fill: #fff; }
+  .topbar .spacer { flex: 1; }
+  .link-btn { background: none; border: none; color: var(--accent); font-size: 14px; font-weight: 600; cursor: pointer; padding: 4px 0; }
+  .link-btn.quiet { color: var(--muted); }
+
+  .main { max-width: 600px; margin: 0 auto; padding-bottom: calc(var(--nav-h) + var(--actions-h, 0px) + 1.5rem); }
   .phase-panel { display: none; }
   .phase-panel.active { display: block; }
-  .session-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.25rem; }
-  .field-group { margin-bottom: 1rem; }
-  .field-group:last-child { margin-bottom: 0; }
-  .field-group label { display: block; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
-  .field-group input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.875rem 1rem; color: var(--text); font-size: 1rem; outline: none; -webkit-appearance: none; }
-  .field-group input:focus { border-color: var(--accent); }
-  .locked-banner { display: flex; align-items: center; gap: 0.75rem; background: var(--accent-dim); border: 1px solid rgba(53,227,117,0.2); border-radius: var(--radius); padding: 0.875rem 1rem; margin-bottom: 1.25rem; font-size: 0.82rem; color: var(--accent); }
-  .locked-info { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .banner-btn { flex-shrink: 0; background: transparent; border: 1px solid rgba(53,227,117,0.4); color: var(--accent); border-radius: 8px; padding: 0.4rem 0.85rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; }
-  .banner-btn:active { background: var(--accent-dim); }
-  .group-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 0.75rem; }
-  .group-header { display: flex; align-items: center; padding: 1rem 1.25rem; gap: 0.75rem; cursor: pointer; user-select: none; min-height: 64px; }
-  .group-header:active { background: var(--surface2); }
-  .group-icon { font-size: 1.2rem; flex-shrink: 0; }
-  .group-name { font-size: 1rem; font-weight: 700; color: var(--text); flex: 1; }
-  .group-count { font-size: 0.72rem; color: var(--muted); flex-shrink: 0; }
-  .group-chevron { font-size: 0.7rem; color: var(--muted); flex-shrink: 0; margin-left: 0.25rem; }
-  .group-check { width: 28px; height: 28px; flex-shrink: 0; border: 2px solid var(--border2); border-radius: 8px; background: transparent; display: flex; align-items: center; justify-content: center; transition: all 0.15s; position: relative; }
-  .group-check.checked { background: var(--accent); border-color: var(--accent); }
-  .group-check.checked::after { content: ""; position: absolute; width: 14px; height: 8px; border-left: 2.5px solid #111; border-bottom: 2.5px solid #111; transform: rotate(-45deg) translateY(-1px); }
-  .group-check.partial { background: var(--accent); border-color: var(--accent); }
-  .item-row { display: flex; align-items: center; padding: 0.875rem 1.25rem; border-top: 1px solid var(--border); gap: 1rem; min-height: 54px; cursor: pointer; user-select: none; background: rgba(0,0,0,0.15); }
-  .item-row:active { background: var(--surface2); }
-  .item-row.not-taken { opacity: 0.3; }
-  .item-check { width: 24px; height: 24px; flex-shrink: 0; border: 2px solid var(--border2); border-radius: 6px; background: transparent; display: flex; align-items: center; justify-content: center; transition: all 0.15s; position: relative; }
-  .item-check.checked { background: var(--accent); border-color: var(--accent); }
-  .item-check.checked::after { content: ""; position: absolute; width: 12px; height: 7px; border-left: 2px solid #111; border-bottom: 2px solid #111; transform: rotate(-45deg) translateY(-1px); }
-  .item-name { font-size: 0.9rem; color: var(--text); flex: 1; line-height: 1.3; }
-  .item-serial { font-size: 0.65rem; color: var(--muted); flex-shrink: 0; }
-  .phase-badge { display: inline-flex; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
-  .badge-taken { background: var(--success-dim); color: var(--success); }
-  .badge-missing { background: var(--danger-dim); color: var(--danger); }
-  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 1.25rem; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
-  .action-btn { width: 100%; padding: 1.1rem; border: none; border-radius: var(--radius-lg); background: var(--accent); color: #111; font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; margin-top: 1rem; }
-  .action-btn:active { opacity: 0.85; }
-  .action-btn-sec { width: 100%; padding: 0.875rem; border: 1px solid var(--border2); border-radius: var(--radius-lg); background: transparent; color: var(--muted); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; margin-top: 0.75rem; }
-  .action-btn-sec:active { background: var(--surface2); color: var(--text); }
-  .reset-btn { display: block; width: 100%; margin-top: 1.5rem; background: transparent; border: none; color: var(--danger); opacity: 0.6; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; padding: 0.75rem; }
-  .reset-btn:active { opacity: 1; }
-  .wear-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; }
-  .wear-card-header { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warning); }
-  .wear-item { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
-  .wear-item:last-child { border-bottom: none; }
-  .wear-item.needs-status { background: rgba(255,77,77,0.06); border-left: 3px solid var(--danger); }
-  .wear-item-name { font-size: 0.9rem; margin-bottom: 0.75rem; line-height: 1.3; }
-  .wear-opts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; }
-  .wear-opt { padding: 0.7rem 0.25rem; border-radius: var(--radius); font-size: 0.78rem; font-weight: 600; border: 1.5px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; text-align: center; }
-  .wear-opt:active { opacity: 0.7; }
-  .wear-opt.ok.sel { background: var(--success-dim); border-color: var(--success); color: var(--success); }
-  .wear-opt.slitage.sel { background: var(--warning-dim); border-color: var(--warning); color: var(--warning); }
-  .wear-opt.skadad.sel { background: var(--danger-dim); border-color: var(--danger); color: var(--danger); }
-  .wear-comment { width: 100%; margin-top: 0.75rem; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.75rem 1rem; color: var(--text); font-size: 0.9rem; resize: none; outline: none; display: none; -webkit-appearance: none; }
-  .wear-comment:focus { border-color: var(--warning); }
-  .wear-comment.show { display: block; }
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; align-items: flex-end; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal-sheet { background: var(--surface); border-top: 1px solid var(--border2); border-radius: 20px 20px 0 0; padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom)); width: 100%; max-width: 600px; }
-  .modal-handle { width: 40px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 1.25rem; }
-  .modal-title { font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem; letter-spacing: 0.06em; text-transform: uppercase; }
-  .modal-btn { width: 100%; padding: 1rem; border: none; border-radius: var(--radius-lg); font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
-  .modal-btn-danger { background: var(--danger-dim); color: var(--danger); border: 1px solid var(--danger); }
-  .modal-btn-accent { background: var(--accent); color: #111; }
-  .modal-btn-cancel { background: var(--surface2); color: var(--muted); border: none; }
-  .modal-list { list-style: none; margin: 0.75rem 0 0.25rem; padding: 0; max-height: 35vh; overflow-y: auto; }
-  .modal-list li { padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text); }
-  .modal-list li:last-child { border-bottom: none; }
-  .send-overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 400; overflow-y: auto; }
+
+  .page-head { padding: 12px 20px 0; }
+  .page-head h1 { font-size: 28px; font-weight: 700; letter-spacing: -.022em; line-height: 1.12; }
+  .page-sub { color: var(--muted); font-size: 14px; margin-top: 5px; line-height: 1.45; }
+
+  /* ── Klibbig mätarrad: visar hur långt man kommit även när titeln scrollat bort ── */
+  .meterbar { position: sticky; top: 0; z-index: 5; background: var(--bg); padding-top: 16px; }
+  .meter { height: 2px; margin: 0 20px; background: rgba(255,255,255,.09); border-radius: 2px; overflow: hidden; }
+  .meter i { display: block; height: 100%; background: var(--accent); border-radius: 2px; transition: width .25s ease; }
+  .meter-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 20px 10px; font-size: 12.5px; color: var(--muted); }
+  .meter-row b { color: var(--text); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .meter-row .done { color: var(--accent); }
+
+  /* ── Formulär ── */
+  .form { padding: 4px 20px 0; }
+  .field { margin-top: 18px; }
+  .field label { display: block; font-size: 12.5px; color: var(--muted); font-weight: 550; margin-bottom: 7px; }
+  .field input { width: 100%; background: var(--surface); border: 1px solid var(--line2); border-radius: var(--r); padding: 13px 14px; color: var(--text); font-size: 16px; outline: none; -webkit-appearance: none; }
+  .field input:focus { border-color: var(--accent); }
+
+  /* ── Sektioner och rader, inga kort ── */
+  .sec { display: flex; align-items: center; gap: 13px; padding: 0 20px; height: 46px; margin-top: 14px; cursor: pointer; user-select: none; }
+  .sec .nm { flex: 1; font-size: 14px; font-weight: 650; letter-spacing: -.005em; }
+  .sec .ct { color: var(--faint); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  .sec .cv { color: var(--faint); font-size: 10px; }
+  .sec.plain { cursor: default; }
+  .sec.alert .nm, .sec.alert .ct { color: var(--danger); }
+
+  .row { display: flex; align-items: center; gap: 13px; padding: 0 20px; min-height: 50px; border-top: 1px solid var(--line); cursor: pointer; user-select: none; }
+  .row:active { background: var(--surface); }
+  .row .nm { flex: 1; font-size: 15.5px; letter-spacing: -.01em; line-height: 1.3; padding: 8px 0; }
+  .row.dim .nm { color: var(--faint); }
+  .row.static { cursor: default; }
+  .row.static:active { background: none; }
+  .cv { color: var(--faint); font-size: 13px; flex-shrink: 0; }
+
+  .box { width: 21px; height: 21px; border-radius: 6px; border: 1.5px solid var(--line2); flex-shrink: 0; position: relative; transition: background .12s, border-color .12s; }
+  .box.on { background: var(--accent); border-color: var(--accent); }
+  .box.on::after { content: ""; position: absolute; left: 6px; top: 3px; width: 6px; height: 10px; border: solid #08120c; border-width: 0 2px 2px 0; transform: rotate(42deg); }
+  .box.half { background: var(--accent); border-color: var(--accent); }
+  .box.half::after { content: ""; position: absolute; left: 4px; top: 8.5px; width: 11px; height: 2px; background: #08120c; border-radius: 1px; }
+
+  .st { font-size: 13px; flex-shrink: 0; font-weight: 550; }
+  .st.ok { color: var(--accent); }
+  .st.slitage { color: var(--warn); }
+  .st.skadad { color: var(--danger); }
+  .st.saknas { color: var(--danger); }
+  .st.none { color: var(--faint); font-weight: 500; }
+  .cmt { padding: 0 20px 11px 20px; margin-top: -6px; font-size: 12.5px; color: var(--faint); line-height: 1.45; }
+  .hint { padding: 10px 20px 0; font-size: 12.5px; color: var(--faint); line-height: 1.5; }
+
+  /* ── Gels ── */
+  .gels { padding: 12px 20px 4px; border-top: 1px solid var(--line); }
+  .gels-l { font-size: 12.5px; color: var(--muted); margin-bottom: 9px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 20px; border: 1px solid var(--line2); color: var(--muted); font-size: 13px; font-weight: 550; cursor: pointer; user-select: none; }
+  .chip.on { border-color: rgba(53,227,117,.5); background: var(--accent-dim); color: var(--text); }
+  .chip .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Segmenterat val (BTS) ── */
+  .seg { display: flex; gap: 8px; padding: 0 20px; margin-top: 12px; }
+  .seg button { flex: 1; height: 44px; border-radius: var(--r); border: 1px solid var(--line2); background: transparent; color: var(--muted); font-size: 14.5px; font-weight: 600; cursor: pointer; }
+  .seg button.on-ok { border-color: rgba(53,227,117,.5); background: var(--accent-dim); color: var(--accent); }
+  .seg button.on-no { border-color: rgba(255,90,90,.5); background: var(--danger-dim); color: var(--danger); }
+  .ta { width: calc(100% - 40px); margin: 12px 20px 0; background: var(--surface); border: 1px solid var(--line2); border-radius: var(--r); padding: 12px 14px; color: var(--text); font-size: 15px; resize: none; outline: none; -webkit-appearance: none; font-family: inherit; }
+  .ta:focus { border-color: var(--accent); }
+
+  .filename { margin: 10px 20px 0; background: var(--surface); border-radius: var(--r); padding: 12px 14px; font-size: 13px; color: var(--muted); line-height: 1.5; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .filename b { color: var(--text); font-weight: 600; }
+  .mini-btn { border: 1px solid var(--line2); background: transparent; color: var(--muted); border-radius: 8px; padding: 5px 11px; font-size: 12.5px; cursor: pointer; }
+
+  .reset-btn { display: block; width: calc(100% - 40px); margin: 28px 20px 8px; background: none; border: none; color: var(--faint); font-size: 13px; cursor: pointer; padding: 10px; }
+  .reset-btn:active { color: var(--danger); }
+
+  /* ── Fast bottenyta: en primär handling ── */
+  .phase-actions { position: fixed; left: 0; right: 0; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); z-index: 40; max-width: 600px; margin: 0 auto; padding: 20px 20px 12px; background: linear-gradient(to bottom, rgba(11,11,12,0) 0%, var(--bg) 26%); }
+  .cta { width: 100%; height: 52px; border-radius: 14px; border: none; background: var(--accent); color: #08120c; font-size: 16px; font-weight: 650; letter-spacing: -.01em; cursor: pointer; }
+  .cta:active { opacity: .85; }
+
+  /* ── Stegindikator: flödet är linjärt, så navigeringen visar var man är ── */
+  .steps { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; height: calc(var(--nav-h) + env(safe-area-inset-bottom)); padding: 0 12px env(safe-area-inset-bottom); background: var(--bg); border-top: 1px solid var(--line); display: flex; gap: 6px; }
+  .step { flex: 1; background: none; border: none; padding: 12px 4px 0; cursor: pointer; display: flex; flex-direction: column; gap: 8px; }
+  .step .bar { height: 2px; border-radius: 2px; background: rgba(255,255,255,.09); }
+  .step .lbl { font-size: 11.5px; font-weight: 600; color: var(--faint); letter-spacing: .005em; }
+  .step.done .bar { background: rgba(53,227,117,.45); }
+  .step.done .lbl { color: var(--muted); }
+  .step.active .bar { background: var(--accent); }
+  .step.active .lbl { color: var(--text); }
+
+  /* ── Ark som glider upp underifrån ── */
+  .sheet-wrap { display: none; position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,.6); align-items: flex-end; justify-content: center; }
+  .sheet-wrap.open { display: flex; }
+  .sheet { background: var(--surface); border-top: 1px solid var(--line2); border-radius: 20px 20px 0 0; padding: 10px 20px calc(20px + env(safe-area-inset-bottom)); width: 100%; max-width: 600px; max-height: 88vh; overflow-y: auto; }
+  .grab { width: 36px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.18); margin: 0 auto 18px; }
+  .sheet h3 { font-size: 19px; font-weight: 650; letter-spacing: -.015em; line-height: 1.25; }
+  .sheet .who { color: var(--muted); font-size: 13.5px; margin-top: 4px; }
+  .sheet .body { color: var(--muted); font-size: 14.5px; line-height: 1.55; margin-top: 10px; }
+  .sheet .ta { width: 100%; margin: 14px 0 0; }
+  .opt { display: flex; align-items: center; gap: 13px; min-height: 54px; border-top: 1px solid var(--line); font-size: 15.5px; cursor: pointer; user-select: none; }
+  .opt .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .opt .tick { margin-left: auto; color: var(--accent); font-size: 15px; opacity: 0; }
+  .opt.sel .tick { opacity: 1; }
+  .sheet-list { list-style: none; margin: 12px 0 4px; max-height: 34vh; overflow-y: auto; }
+  .sheet-list li { padding: 9px 0; border-top: 1px solid var(--line); font-size: 14.5px; }
+  .sheet .cta { margin-top: 18px; }
+  .sheet .cta.danger { background: var(--danger); color: #1a0505; }
+  .btn-quiet { width: 100%; height: 48px; margin-top: 8px; border-radius: 14px; border: none; background: transparent; color: var(--muted); font-size: 15px; font-weight: 550; cursor: pointer; }
+
+  /* ── Heltäckande lägen ── */
+  .send-overlay { display: none; position: fixed; inset: 0; z-index: 400; background: var(--bg); overflow-y: auto; }
   .send-overlay.open { display: block; }
-  .toast { position: fixed; bottom: calc(var(--tab-h) + var(--actions-h, 0px) + 1rem); left: 50%; transform: translateX(-50%) translateY(120px); background: #1c1c20; border: 1px solid var(--border2); color: var(--text); padding: 0.875rem 1.5rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; transition: transform 0.3s, visibility 0.3s; z-index: 999; box-shadow: 0 4px 24px rgba(0,0,0,0.6); max-width: 88vw; text-align: center; line-height: 1.4; pointer-events: none; visibility: hidden; }
+  .screen { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; padding: 4rem 1.5rem 3rem; max-width: 460px; margin: 0 auto; }
+  .screen .ring { width: 66px; height: 66px; border-radius: 50%; border: 1.5px solid rgba(53,227,117,.4); background: var(--accent-dim); display: flex; align-items: center; justify-content: center; font-size: 26px; color: var(--accent); }
+  .screen .ring.bad { border-color: rgba(255,90,90,.45); background: var(--danger-dim); color: var(--danger); }
+  .screen .ring.wait { border-color: var(--line2); background: none; color: var(--muted); }
+  .screen h2 { font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+  .screen h2.bad { color: var(--danger); }
+  .screen p { color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+  .screen .cta, .screen .btn-quiet { max-width: 300px; }
+  .screen .cta { margin-top: 10px; }
+  .detail { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 13px 15px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; line-height: 1.55; color: var(--text); text-align: left; overflow-wrap: anywhere; }
+  .detail span { display: block; font-family: inherit; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); font-weight: 600; margin-bottom: 7px; font-family: -apple-system, sans-serif; }
+
+  .toast { position: fixed; bottom: calc(var(--nav-h) + var(--actions-h, 0px) + 16px); left: 50%; transform: translateX(-50%) translateY(140px); background: var(--raise); border: 1px solid var(--line2); color: var(--text); padding: 13px 20px; border-radius: var(--r); font-size: 14.5px; font-weight: 550; line-height: 1.4; transition: transform .28s ease, visibility .28s; z-index: 999; box-shadow: 0 8px 28px rgba(0,0,0,.55); max-width: 88vw; text-align: center; pointer-events: none; visibility: hidden; }
   .toast.show { transform: translateX(-50%) translateY(0); visibility: visible; }
-  .toast.toast-error { border-color: var(--danger); color: var(--danger); background: #1a0e0e; }
-  .success-screen { display: flex; flex-direction: column; align-items: center; padding: 3rem 1rem; text-align: center; gap: 1.25rem; max-width: 600px; margin: 0 auto; }
-  .success-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
-  .success-title { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
-  .success-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
-  .success-screen .action-btn, .success-screen .action-btn-sec { max-width: 320px; }
-  .error-detail { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.85rem 1rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; line-height: 1.55; color: var(--text); text-align: left; overflow-wrap: anywhere; }
-  .error-detail-label { display: block; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 0.5rem; }
-  .gels-row { padding: 0.875rem 1.25rem; border-top: 1px solid var(--border); }
-  .gels-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 0.6rem; }
-  .gels-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .gel-chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.75rem; border-radius: 20px; border: 1.5px solid var(--border2); background: transparent; color: var(--muted); font-size: 0.78rem; font-weight: 600; cursor: pointer; user-select: none; transition: all 0.15s; }
-  .gel-chip:active { opacity: 0.7; }
-  .gel-chip.sel { border-color: var(--accent); background: var(--accent-dim); color: var(--text); }
-  .gel-chip.locked { pointer-events: none; }
-  .gel-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .toast.err { border-color: rgba(255,90,90,.5); color: var(--danger); }
+
+  .note { padding: 1.25rem 20px; color: var(--muted); font-size: 14.5px; line-height: 1.55; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="neon-logo-wrap">
-    <div class="neon-svg-wrap">
-      <svg viewBox="0 0 704 215" xmlns="http://www.w3.org/2000/svg">
-        <g fill="#ffffff" stroke="none">
-          <path d="M 0.00 2.95 C 0.00 3.84 21.56 26.59 71.95 78.86 C 83.80 91.16 93.79 101.73 94.15 102.36 C 94.53 103.02 85.68 113.01 73.22 126.00 C 61.35 138.38 42.13 158.40 30.52 170.50 C 5.51 196.55 0.00 202.49 0.00 203.35 C 0.00 203.71 16.39 204.00 36.42 204.00 L 72.83 204.00 120.17 154.86 C 146.20 127.83 167.87 105.09 168.33 104.32 C 169.38 102.52 170.73 103.99 117.11 48.25 L 72.63 2.00 36.31 2.00 C 14.08 2.00 0.00 2.37 0.00 2.95 M 171.11 24.00 L 149.83 46.01 168.60 65.53 C 183.48 81.02 187.61 84.79 188.55 83.78 C 189.20 83.08 206.67 64.81 227.37 43.19 C 248.07 21.58 265.00 3.46 265.00 2.94 C 265.00 2.37 250.81 2.00 228.69 2.00 L 192.39 2.00 171.11 24.00 M 295.25 107.25 L 295.50 212.50 322.25 212.77 L 349.00 213.03 349.00 134.02 L 349.00 55.00 415.00 55.00 L 481.00 55.00 481.00 28.50 L 481.00 2.00 388.00 2.00 L 294.99 2.00 295.25 107.25 M 500.00 28.49 L 500.00 54.98 537.25 55.24 L 574.50 55.50 574.76 134.25 L 575.01 213.00 602.00 213.00 L 628.99 213.00 629.24 134.25 L 629.50 55.50 666.75 55.24 L 704.00 54.98 704.00 28.49 L 704.00 2.00 602.00 2.00 L 500.00 2.00 500.00 28.49 M 374.00 110.00 L 374.00 132.00 423.00 132.00 L 472.00 132.00 472.00 110.00 L 472.00 88.00 423.00 88.00 L 374.00 88.00 374.00 110.00 M 168.16 141.07 L 149.90 160.15 171.07 182.07 L 192.24 204.00 228.62 204.00 C 248.63 204.00 265.00 203.65 265.00 203.23 C 265.00 202.22 188.12 122.00 187.16 122.00 C 186.75 122.00 178.21 130.58 168.16 141.07"/>
-        </g>
-      </svg>
-    </div>
-    <div class="neon-divider"></div>
-    <div class="neon-subtitle"><span class="part-expendo">Expendo</span><span class="sep">|</span><span class="part-film">Filmteamet</span></div>
-  </div>
-  <div class="header-sub">
-    <span class="header-title">Utrustningschecklista — Filmteamet</span>
-    <span class="header-version">v4.0</span>
-  </div>
-</header>
-
-<div class="modal-overlay" id="confirm-modal" onclick="if(event.target===this)closeConfirm()">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="confirm-title"></div>
-    <div id="confirm-body" style="color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:0.5rem;"></div>
-    <button class="modal-btn modal-btn-danger" id="confirm-btn" onclick="runConfirm()"></button>
-    <button class="modal-btn modal-btn-cancel" onclick="closeConfirm()">Avbryt</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="bts-modal" style="align-items:center;padding:1.5rem;">
-  <div class="modal-sheet" style="border-radius:var(--radius-lg);">
-    <div class="modal-handle"></div>
-    <div class="modal-title" style="color:var(--warning)">Glöm inte BTS-content!</div>
-    <p style="color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:1.25rem;">Filma bakom kulisserna under inspelningen. BTS-content är avgörande för bolagets marknadsföring.</p>
-    <button class="modal-btn" style="background:var(--accent);color:#111;" onclick="document.getElementById('bts-modal').classList.remove('open')">Förstått, jag filmar BTS</button>
-  </div>
-</div>
-
-<div class="send-overlay" id="send-overlay"></div>
-
 <div class="main">
+
+  <header id="brand" class="brand">
+    <div class="brand-mark"><svg viewBox="0 0 704 215" xmlns="http://www.w3.org/2000/svg"><path d="M 0.00 2.95 C 0.00 3.84 21.56 26.59 71.95 78.86 C 83.80 91.16 93.79 101.73 94.15 102.36 C 94.53 103.02 85.68 113.01 73.22 126.00 C 61.35 138.38 42.13 158.40 30.52 170.50 C 5.51 196.55 0.00 202.49 0.00 203.35 C 0.00 203.71 16.39 204.00 36.42 204.00 L 72.83 204.00 120.17 154.86 C 146.20 127.83 167.87 105.09 168.33 104.32 C 169.38 102.52 170.73 103.99 117.11 48.25 L 72.63 2.00 36.31 2.00 C 14.08 2.00 0.00 2.37 0.00 2.95 M 171.11 24.00 L 149.83 46.01 168.60 65.53 C 183.48 81.02 187.61 84.79 188.55 83.78 C 189.20 83.08 206.67 64.81 227.37 43.19 C 248.07 21.58 265.00 3.46 265.00 2.94 C 265.00 2.37 250.81 2.00 228.69 2.00 L 192.39 2.00 171.11 24.00 M 295.25 107.25 L 295.50 212.50 322.25 212.77 L 349.00 213.03 349.00 134.02 L 349.00 55.00 415.00 55.00 L 481.00 55.00 481.00 28.50 L 481.00 2.00 388.00 2.00 L 294.99 2.00 295.25 107.25 M 500.00 28.49 L 500.00 54.98 537.25 55.24 L 574.50 55.50 574.76 134.25 L 575.01 213.00 602.00 213.00 L 628.99 213.00 629.24 134.25 L 629.50 55.50 666.75 55.24 L 704.00 54.98 704.00 28.49 L 704.00 2.00 602.00 2.00 L 500.00 2.00 500.00 28.49 M 374.00 110.00 L 374.00 132.00 423.00 132.00 L 472.00 132.00 472.00 110.00 L 472.00 88.00 423.00 88.00 L 374.00 88.00 374.00 110.00 M 168.16 141.07 L 149.90 160.15 171.07 182.07 L 192.24 204.00 228.62 204.00 C 248.63 204.00 265.00 203.65 265.00 203.23 C 265.00 202.22 188.12 122.00 187.16 122.00 C 186.75 122.00 178.21 130.58 168.16 141.07"/></svg></div>
+    <div class="brand-rule"></div>
+    <div class="brand-sub"><span class="w">Expendo</span><span class="s">|</span><span class="g">Filmteamet</span></div>
+    <div class="brand-ver">Utrustningschecklista v4.1</div>
+  </header>
+
+  <div id="topbar" class="topbar" style="display:none">
+    <div class="mini"><svg viewBox="0 0 704 215" xmlns="http://www.w3.org/2000/svg"><path d="M 0.00 2.95 C 0.00 3.84 21.56 26.59 71.95 78.86 C 83.80 91.16 93.79 101.73 94.15 102.36 C 94.53 103.02 85.68 113.01 73.22 126.00 C 61.35 138.38 42.13 158.40 30.52 170.50 C 5.51 196.55 0.00 202.49 0.00 203.35 C 0.00 203.71 16.39 204.00 36.42 204.00 L 72.83 204.00 120.17 154.86 C 146.20 127.83 167.87 105.09 168.33 104.32 C 169.38 102.52 170.73 103.99 117.11 48.25 L 72.63 2.00 36.31 2.00 C 14.08 2.00 0.00 2.37 0.00 2.95 M 171.11 24.00 L 149.83 46.01 168.60 65.53 C 183.48 81.02 187.61 84.79 188.55 83.78 C 189.20 83.08 206.67 64.81 227.37 43.19 C 248.07 21.58 265.00 3.46 265.00 2.94 C 265.00 2.37 250.81 2.00 228.69 2.00 L 192.39 2.00 171.11 24.00 M 295.25 107.25 L 295.50 212.50 322.25 212.77 L 349.00 213.03 349.00 134.02 L 349.00 55.00 415.00 55.00 L 481.00 55.00 481.00 28.50 L 481.00 2.00 388.00 2.00 L 294.99 2.00 295.25 107.25 M 500.00 28.49 L 500.00 54.98 537.25 55.24 L 574.50 55.50 574.76 134.25 L 575.01 213.00 602.00 213.00 L 628.99 213.00 629.24 134.25 L 629.50 55.50 666.75 55.24 L 704.00 54.98 704.00 28.49 L 704.00 2.00 602.00 2.00 L 500.00 2.00 500.00 28.49 M 374.00 110.00 L 374.00 132.00 423.00 132.00 L 472.00 132.00 472.00 110.00 L 472.00 88.00 423.00 88.00 L 374.00 88.00 374.00 110.00 M 168.16 141.07 L 149.90 160.15 171.07 182.07 L 192.24 204.00 228.62 204.00 C 248.63 204.00 265.00 203.65 265.00 203.23 C 265.00 202.22 188.12 122.00 187.16 122.00 C 186.75 122.00 178.21 130.58 168.16 141.07"/></svg></div>
+    <div class="spacer"></div>
+    <button class="link-btn" id="topbar-action" style="display:none"></button>
+  </div>
+
   <div class="phase-panel active" id="panel-utresa">
-    <div class="session-card" id="session-form">
-      <div class="field-group">
+    <div class="page-head">
+      <h1>Utresa</h1>
+      <p class="page-sub" id="utresa-sub"></p>
+    </div>
+    <div class="form" id="session-form">
+      <div class="field">
         <label>Ditt namn</label>
         <input type="text" id="filmer-name" placeholder="t.ex. Petrus" autocomplete="name">
       </div>
-      <div class="field-group">
+      <div class="field">
         <label>Kundnamn</label>
         <input type="text" id="customer-name" placeholder="t.ex. Björk &amp; Partners AB" autocomplete="off">
       </div>
-      <div class="field-group">
+      <div class="field">
         <label>Datum</label>
         <input type="date" id="trip-date">
       </div>
     </div>
-    <div id="locked-banner" style="display:none" class="locked-banner">🔒 <span class="locked-info" id="locked-text"></span><button class="banner-btn" onclick="unlockUtresa()">Ändra</button></div>
-    <div class="top-actions" id="utresa-top-actions">
-      <button class="action-btn-sec" onclick="selectAllUtresa()">Välj all utrustning</button>
+    <div class="meterbar">
+      <div class="meter"><i id="utresa-meter"></i></div>
+      <div class="meter-row">
+        <span id="utresa-status"></span>
+        <button class="link-btn" id="utresa-selectall" onclick="selectAllUtresa()">Välj alla</button>
+      </div>
     </div>
     <div id="checklist-utresa"></div>
     <button class="reset-btn" onclick="askReset()">Rensa allt och börja om</button>
     <div class="phase-actions" id="utresa-actions">
-      <div class="actions-status" id="utresa-status"></div>
-      <button class="action-btn" onclick="lockUtresa()">Bekräfta och lås utresa</button>
+      <button class="cta" onclick="lockUtresa()">Lås utresa</button>
     </div>
   </div>
 
   <div class="phase-panel" id="panel-hemresa">
-    <div id="locked-banner-hemresa" class="locked-banner" style="display:none">🔒 <span class="locked-info" id="locked-text-hemresa"></span><button class="banner-btn" onclick="unlockHemresa()">Ändra</button></div>
-    <div class="top-actions" id="hemresa-top-actions">
-      <button class="action-btn-sec" onclick="selectAllHemresa()">Välj alla returnerade</button>
+    <div class="page-head">
+      <h1>Hemresa</h1>
+      <p class="page-sub" id="hemresa-sub"></p>
+    </div>
+    <div class="meterbar" id="hemresa-meterbar">
+      <div class="meter"><i id="hemresa-meter"></i></div>
+      <div class="meter-row">
+        <span id="hemresa-status"></span>
+        <button class="link-btn" id="hemresa-selectall" onclick="selectAllHemresa()">Bocka av alla</button>
+      </div>
     </div>
     <div id="checklist-hemresa"></div>
     <div class="phase-actions" id="hemresa-actions">
-      <div class="actions-status" id="hemresa-status"></div>
-      <button class="action-btn" onclick="lockHemresa()">Bekräfta hemresa</button>
+      <button class="cta" onclick="lockHemresa()">Bekräfta hemresa</button>
     </div>
   </div>
 
   <div class="phase-panel" id="panel-kontor">
-    <div class="top-actions" id="kontor-top-actions">
-      <button class="action-btn-sec" id="rest-ok-btn" onclick="askRestOk()">Markera resterande som OK</button>
+    <div class="page-head">
+      <h1>Kontroll</h1>
+      <p class="page-sub" id="kontor-sub"></p>
+    </div>
+    <div class="meterbar" id="kontor-meterbar">
+      <div class="meter"><i id="kontor-meter"></i></div>
+      <div class="meter-row">
+        <span id="kontor-status"></span>
+        <button class="link-btn" id="rest-ok-btn" onclick="askRestOk()">Resten är OK</button>
+      </div>
     </div>
     <div id="wear-checks"></div>
     <div class="phase-actions" id="kontor-actions">
-      <div class="actions-status" id="kontor-status"></div>
-      <button class="action-btn" onclick="submitKontor()">Slutför och skicka</button>
+      <button class="cta" onclick="submitKontor()">Lämna in rapporten</button>
     </div>
+  </div>
+
+</div>
+
+<nav class="steps">
+  <button class="step active" id="tab-utresa" onclick="switchTab('utresa')"><span class="bar"></span><span class="lbl">Utresa</span></button>
+  <button class="step" id="tab-hemresa" onclick="switchTab('hemresa')"><span class="bar"></span><span class="lbl">Hemresa</span></button>
+  <button class="step" id="tab-kontor" onclick="switchTab('kontor')"><span class="bar"></span><span class="lbl">Kontroll</span></button>
+</nav>
+
+<!-- Bekräftelse -->
+<div class="sheet-wrap" id="confirm-modal" onclick="if(event.target===this)closeConfirm()">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h3 id="confirm-title"></h3>
+    <div class="body" id="confirm-body"></div>
+    <button class="cta danger" id="confirm-btn" onclick="runConfirm()"></button>
+    <button class="btn-quiet" onclick="closeConfirm()">Avbryt</button>
   </div>
 </div>
 
-<nav class="bottom-nav">
-  <button class="nav-btn active" id="tab-utresa" onclick="switchTab('utresa')">
-    <span class="icon">📦</span><span>Utresa</span><span class="nav-status" id="ns-utresa"></span>
-  </button>
-  <button class="nav-btn" id="tab-hemresa" onclick="switchTab('hemresa')">
-    <span class="icon">🔙</span><span>Hemresa</span><span class="nav-status" id="ns-hemresa"></span>
-  </button>
-  <button class="nav-btn" id="tab-kontor" onclick="switchTab('kontor')">
-    <span class="icon">🏢</span><span>Kontor</span><span class="nav-status"></span>
-  </button>
-</nav>
+<!-- Status för en sak -->
+<div class="sheet-wrap" id="status-sheet" onclick="if(event.target===this)closeStatusSheet()">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h3 id="ss-name"></h3>
+    <div class="who" id="ss-meta"></div>
+    <div id="ss-opts" style="margin-top:16px"></div>
+    <textarea class="ta" id="ss-comment" rows="2" placeholder="Beskriv skadan…" style="display:none"></textarea>
+    <button class="cta" onclick="closeStatusSheet()">Klar</button>
+  </div>
+</div>
 
+<!-- Påminnelse om BTS -->
+<div class="sheet-wrap" id="bts-modal">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h3>Glöm inte BTS-content</h3>
+    <div class="body">Filma bakom kulisserna under inspelningen. Materialet är avgörande för bolagets marknadsföring.</div>
+    <button class="cta" onclick="document.getElementById('bts-modal').classList.remove('open')">Förstått</button>
+  </div>
+</div>
+
+<div class="send-overlay" id="send-overlay"></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -323,7 +379,6 @@ const ITEM_NAMES = {
   33:"Trådlös mygga #2", 47:"Förlängningssladd", 48:"Kameraväska", 51:"RS3 Mini stativ"
 };
 
-const ICONS = { "DJI-kamera":"🎥","Dronare":"🚁","Ljus":"💡","Backdrop":"🎭","Mikrofon":"🎙️","Stillbildskamera":"📷","Ovrigt":"🎒" };
 const STORE_KEY = 'xft_v2';
 // Google Apps Script-backend (checklista → Google Sheet → adminvy). Se SETUP.md.
 // Allt loggas i kalkylarket; adminvyn är där kontoret följer utrustningen.
@@ -338,6 +393,7 @@ const GELS = [
   { name:"Orange", display:"Orange", color:"#f07020" },
   { name:"Lila",   display:"Lila",   color:"#a035e0" },
 ];
+const STATUS_TEXT = { ok:'OK', slitage:'Slitage', skadad:'Skadad' };
 
 function freshState() {
   return { utresa:{locked:false,filmer:'',customer:'',date:'',taken:[]}, hemresa:{locked:false,returned:[]}, kontor:{wear:{}}, openGroups:{}, gels:[], btsShown:false };
@@ -366,11 +422,16 @@ function serialSuffix(item) { return item.serial ? ' (SN: ' + item.serial + ')' 
 function takenItems(s) { return EQUIPMENT.filter(e => s.utresa.taken.includes(e.id)); }
 function returnedItems(s) { return EQUIPMENT.filter(e => s.utresa.taken.includes(e.id) && s.hemresa.returned.includes(e.id)); }
 function missingItems(s) { return EQUIPMENT.filter(e => s.utresa.taken.includes(e.id) && !s.hemresa.returned.includes(e.id)); }
+function kortDatum(d) {
+  const m = ['jan','feb','mars','april','maj','juni','juli','aug','sep','okt','nov','dec'];
+  const p = String(d || '').split('-');
+  return p.length === 3 ? (parseInt(p[2], 10) + ' ' + m[parseInt(p[1], 10) - 1]) : (d || '');
+}
 
 function toast(msg, isError) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.className = 'toast' + (isError ? ' toast-error' : '');
+  t.className = 'toast' + (isError ? ' err' : '');
   t.classList.add('show');
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), isError ? 3500 : 2400);
@@ -380,11 +441,10 @@ function toast(msg, isError) {
 let confirmFn = null;
 function openConfirm(title, bodyHtml, btnLabel, style, fn) {
   document.getElementById('confirm-title').textContent = title;
-  document.getElementById('confirm-title').style.color = style === 'accent' ? 'var(--text)' : 'var(--danger)';
   document.getElementById('confirm-body').innerHTML = bodyHtml;
   const btn = document.getElementById('confirm-btn');
   btn.textContent = btnLabel;
-  btn.className = 'modal-btn ' + (style === 'accent' ? 'modal-btn-accent' : 'modal-btn-danger');
+  btn.className = 'cta' + (style === 'accent' ? '' : ' danger');
   confirmFn = fn;
   document.getElementById('confirm-modal').classList.add('open');
 }
@@ -402,19 +462,21 @@ function syncActionBar() {
   document.documentElement.style.setProperty('--actions-h', (synlig ? bar.offsetHeight : 0) + 'px');
 }
 
-function statusText(klara, totalt, ord) {
-  const kvar = totalt - klara;
-  if (!totalt) return '';
-  return kvar === 0
-    ? '<span class="done">✓ ' + totalt + ' av ' + totalt + ' ' + ord + '</span>'
-    : klara + ' av ' + totalt + ' ' + ord + ' · <span class="todo">' + kvar + ' kvar</span>';
+function setMeter(id, klara, totalt, ord) {
+  document.getElementById(id + '-meter').style.width = (totalt ? Math.round(klara / totalt * 100) : 0) + '%';
+  const el = document.getElementById(id + '-status');
+  if (!totalt) { el.textContent = ''; return; }
+  el.innerHTML = klara === totalt
+    ? '<span class="done"><b>' + totalt + '</b> av ' + totalt + ' ' + ord + '</span>'
+    : '<b>' + klara + '</b> av ' + totalt + ' ' + ord;
 }
 
 function switchTab(tab) {
   document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.step').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-' + tab).classList.add('active');
   document.getElementById('tab-' + tab).classList.add('active');
+  window.scrollTo(0, 0);
   render();
 }
 
@@ -425,68 +487,69 @@ function groups(items) {
 }
 
 function render() {
-  renderUtresa(); renderHemresa(); renderKontor();
   const s = load();
-  document.getElementById('ns-utresa').textContent = s.utresa.locked ? '✓' : '';
-  document.getElementById('ns-hemresa').textContent = s.hemresa.locked ? '✓' : '';
+  // Varumärkesblocket hör till startskärmen; pågår ett uppdrag räcker en slimmad rad
+  document.getElementById('brand').style.display = s.utresa.locked ? 'none' : 'flex';
+  document.getElementById('topbar').style.display = s.utresa.locked ? 'flex' : 'none';
+  const action = document.getElementById('topbar-action');
+  const aktiv = document.querySelector('.phase-panel.active');
+  const tab = aktiv ? aktiv.id.replace('panel-', '') : 'utresa';
+  if (s.utresa.locked && tab === 'utresa') {
+    action.style.display = 'block'; action.textContent = 'Ändra'; action.onclick = unlockUtresa;
+  } else if (s.hemresa.locked && tab === 'hemresa') {
+    action.style.display = 'block'; action.textContent = 'Ändra'; action.onclick = unlockHemresa;
+  } else {
+    action.style.display = 'none';
+  }
+  document.getElementById('tab-utresa').classList.toggle('done', s.utresa.locked);
+  document.getElementById('tab-hemresa').classList.toggle('done', s.hemresa.locked);
+  renderUtresa(); renderHemresa(); renderKontor();
 }
 
 function renderUtresa() {
   const s = load();
-  document.getElementById('session-form').style.display = s.utresa.locked ? 'none' : 'block';
-  document.getElementById('utresa-actions').style.display = s.utresa.locked ? 'none' : 'block';
-  document.getElementById('utresa-top-actions').style.display = s.utresa.locked ? 'none' : 'block';
-  document.getElementById('utresa-status').innerHTML = statusText(s.utresa.taken.length, EQUIPMENT.length, 'valda');
-  const banner = document.getElementById('locked-banner');
-  if (s.utresa.locked) {
-    banner.style.display = 'flex';
-    document.getElementById('locked-text').textContent = s.utresa.filmer + ' · ' + s.utresa.customer + ' · ' + s.utresa.date;
-  } else {
-    banner.style.display = 'none';
+  const laast = s.utresa.locked;
+  document.getElementById('session-form').style.display = laast ? 'none' : 'block';
+  document.getElementById('utresa-actions').style.display = laast ? 'none' : 'block';
+  document.getElementById('utresa-selectall').style.display = laast ? 'none' : 'block';
+  document.getElementById('utresa-sub').textContent = laast
+    ? s.utresa.customer + ' · ' + kortDatum(s.utresa.date) + ' · ' + s.utresa.filmer
+    : 'Fyll i uppdraget och bocka i vad du tar med.';
+  if (!laast) {
     if (s.utresa.date) document.getElementById('trip-date').value = s.utresa.date;
     if (s.utresa.filmer) document.getElementById('filmer-name').value = s.utresa.filmer;
     if (s.utresa.customer) document.getElementById('customer-name').value = s.utresa.customer;
   }
   const taken = s.utresa.taken;
-  const pct = EQUIPMENT.length ? Math.round(taken.length / EQUIPMENT.length * 100) : 0;
-  let html = '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
-  const g = groups(EQUIPMENT);
-  Object.entries(g).forEach(function([gname, items]) {
+  setMeter('utresa', taken.length, EQUIPMENT.length, 'valda');
+
+  let html = '';
+  Object.entries(groups(EQUIPMENT)).forEach(function([gname, items]) {
     const checked = items.filter(i => taken.includes(i.id)).length;
     const all = checked === items.length, some = checked > 0 && !all;
     const open = s.openGroups[gname] !== false;
     const genc = encodeURIComponent(gname);
-    html += '<div class="group-card"><div class="group-header" data-group="' + genc + '" data-type="utresa-open">';
-    html += '<div class="group-check ' + (all?'checked':some?'partial':'') + '" data-group="' + genc + '" data-type="utresa-all">';
-    if (some) html += '<span style="color:#111;font-weight:700;font-size:0.9rem;line-height:1;">−</span>';
-    html += '</div><span class="group-icon">' + (ICONS[gname]||'📦') + '</span>';
-    html += '<span class="group-name">' + groupDisplay(gname) + '</span>';
-    html += '<span class="group-count">' + checked + '/' + items.length + '</span>';
-    html += '<span class="group-chevron">' + (open?'▲':'▼') + '</span></div>';
+    html += '<div class="sec" data-group="' + genc + '" data-type="utresa-open">';
+    html += '<div class="box ' + (all ? 'on' : some ? 'half' : '') + '" data-group="' + genc + '" data-type="utresa-all"></div>';
+    html += '<span class="nm">' + groupDisplay(gname) + '</span>';
+    html += '<span class="group-count ct">' + checked + '/' + items.length + '</span>';
+    html += '<span class="cv">' + (open ? '▲' : '▼') + '</span></div>';
     if (open) {
       items.forEach(function(item) {
         const c = taken.includes(item.id);
-        const notTaken = s.utresa.locked && !c ? ' not-taken' : '';
-        html += '<div class="item-row' + notTaken + '" data-id="' + item.id + '" data-type="utresa-item">';
-        html += '<div style="width:16px;flex-shrink:0"></div>';
-        html += '<div class="item-check ' + (c?'checked':'') + '"></div>';
-        html += '<span class="item-name">' + itemName(item) + '</span>';
-        if (item.serial) html += '<span class="item-serial">SN: ' + item.serial + '</span>';
-        html += '</div>';
+        html += '<div class="row item-row' + (laast && !c ? ' dim' : '') + '" data-id="' + item.id + '" data-type="utresa-item">';
+        html += '<div class="box ' + (c ? 'on' : '') + '"></div>';
+        html += '<span class="nm">' + itemName(item) + '</span></div>';
       });
       if (gname === 'Ljus') {
-        html += '<div class="gels-row"><div class="gels-label">Gels</div><div class="gels-chips">';
+        html += '<div class="gels"><div class="gels-l">Gels</div><div class="chips">';
         GELS.forEach(function(gel) {
-          const sel = s.gels.includes(gel.name);
-          const locked = s.utresa.locked ? ' locked' : '';
-          html += '<div class="gel-chip' + (sel?' sel':'') + locked + '" data-gel="' + gel.name + '" data-type="gel-chip">';
-          html += '<span class="gel-dot" style="background:' + gel.color + '"></span>' + gel.display;
-          html += '</div>';
+          html += '<div class="chip' + (s.gels.includes(gel.name) ? ' on' : '') + '" data-gel="' + gel.name + '" data-type="gel-chip">';
+          html += '<span class="dot" style="background:' + gel.color + '"></span>' + gel.display + '</div>';
         });
         html += '</div></div>';
       }
     }
-    html += '</div>';
   });
   document.getElementById('checklist-utresa').innerHTML = html;
   document.querySelectorAll('[data-type="utresa-open"]').forEach(el => el.addEventListener('click', function(e) { if (!e.target.closest('[data-type="utresa-all"]')) toggleGroupOpen(decodeURIComponent(this.dataset.group)); }));
@@ -498,71 +561,62 @@ function renderUtresa() {
 
 function renderHemresa() {
   const s = load();
-  const hemBanner = document.getElementById('locked-banner-hemresa');
-  const hemActions = document.getElementById('hemresa-actions');
-  const hemTop = document.getElementById('hemresa-top-actions');
+  const actions = document.getElementById('hemresa-actions');
+  const meterbar = document.getElementById('hemresa-meterbar');
   if (!s.utresa.locked) {
-    hemBanner.style.display = 'none';
-    document.getElementById('checklist-hemresa').innerHTML = '<p style="color:var(--muted);padding:1rem;font-size:0.85rem;">Lås utresan först.</p>';
-    hemActions.style.display = 'none';
-    hemTop.style.display = 'none';
+    document.getElementById('hemresa-sub').textContent = 'Lås utresan först.';
+    document.getElementById('checklist-hemresa').innerHTML = '';
+    actions.style.display = 'none';
+    meterbar.style.display = 'none';
     syncActionBar();
     return;
   }
-  if (s.hemresa.locked) {
-    hemBanner.style.display = 'flex';
-    document.getElementById('locked-text-hemresa').textContent = 'Hemresa bekräftad';
-    hemActions.style.display = 'none';
-    hemTop.style.display = 'none';
-  } else {
-    hemBanner.style.display = 'none';
-    hemActions.style.display = 'block';
-    hemTop.style.display = 'block';
-  }
+  const laast = s.hemresa.locked;
+  meterbar.style.display = 'block';
+  actions.style.display = laast ? 'none' : 'block';
+  document.getElementById('hemresa-selectall').style.display = laast ? 'none' : 'block';
+
   const tItems = takenItems(s);
   const ret = s.hemresa.returned;
-  document.getElementById('hemresa-status').innerHTML = statusText(ret.length, tItems.length, 'avbockade');
-  const pct = tItems.length ? Math.round(ret.length / tItems.length * 100) : 0;
-  const g = groups(tItems);
-  let html = '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
+  const saknas = tItems.length - ret.length;
+  document.getElementById('hemresa-sub').textContent = laast
+    ? 'Bekräftad · ' + ret.length + ' tillbaka' + (saknas ? ', ' + saknas + ' saknas' : '')
+    : 'Bocka av det du har med dig hem.';
+  setMeter('hemresa', ret.length, tItems.length, 'avbockade');
+
   const bts = s.hemresa.bts || { status:null, reason:'' };
-  html += '<div class="group-card" style="margin-bottom:1rem;border-color:rgba(251,191,36,0.3);">';
-  html += '<div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);">';
-  html += '<div style="font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--warning);font-weight:600;margin-bottom:0.75rem;">BTS-Content</div>';
-  if (!s.hemresa.locked) {
-    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">';
-    html += '<button class="wear-opt ok' + (bts.status==='ja'?' sel':'') + '" data-bts="ja" style="padding:0.875rem;">Filmad</button>';
-    html += '<button class="wear-opt skadad' + (bts.status==='nej'?' sel':'') + '" data-bts="nej" style="padding:0.875rem;">Ej filmad</button>';
+  let html = '<div class="sec plain"><span class="nm">BTS-content</span></div>';
+  if (!laast) {
+    html += '<div class="seg">';
+    html += '<button data-bts="ja" class="' + (bts.status === 'ja' ? 'on-ok' : '') + '">Filmad</button>';
+    html += '<button data-bts="nej" class="' + (bts.status === 'nej' ? 'on-no' : '') + '">Ej filmad</button>';
     html += '</div>';
-    if (bts.status === 'nej') html += '<textarea id="bts-reason" class="wear-comment show" rows="2" placeholder="Varför filmades inte BTS?" style="margin-top:0.75rem;">' + esc(bts.reason||'') + '</textarea>';
+    if (bts.status === 'nej') html += '<textarea id="bts-reason" class="ta" rows="2" placeholder="Varför filmades inte BTS?">' + esc(bts.reason || '') + '</textarea>';
   } else {
-    html += bts.status === 'ja' ? '<span style="color:var(--success);">Filmad</span>' : '<span style="color:var(--danger);">Ej filmad' + (bts.reason?' — '+esc(bts.reason):'') + '</span>';
+    html += '<div class="row static"><span class="nm">' + (bts.status === 'ja' ? 'Filmad' : 'Ej filmad' + (bts.reason ? ' — ' + esc(bts.reason) : '')) + '</span>';
+    html += '<span class="st ' + (bts.status === 'ja' ? 'ok' : 'skadad') + '">' + (bts.status === 'ja' ? 'OK' : 'Nej') + '</span></div>';
   }
-  html += '</div></div>';
-  Object.entries(g).forEach(function([gname, items]) {
+
+  Object.entries(groups(tItems)).forEach(function([gname, items]) {
     const checked = items.filter(i => ret.includes(i.id)).length;
     const all = checked === items.length, some = checked > 0 && !all;
     const open = s.openGroups['h_' + gname] !== false;
     const genc = encodeURIComponent(gname);
-    html += '<div class="group-card"><div class="group-header" data-group="' + genc + '" data-type="hem-open">';
-    html += '<div class="group-check ' + (all?'checked':some?'partial':'') + '" data-group="' + genc + '" data-type="hem-all">';
-    if (some) html += '<span style="color:#111;font-weight:700;font-size:0.9rem;line-height:1;">−</span>';
-    html += '</div><span class="group-icon">' + (ICONS[gname]||'📦') + '</span>';
-    html += '<span class="group-name">' + groupDisplay(gname) + '</span>';
-    html += '<span class="group-count">' + checked + '/' + items.length + '</span>';
-    html += '<span class="group-chevron">' + (open?'▲':'▼') + '</span></div>';
+    html += '<div class="sec" data-group="' + genc + '" data-type="hem-open">';
+    html += '<div class="box ' + (all ? 'on' : some ? 'half' : '') + '" data-group="' + genc + '" data-type="hem-all"></div>';
+    html += '<span class="nm">' + groupDisplay(gname) + '</span>';
+    html += '<span class="group-count ct">' + checked + '/' + items.length + '</span>';
+    html += '<span class="cv">' + (open ? '▲' : '▼') + '</span></div>';
     if (open) {
       items.forEach(function(item) {
         const c = ret.includes(item.id);
-        html += '<div class="item-row" data-id="' + item.id + '" data-type="hem-item">';
-        html += '<div style="width:16px;flex-shrink:0"></div>';
-        html += '<div class="item-check ' + (c?'checked':'') + '"></div>';
-        html += '<span class="item-name">' + itemName(item) + '</span>';
-        if (s.hemresa.locked) html += c ? '<span class="phase-badge badge-taken">OK</span>' : '<span class="phase-badge badge-missing">saknas</span>';
+        html += '<div class="row item-row" data-id="' + item.id + '" data-type="hem-item">';
+        html += '<div class="box ' + (c ? 'on' : '') + '"></div>';
+        html += '<span class="nm">' + itemName(item) + '</span>';
+        if (laast && !c) html += '<span class="st saknas">Saknas</span>';
         html += '</div>';
       });
     }
-    html += '</div>';
   });
   document.getElementById('checklist-hemresa').innerHTML = html;
   document.querySelectorAll('[data-type="hem-open"]').forEach(el => el.addEventListener('click', function(e) { if (!e.target.closest('[data-type="hem-all"]')) toggleHemGroupOpen(decodeURIComponent(this.dataset.group)); }));
@@ -587,78 +641,98 @@ function renderKontor() {
   const s = load();
   const wearDiv = document.getElementById('wear-checks');
   const actions = document.getElementById('kontor-actions');
-  const kontorTop = document.getElementById('kontor-top-actions');
+  const meterbar = document.getElementById('kontor-meterbar');
   if (!s.utresa.locked || !s.hemresa.locked) {
-    wearDiv.innerHTML = '<p style="color:var(--muted);padding:1rem;font-size:0.85rem;">' + (!s.utresa.locked ? 'Lås utresan först.' : 'Bekräfta hemresan först.') + '</p>';
+    document.getElementById('kontor-sub').textContent = !s.utresa.locked ? 'Lås utresan först.' : 'Bekräfta hemresan först.';
+    wearDiv.innerHTML = '';
     actions.style.display = 'none';
-    kontorTop.style.display = 'none';
+    meterbar.style.display = 'none';
     syncActionBar();
     return;
   }
+  meterbar.style.display = 'block';
   actions.style.display = 'block';
   const returned = returnedItems(s);
   const missing = missingItems(s);
-  const g = groups(returned);
   const bts = s.hemresa.bts || {};
-  const btsDriveChecked = s.kontor.btsDrive || false;
-  const fileName = s.utresa.date + ' - ' + s.utresa.customer;
+  const done = returned.filter(e => s.kontor.wear[e.id] && s.kontor.wear[e.id].status).length;
+  const rest = returned.length - done;
+
+  document.getElementById('kontor-sub').textContent = returned.length + ' saker tillbaka' + (missing.length ? ' · ' + missing.length + ' saknas' : '');
+  setMeter('kontor', done, returned.length, 'kontrollerade');
+  document.getElementById('rest-ok-btn').style.display = rest > 0 ? 'block' : 'none';
+
   let html = '';
   if (bts.status === 'ja') {
-    html += '<div class="group-card" style="margin-bottom:1rem;border-color:rgba(251,191,36,0.3);">';
-    html += '<div style="padding:1rem 1.25rem;">';
-    html += '<div style="font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--warning);font-weight:600;margin-bottom:0.875rem;">BTS Google Drive</div>';
-    html += '<div class="item-row" data-type="bts-drive" style="padding:0.75rem 0;border:none;background:none;cursor:pointer;">';
-    html += '<div class="item-check ' + (btsDriveChecked?'checked':'') + '"></div>';
-    html += '<span class="item-name">Överför BTS-content till Google Drive</span></div>';
-    if (btsDriveChecked) {
-      html += '<div style="margin-top:0.5rem;background:var(--surface2);border-radius:var(--radius);padding:0.75rem 1rem;font-size:0.82rem;color:var(--muted);line-height:1.6;">';
-      html += 'Döp filen till:<br><div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">';
-      html += '<span style="color:var(--text);font-weight:600;">' + esc(fileName) + '</span>';
-      html += '<button onclick="copyBtsName()" style="border:1px solid var(--border2);background:var(--surface);color:var(--muted);border-radius:6px;padding:0.3rem 0.65rem;font-size:0.72rem;cursor:pointer;">Kopiera</button>';
-      html += '</div></div>';
+    html += '<div class="sec plain"><span class="nm">BTS-content</span></div>';
+    html += '<div class="row" data-type="bts-drive">';
+    html += '<div class="box ' + (s.kontor.btsDrive ? 'on' : '') + '"></div>';
+    html += '<span class="nm">Överförd till Google Drive</span></div>';
+    if (s.kontor.btsDrive) {
+      html += '<div class="filename">Filnamn: <b>' + esc(s.utresa.date + ' - ' + s.utresa.customer) + '</b>';
+      html += '<button class="mini-btn" onclick="copyBtsName()">Kopiera</button></div>';
     }
-    html += '</div></div>';
   }
   if (missing.length) {
-    html += '<div class="group-card" style="margin-bottom:1rem;border-color:rgba(255,77,77,0.35);">';
-    html += '<div style="padding:1rem 1.25rem;">';
-    html += '<div style="font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--danger);font-weight:600;margin-bottom:0.6rem;">Saknas vid hemkomst — ' + missing.length + ' st</div>';
+    html += '<div class="sec plain alert"><span class="nm">Saknas vid hemkomst</span><span class="ct">' + missing.length + '</span></div>';
     missing.forEach(function(item) {
-      html += '<div style="display:flex;align-items:center;gap:0.6rem;padding:0.35rem 0;font-size:0.9rem;"><span class="phase-badge badge-missing">saknas</span><span>' + itemName(item) + (item.serial ? ' <span style="color:var(--muted);font-size:0.7rem;">SN: ' + item.serial + '</span>' : '') + '</span></div>';
+      html += '<div class="row static"><span class="nm">' + itemName(item) + '</span><span class="st saknas">Saknas</span></div>';
     });
-    html += '<div style="margin-top:0.6rem;font-size:0.78rem;color:var(--muted);line-height:1.5;">Detta rapporteras som saknat. Om något ändå har kommit hem: gå till Hemresa, tryck på Ändra och bocka av det.</div>';
-    html += '</div></div>';
+    html += '<div class="hint">Kommit hem ändå? Bocka av det under Hemresa.</div>';
   }
-  const done = returned.filter(e => s.kontor.wear[e.id] && s.kontor.wear[e.id].status).length;
-  html += '<div class="wear-card"><div class="wear-card-header"><span>Kontrollera slitage och skador</span><span style="color:var(--muted);">' + done + '/' + returned.length + '</span></div>';
-  Object.entries(g).forEach(function([gname, items]) {
-    html += '<div style="padding:0.75rem 1.25rem 0.25rem;border-top:1px solid var(--border);"><span style="font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);font-weight:600;">' + (ICONS[gname]||'📦') + ' ' + groupDisplay(gname) + '</span></div>';
+  Object.entries(groups(returned)).forEach(function([gname, items]) {
+    html += '<div class="sec plain"><span class="nm">' + groupDisplay(gname) + '</span><span class="ct">' + items.length + '</span></div>';
     items.forEach(function(item) {
       const w = s.kontor.wear[item.id] || { status:null, comment:'' };
-      const show = w.status === 'slitage' || w.status === 'skadad';
-      const needsStatus = !w.status ? ' needs-status' : '';
-      html += '<div class="wear-item' + needsStatus + '" id="wi-' + item.id + '">';
-      html += '<div class="wear-item-name">' + itemName(item) + '</div>';
-      html += '<div class="wear-opts">';
-      html += '<button class="wear-opt ok' + (w.status==='ok'?' sel':'') + '" data-id="' + item.id + '" data-status="ok">OK</button>';
-      html += '<button class="wear-opt slitage' + (w.status==='slitage'?' sel':'') + '" data-id="' + item.id + '" data-status="slitage">Slitage</button>';
-      html += '<button class="wear-opt skadad' + (w.status==='skadad'?' sel':'') + '" data-id="' + item.id + '" data-status="skadad">Skadad</button>';
-      html += '</div>';
-      html += '<textarea class="wear-comment' + (show?' show':'') + '" rows="2" id="wc-' + item.id + '" oninput="setWearComment(' + item.id + ',this.value)" placeholder="Beskriv skadan...">' + esc(w.comment||'') + '</textarea>';
-      html += '</div>';
+      html += '<div class="row" id="wi-' + item.id + '" data-id="' + item.id + '" data-type="wear-row">';
+      html += '<span class="nm">' + itemName(item) + '</span>';
+      html += '<span class="st ' + (w.status || 'none') + '">' + (w.status ? STATUS_TEXT[w.status] : 'Ej kontrollerad') + '</span>';
+      html += '<span class="cv">›</span></div>';
+      if (w.status && w.status !== 'ok' && w.comment) html += '<div class="cmt">' + esc(w.comment) + '</div>';
     });
   });
-  html += '</div>';
   wearDiv.innerHTML = html;
-  document.querySelectorAll('.wear-opt[data-status]').forEach(btn => btn.addEventListener('click', function() { setWear(parseInt(this.dataset.id), this.dataset.status); }));
+  document.querySelectorAll('[data-type="wear-row"]').forEach(el => el.addEventListener('click', function() { openStatusSheet(parseInt(this.dataset.id)); }));
   const btsDriveRow = document.querySelector('[data-type="bts-drive"]');
   if (btsDriveRow) btsDriveRow.addEventListener('click', function() { const s2 = load(); s2.kontor.btsDrive = !s2.kontor.btsDrive; save(s2); renderKontor(); });
-  const restBtn = document.getElementById('rest-ok-btn');
-  const rest = returned.length - done;
-  restBtn.textContent = 'Markera resterande som OK (' + rest + ')';
-  kontorTop.style.display = rest > 0 ? 'block' : 'none';
-  document.getElementById('kontor-status').innerHTML = statusText(done, returned.length, 'kontrollerade');
   syncActionBar();
+}
+
+// ── Arket där en sak får sin status ──
+let sheetId = null;
+function openStatusSheet(id) {
+  const item = EQUIPMENT.find(e => e.id === id);
+  if (!item) return;
+  sheetId = id;
+  document.getElementById('ss-name').textContent = itemName(item);
+  document.getElementById('ss-meta').textContent = groupDisplay(item.group) + (item.serial ? ' · SN ' + item.serial : '');
+  renderStatusSheet();
+  document.getElementById('status-sheet').classList.add('open');
+}
+function renderStatusSheet() {
+  const s = load();
+  const w = s.kontor.wear[sheetId] || { status:null, comment:'' };
+  const val = [
+    ['ok', 'Hel och fungerar', 'var(--accent)'],
+    ['slitage', 'Slitage', 'var(--warn)'],
+    ['skadad', 'Skadad', 'var(--danger)']
+  ];
+  document.getElementById('ss-opts').innerHTML = val.map(function(v) {
+    return '<div class="opt' + (w.status === v[0] ? ' sel' : '') + '" data-status="' + v[0] + '">'
+      + '<span class="dot" style="background:' + v[2] + '"></span>' + v[1] + '<span class="tick">✓</span></div>';
+  }).join('');
+  document.querySelectorAll('#ss-opts .opt').forEach(el => el.addEventListener('click', function() { setWear(sheetId, this.dataset.status); }));
+  const ta = document.getElementById('ss-comment');
+  const visa = w.status === 'slitage' || w.status === 'skadad';
+  ta.style.display = visa ? 'block' : 'none';
+  ta.value = w.comment || '';
+}
+function closeStatusSheet() {
+  const ta = document.getElementById('ss-comment');
+  if (sheetId !== null && ta.style.display !== 'none') setWearComment(sheetId, ta.value);
+  sheetId = null;
+  document.getElementById('status-sheet').classList.remove('open');
+  renderKontor();
 }
 
 function copyBtsName() {
@@ -674,9 +748,9 @@ function askRestOk() {
   const rest = returnedItems(s).filter(e => !s.kontor.wear[e.id] || !s.kontor.wear[e.id].status);
   if (!rest.length) return;
   openConfirm(
-    'Markera resterande som OK',
-    'De ' + rest.length + ' saker som ännu saknar status markeras som OK. Gör det bara om du har kontrollerat dem.',
-    'Markera ' + rest.length + ' som OK', 'accent',
+    'Markera ' + rest.length + ' som OK?',
+    'De saker som ännu saknar status markeras som hela. Gör det bara om du har kontrollerat dem.',
+    'Markera som OK', 'accent',
     function() {
       const s2 = load();
       rest.forEach(e => { if (!s2.kontor.wear[e.id]) s2.kontor.wear[e.id] = { status:null, comment:'' }; s2.kontor.wear[e.id].status = 'ok'; });
@@ -736,12 +810,12 @@ function submitKontor() {
   // Allt som kom tillbaka måste ha en status
   const unchecked = returned.filter(e => !s.kontor.wear[e.id] || !s.kontor.wear[e.id].status);
   if (unchecked.length > 0) {
-    toast(unchecked.length === 1 ? '1 sak saknar status — den är markerad med rött' : unchecked.length + ' saker saknar status — den första är markerad med rött', true);
+    toast(unchecked.length === 1 ? '1 sak saknar status' : unchecked.length + ' saker saknar status', true);
     const firstEl = document.getElementById('wi-' + unchecked[0].id);
     if (firstEl) {
       firstEl.scrollIntoView({ behavior:'smooth', block:'center' });
-      firstEl.style.transition = 'box-shadow 0.2s';
-      firstEl.style.boxShadow = '0 0 0 2px var(--danger)';
+      firstEl.style.transition = 'box-shadow .2s';
+      firstEl.style.boxShadow = 'inset 3px 0 0 var(--danger)';
       setTimeout(() => { firstEl.style.boxShadow = ''; }, 2500);
     }
     return;
@@ -810,12 +884,12 @@ function submitKontor() {
 let SISTA_RAPPORT = null;
 
 function skickarSkarm() {
-  showOverlay('<div class="success-screen"><div class="success-icon" style="font-size:1.5rem;">⏳</div><div class="success-title" style="color:var(--muted);">Skickar rapport…</div><div class="success-sub">Stäng inte sidan.</div></div>');
+  showOverlay('<div class="screen"><div class="ring wait">⏳</div><h2 style="color:var(--muted)">Lämnar in…</h2><p>Stäng inte sidan.</p></div>');
 }
 
 function klarSkarm(text) {
   localStorage.removeItem(STORE_KEY);
-  showOverlay('<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">Rapporten är inlämnad!</div><div class="success-sub">' + text + '</div><button class="action-btn" onclick="newSession()">+ Nytt uppdrag</button></div>');
+  showOverlay('<div class="screen"><div class="ring">✓</div><h2>Rapporten är inlämnad</h2><p>' + text + '</p><button class="cta" onclick="newSession()">Nytt uppdrag</button></div>');
 }
 
 function sendReport(s, body, avvik, payload) {
@@ -849,7 +923,7 @@ function sendReport(s, body, avvik, payload) {
       } else if (fel && fel.typ === 'svar') {
         showSendError('Google-skriptet svarade med något oväntat. Kontrollera att webbappen är distribuerad med åtkomst för alla.', fel.detalj);
       } else {
-        showSendError('Rapporten kom inte fram. Kontrollera internet och försök igen — allt är kvar på den här enheten.', '');
+        showSendError('Rapporten kom inte fram. Kontrollera internet och försök igen.', '');
       }
     });
 }
@@ -862,13 +936,13 @@ function kopieraRapport() {
 }
 
 function showSendError(msg, detalj) {
-  let h = '<div class="success-screen"><div class="success-icon" style="border-color:var(--danger);background:var(--danger-dim);font-size:1.5rem;">!</div>';
-  h += '<div class="success-title" style="color:var(--danger);">Kunde inte skicka</div>';
-  h += '<div class="success-sub">' + msg + '<br><br>Allt du fyllt i är kvar på den här enheten.</div>';
-  if (detalj) h += '<div class="error-detail"><span class="error-detail-label">Meddelande från servern</span>' + esc(detalj) + '</div>';
-  h += '<button class="action-btn" onclick="closeOverlay();submitKontor()">Försök igen</button>';
-  h += '<button class="action-btn-sec" onclick="kopieraRapport()">Kopiera rapporten</button>';
-  h += '<button class="action-btn-sec" onclick="closeOverlay()">Tillbaka till checklistan</button>';
+  let h = '<div class="screen"><div class="ring bad">!</div>';
+  h += '<h2 class="bad">Kunde inte lämna in</h2>';
+  h += '<p>' + msg + '<br><br>Allt du fyllt i är kvar på den här enheten.</p>';
+  if (detalj) h += '<div class="detail"><span>Meddelande från servern</span>' + esc(detalj) + '</div>';
+  h += '<button class="cta" onclick="closeOverlay();submitKontor()">Försök igen</button>';
+  h += '<button class="btn-quiet" onclick="kopieraRapport()">Kopiera rapporten</button>';
+  h += '<button class="btn-quiet" onclick="closeOverlay()">Tillbaka till checklistan</button>';
   h += '</div>';
   showOverlay(h);
 }
@@ -878,7 +952,7 @@ function newSession() { localStorage.removeItem(STORE_KEY); location.reload(); }
 function askReset() {
   openConfirm(
     'Rensa allt och börja om?',
-    'Hela det pågående uppdraget raderas från den här enheten och ingen rapport skickas. Detta går inte att ångra.',
+    'Hela det pågående uppdraget raderas från den här enheten och ingen rapport lämnas in. Detta går inte att ångra.',
     'Rensa allt', 'danger', newSession
   );
 }
@@ -917,7 +991,7 @@ function unlockUtresa() {
   if (s.hemresa.locked) {
     openConfirm(
       'Lås upp utresan?',
-      'Hemresans bekräftelse tas också bort. Det du redan har bockat i finns kvar, så du kan ändra och sedan låsa igen.',
+      'Hemresans bekräftelse tas också bort. Det du redan har bockat i finns kvar, så du kan ändra och låsa igen.',
       'Lås upp', 'accent', doUnlockUtresa
     );
   } else {
@@ -954,11 +1028,11 @@ function lockHemresa() {
   }
   const missing = missingItems(s);
   if (missing.length) {
-    const list = '<ul class="modal-list">' + missing.map(e => '<li>' + esc(itemName(e)) + ' <span style="color:var(--muted)">(' + esc(groupDisplay(e.group)) + ')</span></li>').join('') + '</ul>';
+    const list = '<ul class="sheet-list">' + missing.map(e => '<li>' + esc(itemName(e)) + ' <span style="color:var(--faint)">' + esc(groupDisplay(e.group)) + '</span></li>').join('') + '</ul>';
     openConfirm(
       missing.length === 1 ? '1 sak är inte avbockad' : missing.length + ' saker är inte avbockade',
-      'Följande är inte avbockat som returnerat och rapporteras som saknat. Har du något av detta med dig? Välj Avbryt och bocka av det först.' + list,
-      missing.length === 1 ? 'Den saknas — bekräfta hemresan' : 'De saknas — bekräfta hemresan', 'danger', doLockHemresa
+      'Detta rapporteras som saknat. Har du något av det med dig? Välj Avbryt och bocka av det först.' + list,
+      'De saknas — bekräfta', 'danger', doLockHemresa
     );
     return;
   }
@@ -968,7 +1042,7 @@ function doLockHemresa() {
   const s = load();
   s.hemresa.locked = true;
   save(s);
-  toast('Hemresa bekräftad!');
+  toast('Hemresa bekräftad');
   switchTab('kontor');
 }
 
@@ -979,7 +1053,7 @@ function toggleGroupOpen(gname) { const s = load(); s.openGroups[gname] = s.open
 function toggleHemItem(id) { const s = load(); if (s.hemresa.locked) return; const i = s.hemresa.returned.indexOf(id); if (i === -1) s.hemresa.returned.push(id); else s.hemresa.returned.splice(i,1); save(s); renderHemresa(); }
 function toggleHemGroupAll(gname) { const s = load(); if (s.hemresa.locked) return; const items = EQUIPMENT.filter(e => s.utresa.taken.includes(e.id) && e.group === gname); const allC = items.every(e => s.hemresa.returned.includes(e.id)); items.forEach(item => { if (allC) { s.hemresa.returned = s.hemresa.returned.filter(id => id !== item.id); } else { if (!s.hemresa.returned.includes(item.id)) s.hemresa.returned.push(item.id); } }); save(s); renderHemresa(); }
 function toggleHemGroupOpen(gname) { const s = load(); s.openGroups['h_' + gname] = s.openGroups['h_' + gname] === false ? true : false; save(s); renderHemresa(); }
-function setWear(id, status) { const s = load(); if (!s.kontor.wear[id]) s.kontor.wear[id] = { status:null, comment:'' }; s.kontor.wear[id].status = status; save(s); renderKontor(); }
+function setWear(id, status) { const s = load(); if (!s.kontor.wear[id]) s.kontor.wear[id] = { status:null, comment:'' }; s.kontor.wear[id].status = status; if (status === 'ok') s.kontor.wear[id].comment = ''; save(s); if (sheetId === id) renderStatusSheet(); }
 function setWearComment(id, val) { const s = load(); if (!s.kontor.wear[id]) s.kontor.wear[id] = { status:null, comment:'' }; s.kontor.wear[id].comment = val; save(s); }
 
 // Namn, kund och datum sparas löpande så att inget försvinner om sidan laddas om
@@ -994,7 +1068,7 @@ function bindDraftFields() {
 
 // ── START ──
 // Pågående arbete får aldrig raderas vid sidladdning — allt återställs från localStorage,
-// och appen öppnar på den flik där användaren är i flödet.
+// och appen öppnar på det steg där användaren är i flödet.
 (function init() {
   bindDraftFields();
   const s = load();

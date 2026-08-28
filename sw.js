@@ -1,7 +1,7 @@
 // Service worker för XFT Utrustningschecklista.
 // Gör att appen startar även utan uppkoppling: sidan hämtas från nätet när det går
 // (så att uppdateringar alltid slår igenom) och från cachen när nätet saknas.
-const CACHE = 'xft-checklista-v4.0';
+const CACHE = 'xft-checklista-v4.1';
 const ASSETS = ['./', './index.html', './admin.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
