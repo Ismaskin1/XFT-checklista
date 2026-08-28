@@ -165,7 +165,7 @@
   </div>
   <div class="header-sub">
     <span class="header-title">Utrustningschecklista — Filmteamet</span>
-    <span class="header-version">v3.4</span>
+    <span class="header-version">v3.5</span>
   </div>
 </header>
 
@@ -825,9 +825,12 @@ function skickarSkarm() {
   showOverlay('<div class="success-screen"><div class="success-icon" style="font-size:1.5rem;">⏳</div><div class="success-title" style="color:var(--muted);">Skickar rapport…</div><div class="success-sub">Stäng inte sidan.</div></div>');
 }
 
-function klarSkarm(extra) {
+// Kvittot berättar vad som faktiskt hände. Ett mejl som inte gick iväg är ett
+// driftproblem för kontoret, inte för filmaren — det syns i adminvyns självtest
+// i stället för som ett tekniskt felmeddelande ute på fältet.
+function klarSkarm(text) {
   localStorage.removeItem(STORE_KEY);
-  showOverlay('<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">Rapport skickad!</div><div class="success-sub">Skickad till filmteamet@xft.se' + (extra || '') + '</div><button class="action-btn" onclick="newSession()">+ Nytt uppdrag</button></div>');
+  showOverlay('<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">Rapporten är inlämnad!</div><div class="success-sub">' + text + '</div><button class="action-btn" onclick="newSession()">+ Nytt uppdrag</button></div>');
 }
 
 function sendReport(s, body, avvik, payload) {
@@ -851,7 +854,9 @@ function sendReport(s, body, avvik, payload) {
       try { j = JSON.parse(text); } catch (e) {}
       if (!j) throw { typ:'svar', detalj: text.slice(0, 300) };
       if (j.ok === false) throw { typ:'server', detalj: j.error || '' };
-      klarSkarm(j.mailError ? '<br><br>Loggen i Google Sheet är uppdaterad, men mejlet gick inte iväg: ' + esc(j.mailError) : '');
+      klarSkarm(j.mailError
+        ? 'Loggad i utrustningsloggen hos filmteamet.'
+        : 'Loggad i utrustningsloggen och skickad till filmteamet@xft.se.');
     })
     .catch(fel => {
       if (fel && fel.typ === 'server') {
@@ -871,7 +876,9 @@ function skickaViaFormspree(arReserv) {
   skickarSkarm();
   fetch(FORM_URL, { method:'POST', body:buildForm(r.subject, r.s, r.body), headers:{ 'Accept':'application/json' } })
     .then(res => { if (!res.ok) throw new Error('server'); })
-    .then(() => klarSkarm(arReserv ? '<br><br>Skickad via reservvägen. Raden i Google Sheet saknas för det här uppdraget.' : ''))
+    .then(() => klarSkarm(arReserv
+      ? 'Skickad till filmteamet@xft.se via reservvägen.<br><br>Uppdraget hamnade inte i utrustningsloggen — säg till kontoret så läggs det in för hand.'
+      : 'Skickad till filmteamet@xft.se.'))
     .catch(() => showSendError(arReserv
       ? 'Reservvägen fungerade inte heller. Kopiera rapporten nedan och mejla den manuellt.'
       : 'Rapporten kom inte fram. Kontrollera internet och försök igen — allt är kvar på den här enheten.', ''));
