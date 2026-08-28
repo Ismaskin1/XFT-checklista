@@ -48,7 +48,16 @@
   .nav-btn .icon { font-size: 1.4rem; line-height: 1; }
   .nav-btn.active { color: var(--accent); }
   .nav-status { font-size: 0.55rem; color: var(--accent); height: 8px; }
-  .main { padding: 1.25rem 1rem calc(var(--tab-h) + 2rem); max-width: 600px; margin: 0 auto; }
+  .main { padding: 1.25rem 1rem calc(var(--tab-h) + var(--actions-h, 0px) + 2rem); max-width: 600px; margin: 0 auto; }
+  /* Huvudknappen ligger fast ovanför flikraden så att den aldrig hamnar utom synhåll
+     när utrustningslistan är lång. --actions-h mäts i syncActionBar(). */
+  .phase-actions { position: fixed; left: 0; right: 0; bottom: calc(var(--tab-h) + env(safe-area-inset-bottom)); z-index: 90; max-width: 600px; margin: 0 auto; padding: 0.7rem 1rem 0.85rem; background: var(--bg); border-top: 1px solid var(--border); box-shadow: 0 -10px 24px rgba(0,0,0,0.6); }
+  .phase-actions .action-btn { margin-top: 0; }
+  .actions-status { font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); font-weight: 600; text-align: center; margin-bottom: 0.55rem; }
+  .actions-status .done { color: var(--accent); }
+  .actions-status .todo { color: var(--warning); }
+  .top-actions { margin-bottom: 1rem; }
+  .top-actions .action-btn-sec { margin-top: 0; }
   .phase-panel { display: none; }
   .phase-panel.active { display: block; }
   .session-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.25rem; }
@@ -120,7 +129,7 @@
   .modal-list li:last-child { border-bottom: none; }
   .send-overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 400; overflow-y: auto; }
   .send-overlay.open { display: block; }
-  .toast { position: fixed; bottom: calc(var(--tab-h) + 1rem); left: 50%; transform: translateX(-50%) translateY(120px); background: #1c1c20; border: 1px solid var(--border2); color: var(--text); padding: 0.875rem 1.5rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; transition: transform 0.3s, visibility 0.3s; z-index: 999; box-shadow: 0 4px 24px rgba(0,0,0,0.6); max-width: 88vw; text-align: center; line-height: 1.4; pointer-events: none; visibility: hidden; }
+  .toast { position: fixed; bottom: calc(var(--tab-h) + var(--actions-h, 0px) + 1rem); left: 50%; transform: translateX(-50%) translateY(120px); background: #1c1c20; border: 1px solid var(--border2); color: var(--text); padding: 0.875rem 1.5rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; transition: transform 0.3s, visibility 0.3s; z-index: 999; box-shadow: 0 4px 24px rgba(0,0,0,0.6); max-width: 88vw; text-align: center; line-height: 1.4; pointer-events: none; visibility: hidden; }
   .toast.show { transform: translateX(-50%) translateY(0); visibility: visible; }
   .toast.toast-error { border-color: var(--danger); color: var(--danger); background: #1a0e0e; }
   .success-screen { display: flex; flex-direction: column; align-items: center; padding: 3rem 1rem; text-align: center; gap: 1.25rem; max-width: 600px; margin: 0 auto; }
@@ -154,7 +163,7 @@
   </div>
   <div class="header-sub">
     <span class="header-title">Utrustningschecklista — Filmteamet</span>
-    <span class="header-version">v3.2</span>
+    <span class="header-version">v3.3</span>
   </div>
 </header>
 
@@ -196,27 +205,36 @@
       </div>
     </div>
     <div id="locked-banner" style="display:none" class="locked-banner">🔒 <span class="locked-info" id="locked-text"></span><button class="banner-btn" onclick="unlockUtresa()">Ändra</button></div>
-    <div id="checklist-utresa"></div>
-    <div id="utresa-actions">
+    <div class="top-actions" id="utresa-top-actions">
       <button class="action-btn-sec" onclick="selectAllUtresa()">Välj all utrustning</button>
+    </div>
+    <div id="checklist-utresa"></div>
+    <button class="reset-btn" onclick="askReset()">Rensa allt och börja om</button>
+    <div class="phase-actions" id="utresa-actions">
+      <div class="actions-status" id="utresa-status"></div>
       <button class="action-btn" onclick="lockUtresa()">Bekräfta och lås utresa</button>
     </div>
-    <button class="reset-btn" onclick="askReset()">Rensa allt och börja om</button>
   </div>
 
   <div class="phase-panel" id="panel-hemresa">
     <div id="locked-banner-hemresa" class="locked-banner" style="display:none">🔒 <span class="locked-info" id="locked-text-hemresa"></span><button class="banner-btn" onclick="unlockHemresa()">Ändra</button></div>
-    <div id="checklist-hemresa"></div>
-    <div id="hemresa-actions">
+    <div class="top-actions" id="hemresa-top-actions">
       <button class="action-btn-sec" onclick="selectAllHemresa()">Välj alla returnerade</button>
+    </div>
+    <div id="checklist-hemresa"></div>
+    <div class="phase-actions" id="hemresa-actions">
+      <div class="actions-status" id="hemresa-status"></div>
       <button class="action-btn" onclick="lockHemresa()">Bekräfta hemresa</button>
     </div>
   </div>
 
   <div class="phase-panel" id="panel-kontor">
-    <div id="wear-checks"></div>
-    <div id="kontor-actions">
+    <div class="top-actions" id="kontor-top-actions">
       <button class="action-btn-sec" id="rest-ok-btn" onclick="askRestOk()">Markera resterande som OK</button>
+    </div>
+    <div id="wear-checks"></div>
+    <div class="phase-actions" id="kontor-actions">
+      <div class="actions-status" id="kontor-status"></div>
       <button class="action-btn" onclick="submitKontor()">Slutför och skicka</button>
     </div>
   </div>
@@ -376,6 +394,22 @@ function closeConfirm() { confirmFn = null; document.getElementById('confirm-mod
 function showOverlay(html) { const o = document.getElementById('send-overlay'); o.innerHTML = html; o.classList.add('open'); }
 function closeOverlay() { document.getElementById('send-overlay').classList.remove('open'); }
 
+// Reserverar plats nederst för den fasta knappraden, så att sista listraden och
+// toast-rutan aldrig hamnar bakom den.
+function syncActionBar() {
+  const bar = document.querySelector('.phase-panel.active .phase-actions');
+  const synlig = bar && getComputedStyle(bar).display !== 'none';
+  document.documentElement.style.setProperty('--actions-h', (synlig ? bar.offsetHeight : 0) + 'px');
+}
+
+function statusText(klara, totalt, ord) {
+  const kvar = totalt - klara;
+  if (!totalt) return '';
+  return kvar === 0
+    ? '<span class="done">✓ ' + totalt + ' av ' + totalt + ' ' + ord + '</span>'
+    : klara + ' av ' + totalt + ' ' + ord + ' · <span class="todo">' + kvar + ' kvar</span>';
+}
+
 function switchTab(tab) {
   document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -401,6 +435,8 @@ function renderUtresa() {
   const s = load();
   document.getElementById('session-form').style.display = s.utresa.locked ? 'none' : 'block';
   document.getElementById('utresa-actions').style.display = s.utresa.locked ? 'none' : 'block';
+  document.getElementById('utresa-top-actions').style.display = s.utresa.locked ? 'none' : 'block';
+  document.getElementById('utresa-status').innerHTML = statusText(s.utresa.taken.length, EQUIPMENT.length, 'valda');
   const banner = document.getElementById('locked-banner');
   if (s.utresa.locked) {
     banner.style.display = 'flex';
@@ -457,27 +493,35 @@ function renderUtresa() {
   document.querySelectorAll('[data-type="utresa-all"]').forEach(el => el.addEventListener('click', function(e) { e.stopPropagation(); toggleGroupAll(decodeURIComponent(this.dataset.group)); }));
   document.querySelectorAll('[data-type="utresa-item"]').forEach(el => el.addEventListener('click', function() { toggleItem(parseInt(this.dataset.id)); }));
   document.querySelectorAll('[data-type="gel-chip"]').forEach(el => el.addEventListener('click', function() { toggleGel(this.dataset.gel); }));
+  syncActionBar();
 }
 
 function renderHemresa() {
   const s = load();
   const hemBanner = document.getElementById('locked-banner-hemresa');
+  const hemActions = document.getElementById('hemresa-actions');
+  const hemTop = document.getElementById('hemresa-top-actions');
   if (!s.utresa.locked) {
     hemBanner.style.display = 'none';
     document.getElementById('checklist-hemresa').innerHTML = '<p style="color:var(--muted);padding:1rem;font-size:0.85rem;">Lås utresan först.</p>';
-    document.getElementById('hemresa-actions').style.display = 'none';
+    hemActions.style.display = 'none';
+    hemTop.style.display = 'none';
+    syncActionBar();
     return;
   }
   if (s.hemresa.locked) {
     hemBanner.style.display = 'flex';
     document.getElementById('locked-text-hemresa').textContent = 'Hemresa bekräftad';
-    document.getElementById('hemresa-actions').style.display = 'none';
+    hemActions.style.display = 'none';
+    hemTop.style.display = 'none';
   } else {
     hemBanner.style.display = 'none';
-    document.getElementById('hemresa-actions').style.display = 'block';
+    hemActions.style.display = 'block';
+    hemTop.style.display = 'block';
   }
   const tItems = takenItems(s);
   const ret = s.hemresa.returned;
+  document.getElementById('hemresa-status').innerHTML = statusText(ret.length, tItems.length, 'avbockade');
   const pct = tItems.length ? Math.round(ret.length / tItems.length * 100) : 0;
   const g = groups(tItems);
   let html = '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
@@ -527,6 +571,7 @@ function renderHemresa() {
   document.querySelectorAll('[data-bts]').forEach(btn => btn.addEventListener('click', function() { setBts(this.dataset.bts); }));
   const btsReasonEl = document.getElementById('bts-reason');
   if (btsReasonEl) btsReasonEl.addEventListener('input', function() { const s2 = load(); s2.hemresa.bts = s2.hemresa.bts || { status:'nej', reason:'' }; s2.hemresa.bts.reason = this.value; save(s2); });
+  syncActionBar();
 }
 
 function setBts(status) {
@@ -542,9 +587,12 @@ function renderKontor() {
   const s = load();
   const wearDiv = document.getElementById('wear-checks');
   const actions = document.getElementById('kontor-actions');
+  const kontorTop = document.getElementById('kontor-top-actions');
   if (!s.utresa.locked || !s.hemresa.locked) {
     wearDiv.innerHTML = '<p style="color:var(--muted);padding:1rem;font-size:0.85rem;">' + (!s.utresa.locked ? 'Lås utresan först.' : 'Bekräfta hemresan först.') + '</p>';
     actions.style.display = 'none';
+    kontorTop.style.display = 'none';
+    syncActionBar();
     return;
   }
   actions.style.display = 'block';
@@ -607,8 +655,10 @@ function renderKontor() {
   if (btsDriveRow) btsDriveRow.addEventListener('click', function() { const s2 = load(); s2.kontor.btsDrive = !s2.kontor.btsDrive; save(s2); renderKontor(); });
   const restBtn = document.getElementById('rest-ok-btn');
   const rest = returned.length - done;
-  restBtn.style.display = rest > 0 ? 'block' : 'none';
   restBtn.textContent = 'Markera resterande som OK (' + rest + ')';
+  kontorTop.style.display = rest > 0 ? 'block' : 'none';
+  document.getElementById('kontor-status').innerHTML = statusText(done, returned.length, 'kontrollerade');
+  syncActionBar();
 }
 
 function copyBtsName() {
