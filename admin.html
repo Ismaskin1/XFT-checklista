@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e0e0f">
+<title>XFT Adminvy — Utrustning</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root {
+    --bg: #0e0e0f; --surface: #18181b; --surface2: #222226;
+    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.15);
+    --text: #f4f4f5; --muted: #a1a1aa;
+    --accent: #35e375; --accent-dim: rgba(53,227,117,0.12);
+    --danger: #ff4d4d; --danger-dim: rgba(255,77,77,0.1);
+    --success: #4ade80; --success-dim: rgba(74,222,128,0.1);
+    --warning: #fbbf24; --warning-dim: rgba(251,191,36,0.1);
+    --radius: 12px; --radius-lg: 18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; min-height: 100vh; }
+  header { padding: 1.25rem 1rem 1rem; border-bottom: 1px solid var(--border); }
+  .head-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+  .head-logo { width: 64px; flex-shrink: 0; filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px rgba(255,255,255,0.35)); }
+  .head-logo svg { display: block; width: 100%; }
+  .head-titles { flex: 1; min-width: 180px; }
+  .head-title { font-size: 1.05rem; font-weight: 800; letter-spacing: 0.02em; }
+  .head-sub { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+  .head-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .btn-sec { background: transparent; border: 1px solid var(--border2); color: var(--muted); border-radius: 10px; padding: 0.5rem 0.9rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; letter-spacing: 0.04em; }
+  .btn-sec:hover { color: var(--text); background: var(--surface2); }
+  .btn-main { background: var(--accent); border: none; color: #111; border-radius: 10px; padding: 0.55rem 1rem; font-size: 0.8rem; font-weight: 700; cursor: pointer; letter-spacing: 0.04em; text-transform: uppercase; }
+  .btn-main:active { opacity: 0.85; }
+  .updated { font-size: 0.7rem; color: var(--muted); }
+  .main { max-width: 860px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+  .setup-card, .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
+  .setup-card h2 { font-size: 1rem; margin-bottom: 0.5rem; }
+  .setup-card p { color: var(--muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem; }
+  .field { margin-bottom: 0.9rem; }
+  .field label { display: block; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 0.35rem; }
+  .field input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.8rem 1rem; color: var(--text); font-size: 0.95rem; outline: none; }
+  .field input:focus { border-color: var(--accent); }
+  .error-banner { display: none; background: var(--danger-dim); border: 1px solid rgba(255,77,77,0.4); color: var(--danger); border-radius: var(--radius); padding: 0.8rem 1rem; font-size: 0.85rem; line-height: 1.5; margin-bottom: 1rem; }
+  .error-banner.show { display: block; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+  @media (max-width: 560px) { .tiles { grid-template-columns: 1fr 1fr; } .tiles .tile:first-child { grid-column: 1 / -1; } }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; }
+  .tile-num { font-size: 2rem; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .tile-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-top: 0.3rem; }
+  .tile.warn-tile .tile-num { color: var(--danger); }
+  .tile.ok-tile .tile-num { color: var(--accent); }
+  .section-title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 1.4rem 0 0.6rem; }
+  .row { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.8rem 0; border-top: 1px solid var(--border); }
+  .row:first-child { border-top: none; padding-top: 0; }
+  .row-main { flex: 1; min-width: 0; }
+  .row-name { font-size: 0.92rem; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+  .row-meta { font-size: 0.75rem; color: var(--muted); margin-top: 2px; line-height: 1.5; overflow-wrap: anywhere; }
+  .badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.63rem; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; font-weight: 700; margin-top: 2px; }
+  .b-ute { background: var(--accent-dim); color: var(--accent); }
+  .b-ok { background: var(--success-dim); color: var(--success); }
+  .b-slitage { background: var(--warning-dim); color: var(--warning); }
+  .b-skadad { background: var(--danger-dim); color: var(--danger); }
+  .b-saknad { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+  .b-komplett { background: var(--success-dim); color: var(--success); }
+  .b-avvik { background: var(--danger-dim); color: var(--danger); }
+  .empty { color: var(--muted); font-size: 0.85rem; padding: 0.4rem 0; }
+  details.trip-items { margin-top: 0.4rem; }
+  details.trip-items summary { cursor: pointer; font-size: 0.75rem; color: var(--accent); user-select: none; }
+  details.trip-items ul { list-style: none; margin: 0.5rem 0 0; columns: 2; column-gap: 1.5rem; }
+  @media (max-width: 560px) { details.trip-items ul { columns: 1; } }
+  details.trip-items li { font-size: 0.78rem; color: var(--muted); padding: 2px 0; break-inside: avoid; }
+  .search { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.6rem 0.9rem; color: var(--text); font-size: 0.85rem; outline: none; margin-bottom: 0.75rem; }
+  .search:focus { border-color: var(--accent); }
+  .hint { font-size: 0.75rem; color: var(--muted); line-height: 1.5; margin-top: 0.75rem; }
+  #app { display: none; }
+  .loading { color: var(--muted); font-size: 0.85rem; padding: 2rem 0; text-align: center; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="head-logo">
+      <svg viewBox="0 0 704 215" xmlns="http://www.w3.org/2000/svg"><g fill="#ffffff" stroke="none"><path d="M 0.00 2.95 C 0.00 3.84 21.56 26.59 71.95 78.86 C 83.80 91.16 93.79 101.73 94.15 102.36 C 94.53 103.02 85.68 113.01 73.22 126.00 C 61.35 138.38 42.13 158.40 30.52 170.50 C 5.51 196.55 0.00 202.49 0.00 203.35 C 0.00 203.71 16.39 204.00 36.42 204.00 L 72.83 204.00 120.17 154.86 C 146.20 127.83 167.87 105.09 168.33 104.32 C 169.38 102.52 170.73 103.99 117.11 48.25 L 72.63 2.00 36.31 2.00 C 14.08 2.00 0.00 2.37 0.00 2.95 M 171.11 24.00 L 149.83 46.01 168.60 65.53 C 183.48 81.02 187.61 84.79 188.55 83.78 C 189.20 83.08 206.67 64.81 227.37 43.19 C 248.07 21.58 265.00 3.46 265.00 2.94 C 265.00 2.37 250.81 2.00 228.69 2.00 L 192.39 2.00 171.11 24.00 M 295.25 107.25 L 295.50 212.50 322.25 212.77 L 349.00 213.03 349.00 134.02 L 349.00 55.00 415.00 55.00 L 481.00 55.00 481.00 28.50 L 481.00 2.00 388.00 2.00 L 294.99 2.00 295.25 107.25 M 500.00 28.49 L 500.00 54.98 537.25 55.24 L 574.50 55.50 574.76 134.25 L 575.01 213.00 602.00 213.00 L 628.99 213.00 629.24 134.25 L 629.50 55.50 666.75 55.24 L 704.00 54.98 704.00 28.49 L 704.00 2.00 602.00 2.00 L 500.00 2.00 500.00 28.49 M 374.00 110.00 L 374.00 132.00 423.00 132.00 L 472.00 132.00 472.00 110.00 L 472.00 88.00 423.00 88.00 L 374.00 88.00 374.00 110.00 M 168.16 141.07 L 149.90 160.15 171.07 182.07 L 192.24 204.00 228.62 204.00 C 248.63 204.00 265.00 203.65 265.00 203.23 C 265.00 202.22 188.12 122.00 187.16 122.00 C 186.75 122.00 178.21 130.58 168.16 141.07"/></g></svg>
+    </div>
+    <div class="head-titles">
+      <div class="head-title">Adminvy — Utrustning</div>
+      <div class="head-sub">Expendo | Filmteamet</div>
+    </div>
+    <div class="head-actions" id="head-actions" style="display:none;">
+      <span class="updated" id="updated"></span>
+      <button class="btn-sec" onclick="bytAnslutning()">Byt anslutning</button>
+      <button class="btn-main" onclick="loadData()">Uppdatera</button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="error-banner" id="error-banner"></div>
+
+  <div class="setup-card" id="setup" style="display:none;">
+    <h2>Anslut till loggen</h2>
+    <p>Klistra in webappens adress från Apps Script (den som slutar på <code>/exec</code>) och admin-nyckeln du satte i <code>Code.gs</code>. Uppgifterna sparas bara i den här webbläsaren.</p>
+    <div class="field">
+      <label>Webbappens adress</label>
+      <input type="url" id="cfg-url" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Admin-nyckel</label>
+      <input type="password" id="cfg-key" placeholder="Nyckeln från Code.gs" autocomplete="off">
+    </div>
+    <button class="btn-main" onclick="sparaAnslutning()">Anslut</button>
+  </div>
+
+  <div id="app">
+    <div class="tiles">
+      <div class="tile" id="tile-ute"><div class="tile-num" id="num-ute">–</div><div class="tile-label">Uppdrag ute i fält nu</div></div>
+      <div class="tile" id="tile-avvik"><div class="tile-num" id="num-avvik">–</div><div class="tile-label">Öppna avvikelser</div></div>
+      <div class="tile" id="tile-30"><div class="tile-num" id="num-30">–</div><div class="tile-label">Uppdrag senaste 30 dagarna</div></div>
+    </div>
+
+    <div class="section-title">Ute i fält just nu</div>
+    <div class="section-card" id="sec-ute"></div>
+
+    <div class="section-title">Öppna avvikelser</div>
+    <div class="section-card" id="sec-avvik"></div>
+
+    <div class="section-title">Utrustning — senaste kända status</div>
+    <div class="section-card">
+      <input class="search" id="sok" type="search" placeholder="Sök sak, grupp eller serienummer…" oninput="renderUtrustning()">
+      <div id="sec-utrustning"></div>
+    </div>
+
+    <div class="section-title">Senaste uppdrag</div>
+    <div class="section-card" id="sec-senaste"></div>
+  </div>
+
+  <div class="loading" id="loading" style="display:none;">Hämtar data…</div>
+</div>
+
+<script>
+const CFG_KEY = 'xft_admin_cfg';
+let DATA = null;
+let utrustningsLista = [];
+
+function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtDatum(v) { return String(v || '').slice(0, 10); }
+function parseTid(v) { if (!v) return null; const d = new Date(String(v).replace(' ', 'T')); return isNaN(d) ? null : d; }
+
+function cfg() { try { return JSON.parse(localStorage.getItem(CFG_KEY)) || null; } catch (e) { return null; } }
+
+function visaFel(msg) { const b = document.getElementById('error-banner'); b.textContent = msg; b.classList.add('show'); }
+function doljFel() { document.getElementById('error-banner').classList.remove('show'); }
+
+function sparaAnslutning() {
+  const url = document.getElementById('cfg-url').value.trim();
+  const key = document.getElementById('cfg-key').value.trim();
+  if (!url || !key) { visaFel('Fyll i både adressen och nyckeln.'); return; }
+  localStorage.setItem(CFG_KEY, JSON.stringify({ url: url, key: key }));
+  doljFel();
+  visaApp();
+  loadData();
+}
+
+function bytAnslutning() {
+  const c = cfg() || {};
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('head-actions').style.display = 'none';
+  document.getElementById('setup').style.display = 'block';
+  document.getElementById('cfg-url').value = c.url || '';
+  document.getElementById('cfg-key').value = '';
+}
+
+function visaApp() {
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('head-actions').style.display = 'flex';
+}
+
+function loadData() {
+  const c = cfg();
+  if (!c) return;
+  doljFel();
+  document.getElementById('loading').style.display = 'block';
+  fetch(c.url + '?key=' + encodeURIComponent(c.key))
+    .then(r => r.json())
+    .then(j => {
+      document.getElementById('loading').style.display = 'none';
+      if (!j || j.ok === false) { visaFel(j && j.error ? 'Backenden svarade: ' + j.error : 'Backenden gav ett oväntat svar.'); return; }
+      DATA = j;
+      renderAllt();
+      document.getElementById('updated').textContent = 'Uppdaterad ' + new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
+    })
+    .catch(() => {
+      document.getElementById('loading').style.display = 'none';
+      visaFel('Kunde inte hämta data. Kontrollera uppkopplingen och att webbappens adress stämmer.');
+    });
+}
+
+function renderAllt() {
+  const logg = DATA.logg || [];
+  const avvikelser = DATA.avvikelser || [];
+
+  // Pågående uppdrag: utresa utan matchande rapport
+  const rapporterade = new Set(logg.filter(r => r.typ === 'Rapport').map(r => String(r.uppdrag)));
+  const ute = logg.filter(r => r.typ === 'Utresa' && !rapporterade.has(String(r.uppdrag))).reverse();
+
+  const oppna = avvikelser.filter(a => !a.atgardad).reverse();
+
+  const nu = Date.now();
+  const dagar30 = logg.filter(r => { const t = parseTid(r.tid); return r.typ === 'Rapport' && t && (nu - t.getTime()) < 30 * 864e5; }).length;
+
+  document.getElementById('num-ute').textContent = ute.length;
+  document.getElementById('num-avvik').textContent = oppna.length;
+  document.getElementById('num-30').textContent = dagar30;
+  document.getElementById('tile-avvik').className = 'tile' + (oppna.length ? ' warn-tile' : ' ok-tile');
+  document.getElementById('tile-ute').className = 'tile';
+
+  // Ute i fält
+  const uteHtml = ute.map(function(r) {
+    const p = r.payload || {};
+    const saker = (p.taken || []);
+    const start = parseTid(r.tid);
+    const dagarUte = start ? Math.max(0, Math.round((nu - start.getTime()) / 864e5)) : null;
+    let h = '<div class="row"><div class="row-main">';
+    h += '<div class="row-name">' + esc(r.kund) + '</div>';
+    h += '<div class="row-meta">' + esc(r.filmare) + ' · ' + esc(fmtDatum(r.datum)) + ' · ' + saker.length + ' saker' + (p.gels && p.gels.length ? ' · Gels: ' + esc(p.gels.join(', ')) : '') + '</div>';
+    if (saker.length) {
+      h += '<details class="trip-items"><summary>Visa utrustningen</summary><ul>';
+      saker.forEach(function(sak) { h += '<li>' + esc(sak.name) + (sak.serial ? ' · SN ' + esc(sak.serial) : '') + '</li>'; });
+      h += '</ul></details>';
+    }
+    h += '</div><span class="badge b-ute">📦 Ute' + (dagarUte != null && dagarUte >= 1 ? ' · ' + dagarUte + ' dygn' : '') + '</span></div>';
+    return h;
+  }).join('');
+  document.getElementById('sec-ute').innerHTML = uteHtml || '<div class="empty">Ingen utrustning är ute just nu.</div>';
+
+  // Öppna avvikelser
+  const badgeFor = { 'Saknad': 'b-saknad', 'Skadad': 'b-skadad', 'Slitage': 'b-slitage' };
+  const ikonFor = { 'Saknad': '❓', 'Skadad': '❗', 'Slitage': '⚠️' };
+  const avvikHtml = oppna.map(function(a) {
+    let h = '<div class="row"><div class="row-main">';
+    h += '<div class="row-name">' + esc(a.sak) + (a.serienummer ? ' <span style="color:var(--muted);font-weight:400;font-size:0.75rem;">SN ' + esc(a.serienummer) + '</span>' : '') + '</div>';
+    h += '<div class="row-meta">' + esc(a.grupp) + ' · ' + esc(a.kund) + ' · ' + esc(fmtDatum(a.datum)) + (a.kommentar ? '<br>”' + esc(a.kommentar) + '”' : '') + '</div>';
+    h += '</div><span class="badge ' + (badgeFor[a.typ] || 'b-skadad') + '">' + (ikonFor[a.typ] || '') + ' ' + esc(a.typ) + '</span></div>';
+    return h;
+  }).join('');
+  document.getElementById('sec-avvik').innerHTML = (avvikHtml || '<div class="empty">Inga öppna avvikelser — allt är helt.</div>')
+    + (oppna.length ? '<div class="hint">Löst något? Bocka i kolumnen Åtgärdad på raden i fliken Avvikelser i Google Sheet, så försvinner den härifrån.</div>' : '');
+
+  // Utrustning: senaste kända status per sak, byggd ur händelserna i kronologisk ordning
+  const perSak = new Map();
+  logg.forEach(function(r) {
+    const p = r.payload || {};
+    const datum = fmtDatum(r.datum);
+    (p.taken || []).forEach(function(sak) {
+      const nyckel = sak.name + '|' + (sak.serial || '') + '|' + (sak.group || '');
+      let post = perSak.get(nyckel);
+      if (!post) { post = { name: sak.name, group: sak.group || '', serial: sak.serial || '', antal: 0, senast: '', status: 'OK', kommentar: '' }; perSak.set(nyckel, post); }
+      if (r.typ === 'Utresa') post.antal++;
+      if (datum > post.senast) post.senast = datum;
+      if (r.typ === 'Rapport') { post.status = 'OK'; post.kommentar = ''; }
+    });
+    if (r.typ === 'Rapport') {
+      (p.damaged || []).forEach(function(sak) {
+        const post = perSak.get(sak.name + '|' + (sak.serial || '') + '|' + (sak.group || ''));
+        if (post) { post.status = sak.status === 'skadad' ? 'Skadad' : 'Slitage'; post.kommentar = sak.comment || ''; }
+      });
+      (p.missing || []).forEach(function(sak) {
+        const post = perSak.get(sak.name + '|' + (sak.serial || '') + '|' + (sak.group || ''));
+        if (post) { post.status = 'Saknad'; }
+      });
+    }
+  });
+  const uteNu = new Set();
+  ute.forEach(function(r) { ((r.payload || {}).taken || []).forEach(function(sak) { uteNu.add(sak.name + '|' + (sak.serial || '') + '|' + (sak.group || '')); }); });
+  utrustningsLista = Array.from(perSak.entries()).map(function([nyckel, post]) { post.uteNu = uteNu.has(nyckel); return post; });
+  const ordning = { 'Saknad': 0, 'Skadad': 1, 'Slitage': 2, 'OK': 3 };
+  utrustningsLista.sort(function(a, b) { return (ordning[a.status] - ordning[b.status]) || a.name.localeCompare(b.name, 'sv'); });
+  renderUtrustning();
+
+  // Senaste uppdrag
+  const senaste = logg.filter(r => r.typ === 'Rapport').reverse().slice(0, 10);
+  const senasteHtml = senaste.map(function(r) {
+    const badge = r.status === 'KOMPLETT' ? '<span class="badge b-komplett">✔ Komplett</span>' : '<span class="badge b-avvik">❗ Avvikelser</span>';
+    let h = '<div class="row"><div class="row-main">';
+    h += '<div class="row-name">' + esc(r.kund) + '</div>';
+    h += '<div class="row-meta">' + esc(r.filmare) + ' · ' + esc(fmtDatum(r.datum)) + ' · ' + esc(r.sammanfattning || '') + '</div>';
+    h += '</div>' + badge + '</div>';
+    return h;
+  }).join('');
+  document.getElementById('sec-senaste').innerHTML = senasteHtml || '<div class="empty">Inga rapporter ännu.</div>';
+}
+
+function renderUtrustning() {
+  const filter = (document.getElementById('sok').value || '').toLowerCase();
+  const träffar = utrustningsLista.filter(function(post) {
+    return !filter || (post.name + ' ' + post.group + ' ' + post.serial).toLowerCase().includes(filter);
+  });
+  const badgeFor = { 'OK': 'b-ok', 'Slitage': 'b-slitage', 'Skadad': 'b-skadad', 'Saknad': 'b-saknad' };
+  const ikonFor = { 'OK': '✔', 'Slitage': '⚠️', 'Skadad': '❗', 'Saknad': '❓' };
+  const html = träffar.map(function(post) {
+    let h = '<div class="row"><div class="row-main">';
+    h += '<div class="row-name">' + esc(post.name) + (post.serial ? ' <span style="color:var(--muted);font-weight:400;font-size:0.75rem;">SN ' + esc(post.serial) + '</span>' : '') + '</div>';
+    h += '<div class="row-meta">' + esc(post.group) + ' · ' + post.antal + ' uppdrag · senast ' + esc(post.senast || '–') + (post.kommentar ? '<br>”' + esc(post.kommentar) + '”' : '') + '</div>';
+    h += '</div>';
+    if (post.uteNu) h += '<span class="badge b-ute">📦 Ute</span>';
+    h += '<span class="badge ' + badgeFor[post.status] + '">' + ikonFor[post.status] + ' ' + esc(post.status) + '</span></div>';
+    return h;
+  }).join('');
+  document.getElementById('sec-utrustning').innerHTML = html || '<div class="empty">' + (utrustningsLista.length ? 'Inget matchar sökningen.' : 'Ingen utrustning har loggats ännu.') + '</div>';
+}
+
+(function init() {
+  if (cfg()) { visaApp(); loadData(); }
+  else { document.getElementById('setup').style.display = 'block'; }
+  setInterval(function() { if (cfg() && document.getElementById('app').style.display !== 'none') loadData(); }, 5 * 60 * 1000);
+})();
+</script>
+</body>
+</html>

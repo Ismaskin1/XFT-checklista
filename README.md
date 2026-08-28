@@ -4,7 +4,7 @@ Mobilanpassad checklista för filmteamets utrustning. Hela appen ligger i en end
 
 ## Flöde
 
-1. **Utresa** — filmaren fyller i namn, kund och datum, bockar i utrustningen som tas med och låser utresan. Vid låsningen mejlas en utresanmälan till teamet, så att det finns en logg över vad som är ute i fält redan innan uppdraget är klart.
+1. **Utresa** — filmaren fyller i namn, kund och datum, bockar i utrustningen som tas med och låser utresan. Med Google-backenden inkopplad loggas utresan direkt i kalkylarket, så att teamet ser vad som är ute i fält redan innan uppdraget är klart.
 2. **Hemresa** — filmaren bockar av det som har kommit tillbaka och besvarar BTS-frågan. Saker som inte bockas av rapporteras som saknade, och en bekräftelsedialog listar dem innan hemresan låses.
 3. **Kontor** — den returnerade utrustningen kontrolleras (OK / Slitage / Skadad), BTS-materialet bekräftas uppladdat på Google Drive, och slutrapporten skickas till filmteamet@xft.se.
 
@@ -17,10 +17,14 @@ Låsta steg kan alltid låsas upp med **Ändra**-knappen om något blev fel, uta
 ## Teknik
 
 - **Lagring:** `localStorage` med nyckeln `xft_v2`. Ett pågående uppdrag ligger kvar även om sidan stängs eller laddas om, och rensas först när slutrapporten har skickats.
-- **Utskick:** Formspree (form-ID `xeedpwrz`) vidarebefordrar till filmteamet@xft.se. Två mejl per uppdrag: utresanmälan vid låsning och slutrapport efter kontroll. Ämnesraden får tillägget `AVVIKELSER` när något saknas eller är skadat.
+- **Utskick, två lägen:** styrs av `BACKEND_URL` i `index.html`.
+  - *Google-läget* (rekommenderat, se [SETUP.md](SETUP.md)): utresa och slutrapport loggas i ett Google Sheet via Apps Script, slutrapporten mejlas till filmteamet@xft.se och adminvyn läser arket. Inga volymtak i praktiken.
+  - *Formspree-läget* (`BACKEND_URL` tom): slutrapporten mejlas via Formspree (form-ID `xeedpwrz`) som tidigare. Ingen utresanmälan skickas — gratisplanens 50 utskick per månad behöver rymma slutrapporterna.
+  - Ämnesraden får tillägget `AVVIKELSER` när något saknas eller är skadat, i båda lägena.
+- **Adminvy:** `admin.html` (samma GitHub Pages-adress) visar vad som är ute i fält just nu, öppna avvikelser, status per pryl och senaste uppdrag. Kräver webbappens adress + admin-nyckeln, som anges en gång per webbläsare.
 - **Design:** mörkt tema med grön accent `#35e375`.
 - **Offline:** `sw.js` cachar appen så att den startar utan uppkoppling. Sidan hämtas alltid från nätet när det går, så uppdateringar på GitHub Pages slår igenom som vanligt.
-- **Filer:** `index.html` (hela appen), `sw.js` (offlinestöd), `manifest.webmanifest` + ikonfiler (appikon och helskärmsläge).
+- **Filer:** `index.html` (checklistan), `admin.html` (adminvyn), `apps-script/Code.gs` (Google-backenden), `SETUP.md` (installationsguide), `sw.js` (offlinestöd), `manifest.webmanifest` + ikonfiler (appikon och helskärmsläge).
 
 ## Ändra utrustningslistan
 

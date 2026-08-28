@@ -154,7 +154,7 @@
   </div>
   <div class="header-sub">
     <span class="header-title">Utrustningschecklista — Filmteamet</span>
-    <span class="header-version">v3.1</span>
+    <span class="header-version">v3.2</span>
   </div>
 </header>
 
@@ -306,6 +306,11 @@ const ITEM_NAMES = {
 const ICONS = { "DJI-kamera":"🎥","Dronare":"🚁","Ljus":"💡","Backdrop":"🎭","Mikrofon":"🎙️","Stillbildskamera":"📷","Ovrigt":"🎒" };
 const STORE_KEY = 'xft_v2';
 const FORM_URL = 'https://formspree.io/f/xeedpwrz';
+// Google Apps Script-backend (checklista → Google Sheet → adminvy). Se SETUP.md.
+// Tom sträng = rapporterna går via Formspree som tidigare, och ingen utresanmälan skickas
+// (Formspree tillåter 50 utskick per månad och de behöver rymma slutrapporterna).
+// När backenden är utplacerad: klistra in webappens URL (slutar på /exec) här.
+const BACKEND_URL = '';
 const GELS = [
   { name:"Rod",    display:"Röd",    color:"#e03535" },
   { name:"Gron",   display:"Grön",   color:"#35e375" },
@@ -631,15 +636,15 @@ function askRestOk() {
   );
 }
 
+function gelDisplays(s) { return s.gels.map(n => { const gl = GELS.find(x => x.name === n); return gl ? gl.display : n; }); }
+function itemRef(e) { return { name:itemName(e), group:groupDisplay(e.group), serial:e.serial || '' }; }
+
 function takenSection(s) {
   let out = '--- MEDTAGEN UTRUSTNING (' + s.utresa.taken.length + ' st) ---\n\n';
   Object.entries(groups(takenItems(s))).forEach(function([gname, items]) {
     out += '[' + groupDisplay(gname).toUpperCase() + ']\n';
     items.forEach(e => { out += '  * ' + itemName(e) + serialSuffix(e) + '\n'; });
-    if (gname === 'Ljus' && s.gels.length > 0) {
-      const gelDisplays = s.gels.map(n => { const gl = GELS.find(x => x.name === n); return gl ? gl.display : n; });
-      out += '  * Gels: ' + gelDisplays.join(', ') + '\n';
-    }
+    if (gname === 'Ljus' && s.gels.length > 0) out += '  * Gels: ' + gelDisplays(s).join(', ') + '\n';
     out += '\n';
   });
   return out;
@@ -655,26 +660,29 @@ function buildForm(subject, s, body) {
   return fd;
 }
 
-// Mejlar en utresanmälan när utresan låses, så att teamet har en logg över vad som är ute i fält
-// redan innan uppdraget är klart. Skickas på nytt bara om innehållet har ändrats.
-function mailUtresa(s) {
+// Loggar utresan i Google Sheet via backenden när utresan låses, så att teamet ser vad som är
+// ute i fält redan innan uppdraget är klart. Skickas på nytt bara om innehållet har ändrats.
+// Utan backend hoppas loggningen över — Formspree-kvoten behöver rymma slutrapporterna.
+function reportUtresa(s) {
+  if (!BACKEND_URL) return;
   const sig = JSON.stringify([s.utresa.date, s.utresa.customer, s.utresa.filmer, s.utresa.taken.slice().sort((a,b)=>a-b), s.gels.slice().sort()]);
   if (s.utresaMailed === sig) return;
-  let body = '=== UTRESA — UTRUSTNING UTE I FÄLT ===\n';
-  body += 'Kund:     ' + s.utresa.customer + '\n';
-  body += 'Datum:    ' + s.utresa.date + '\n';
-  body += 'Filmare:  ' + s.utresa.filmer + '\n';
-  body += 'Låst:     ' + new Date().toLocaleString('sv-SE') + '\n\n';
-  body += takenSection(s);
-  body += 'Fullständig rapport skickas efter hemkomst och kontroll.\n';
-  fetch(FORM_URL, { method:'POST', body:buildForm('Utresa - ' + s.utresa.customer + ' - ' + s.utresa.date, s, body), headers:{ 'Accept':'application/json' } })
-    .then(r => {
-      if (!r.ok) throw new Error('server');
+  const fd = new FormData();
+  fd.append('type', 'utresa');
+  fd.append('tripId', s.tripId || '');
+  fd.append('filmare', s.utresa.filmer);
+  fd.append('kund', s.utresa.customer);
+  fd.append('datum', s.utresa.date);
+  fd.append('payload', JSON.stringify({ taken: takenItems(s).map(itemRef), gels: gelDisplays(s) }));
+  fetch(BACKEND_URL, { method:'POST', body:fd })
+    .then(r => r.json())
+    .then(j => {
+      if (!j || j.ok === false) throw new Error('backend');
       const s2 = load();
       if (s2.utresa.locked) { s2.utresaMailed = sig; save(s2); }
-      toast('Utresa låst — anmäld till filmteamet@xft.se');
+      toast('Utresa låst och loggad hos filmteamet');
     })
-    .catch(() => toast('Utresa låst. Anmälan kunde inte mejlas nu — allt kommer med i slutrapporten.', true));
+    .catch(() => toast('Utresa låst. Loggningen kunde inte skickas nu — allt kommer med i slutrapporten.', true));
 }
 
 function submitKontor() {
@@ -744,22 +752,46 @@ function submitKontor() {
   else if (bts.status === 'nej') body += '  BTS filmades inte. Anledning: ' + (bts.reason || 'ej angiven') + '\n';
   else body += '  Ej registrerat\n';
 
-  sendReport(s, body, avvik);
+  const payload = {
+    taken: takenItems(s).map(itemRef),
+    missing: missing.map(itemRef),
+    damaged: damaged.map(d => ({ name:d.name, group:d.group, serial:d.serial || '', status:d.status, comment:d.comment })),
+    gels: gelDisplays(s),
+    bts: { status: bts.status || '', reason: bts.reason || '', drive: !!s.kontor.btsDrive },
+    counts: { medtaget: s.utresa.taken.length, returnerat: returned.length, ok: okCount, slitage: slit, skadad: skad, saknat: missing.length }
+  };
+  sendReport(s, body, avvik, payload);
 }
 
-function sendReport(s, body, avvik) {
+function sendReport(s, body, avvik, payload) {
   showOverlay('<div class="success-screen"><div class="success-icon" style="font-size:1.5rem;">⏳</div><div class="success-title" style="color:var(--muted);">Skickar rapport…</div><div class="success-sub">Stäng inte sidan.</div></div>');
-  const fd = buildForm('Utrustningsrapport - ' + s.utresa.customer + ' - ' + s.utresa.date + (avvik ? ' - AVVIKELSER' : ''), s, body);
-  fetch(FORM_URL, { method:'POST', body:fd, headers:{ 'Accept':'application/json' } })
-    .then(r => {
-      if (r.ok) {
-        localStorage.removeItem(STORE_KEY);
-        showOverlay('<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">Rapport skickad!</div><div class="success-sub">Skickad till filmteamet@xft.se</div><button class="action-btn" onclick="newSession()">+ Nytt uppdrag</button></div>');
-      } else {
-        showSendError('Servern tog inte emot rapporten. Vänta en stund och försök igen — allt är kvar på den här enheten.');
-      }
+  const subject = 'Utrustningsrapport - ' + s.utresa.customer + ' - ' + s.utresa.date + (avvik ? ' - AVVIKELSER' : '');
+  let req;
+  if (BACKEND_URL) {
+    const fd = new FormData();
+    fd.append('type', 'rapport');
+    fd.append('tripId', s.tripId || '');
+    fd.append('filmare', s.utresa.filmer);
+    fd.append('kund', s.utresa.customer);
+    fd.append('datum', s.utresa.date);
+    fd.append('subject', subject);
+    fd.append('rapport', body);
+    fd.append('payload', JSON.stringify(payload));
+    req = fetch(BACKEND_URL, { method:'POST', body:fd })
+      .then(r => r.json())
+      .then(j => { if (!j || j.ok === false) throw new Error('server'); });
+  } else {
+    req = fetch(FORM_URL, { method:'POST', body:buildForm(subject, s, body), headers:{ 'Accept':'application/json' } })
+      .then(r => { if (!r.ok) throw new Error('server'); });
+  }
+  req
+    .then(() => {
+      localStorage.removeItem(STORE_KEY);
+      showOverlay('<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">Rapport skickad!</div><div class="success-sub">Skickad till filmteamet@xft.se</div><button class="action-btn" onclick="newSession()">+ Nytt uppdrag</button></div>');
     })
-    .catch(() => showSendError('Ingen uppkoppling. Kontrollera internet och försök igen — allt är kvar på den här enheten.'));
+    .catch(err => showSendError(err && err.message === 'server'
+      ? 'Servern tog inte emot rapporten. Vänta en stund och försök igen — allt är kvar på den här enheten.'
+      : 'Rapporten kom inte fram. Kontrollera internet och försök igen — allt är kvar på den här enheten.'));
 }
 
 function showSendError(msg) {
@@ -791,6 +823,8 @@ function lockUtresa() {
   s.utresa.customer = customer;
   s.utresa.date = date;
   s.utresa.locked = true;
+  // Uppdrags-ID knyter ihop utresan och slutrapporten i loggen
+  if (!s.tripId) s.tripId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);
   // Rensa referenser till saker som inte längre är medtagna (efter upplåsning och ändring)
   s.hemresa.returned = s.hemresa.returned.filter(id => s.utresa.taken.includes(id));
   Object.keys(s.kontor.wear).forEach(id => { if (!s.utresa.taken.includes(parseInt(id))) delete s.kontor.wear[id]; });
@@ -800,7 +834,7 @@ function lockUtresa() {
     document.getElementById('bts-modal').classList.add('open');
   }
   save(s); render();
-  mailUtresa(s);
+  reportUtresa(s);
 }
 
 function unlockUtresa() {
