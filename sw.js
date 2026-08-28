@@ -1,7 +1,7 @@
 // Service worker för XFT Utrustningschecklista.
 // Gör att appen startar även utan uppkoppling: sidan hämtas från nätet när det går
 // (så att uppdateringar alltid slår igenom) och från cachen när nätet saknas.
-const CACHE = 'xft-checklista-v3.5';
+const CACHE = 'xft-checklista-v4.0';
 const ASSETS = ['./', './index.html', './admin.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -24,7 +24,7 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const req = e.request;
-  // Endast GET inom samma origin hanteras — rapportutskick till Formspree rörs aldrig.
+  // Endast GET inom samma origin hanteras — anrop till Google-backenden rörs aldrig.
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   if (req.mode === 'navigate') {
     // no-cache tvingar webbläsaren att fråga servern om sidan ändrats, så att en ny

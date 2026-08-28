@@ -4,14 +4,12 @@
 // och distribueras som webbapp. Fullständig instruktion finns i SETUP.md i repot.
 //
 // Tar emot två händelser från checklistan:
-//   type=utresa  → en rad i fliken "Logg" med status UTE (inget mejl)
-//   type=rapport → en rad i "Logg", avvikelseraderna i fliken "Avvikelser",
-//                  och slutrapporten mejlas till MAIL_TO
+//   type=utresa  → en rad i fliken "Logg" med status UTE
+//   type=rapport → en rad i "Logg" plus avvikelseraderna i fliken "Avvikelser"
 // Adminvyn (admin.html) hämtar allt via GET med nyckeln nedan.
 
-const SKRIPT_VERSION = '3.5'; // syns i adminvyns självtest, så att du ser om rätt kod är utplacerad
+const SKRIPT_VERSION = '4.0'; // syns i adminvyns självtest, så att du ser om rätt kod är utplacerad
 const ADMIN_KEY = 'BYT-MIG-till-en-egen-lang-nyckel'; // hitta på en egen innan utplacering
-const MAIL_TO = 'filmteamet@xft.se';
 const TZ = 'Europe/Stockholm';
 
 const LOGG_BLAD = 'Logg';
@@ -58,20 +56,8 @@ function doPost(e) {
       skrivAvvikelser(payload, p, nu);
     }
 
-    // Loggen skrivs före mejlet: ett mejl som inte går iväg får aldrig kosta oss raden i arket.
     logg.appendRow([nu, typ, tripId, p.datum || '', p.kund || '', p.filmare || '', status, sammanfattning, p.payload || '']);
-
-    let mailFel = '';
-    if (typ === 'Rapport') {
-      try {
-        MailApp.sendEmail(MAIL_TO,
-          p.subject || ('Utrustningsrapport - ' + (p.kund || '') + ' - ' + (p.datum || '')),
-          p.rapport || '(tom rapport)');
-      } catch (mfel) {
-        mailFel = String(mfel);
-      }
-    }
-    return json({ ok: true, mailError: mailFel });
+    return json({ ok: true });
   } catch (fel) {
     return json({ ok: false, error: String(fel) });
   } finally {
@@ -115,11 +101,11 @@ function skrivAvvikelser(payload, p, nu) {
   });
 }
 
-// Självtest som adminvyn anropar: kontrollerar de tre saker som kan fattas efter en
-// utplacering — kopplingen till arket, skrivbehörigheten och mejlbehörigheten.
+// Självtest som adminvyn anropar: kontrollerar de två saker som kan fattas efter en
+// utplacering — kopplingen till arket och skrivbehörigheten.
 // Testraden skrivs och raderas direkt, så inget skräp blir kvar i loggen.
 function sjalvtest() {
-  const svar = { ok: true, sjalvtest: true, version: SKRIPT_VERSION, kalkylark: '', skrivning: '', mejl: '' };
+  const svar = { ok: true, sjalvtest: true, version: SKRIPT_VERSION, kalkylark: '', skrivning: '' };
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     svar.kalkylark = ss
@@ -136,11 +122,6 @@ function sjalvtest() {
     svar.skrivning = 'OK — skriptet kan skriva i arket';
   } catch (fel) {
     svar.skrivning = 'FEL — ' + fel;
-  }
-  try {
-    svar.mejl = 'OK — ' + MailApp.getRemainingDailyQuota() + ' mejl kvar att skicka i dag';
-  } catch (fel) {
-    svar.mejl = 'FEL — behörigheten att skicka mejl saknas. Kör funktionen doGet i Apps Script och godkänn behörigheterna. (' + fel + ')';
   }
   return svar;
 }
