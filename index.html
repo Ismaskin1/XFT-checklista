@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e0e0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="XFT Checklista">
 <title>XFT Utrustningschecklista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0e0e0f; --surface: #18181b; --surface2: #222226;
@@ -18,7 +25,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; min-height: 100vh; }
   header { background: var(--bg); padding: 1.5rem 1rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border); }
-  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300&display=swap');
   .neon-logo-wrap { position: relative; text-align: center; padding: 0.5rem 0; }
   .neon-svg-wrap { display: inline-block; width: clamp(200px, 55vw, 340px); opacity: 0; animation: neonFadeIn 1s ease forwards; filter: drop-shadow(0 0 2px #ffffff) drop-shadow(0 0 5px #ffffff) drop-shadow(0 0 17px rgba(255,255,255,0.19)); overflow: visible; padding: 16px; box-sizing: border-box; }
   .neon-svg-wrap svg { overflow: visible; display: block; }
@@ -33,6 +39,7 @@
   @keyframes expandLine { to{width:100%} }
   .header-sub { display: flex; align-items: center; justify-content: space-between; width: 100%; }
   .header-title { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
+  .header-version { font-size: 0.6rem; color: var(--muted); opacity: 0.7; letter-spacing: 0.08em; }
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--tab-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
   .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: none; background: transparent; color: var(--muted); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
   .nav-btn .icon { font-size: 1.4rem; line-height: 1; }
@@ -48,6 +55,9 @@
   .field-group input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.875rem 1rem; color: var(--text); font-size: 1rem; outline: none; -webkit-appearance: none; }
   .field-group input:focus { border-color: var(--accent); }
   .locked-banner { display: flex; align-items: center; gap: 0.75rem; background: var(--accent-dim); border: 1px solid rgba(53,227,117,0.2); border-radius: var(--radius); padding: 0.875rem 1rem; margin-bottom: 1.25rem; font-size: 0.82rem; color: var(--accent); }
+  .locked-info { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .banner-btn { flex-shrink: 0; background: transparent; border: 1px solid rgba(53,227,117,0.4); color: var(--accent); border-radius: 8px; padding: 0.4rem 0.85rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; }
+  .banner-btn:active { background: var(--accent-dim); }
   .group-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 0.75rem; }
   .group-header { display: flex; align-items: center; padding: 1rem 1.25rem; gap: 0.75rem; cursor: pointer; user-select: none; min-height: 64px; }
   .group-header:active { background: var(--surface2); }
@@ -76,8 +86,10 @@
   .action-btn:active { opacity: 0.85; }
   .action-btn-sec { width: 100%; padding: 0.875rem; border: 1px solid var(--border2); border-radius: var(--radius-lg); background: transparent; color: var(--muted); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; margin-top: 0.75rem; }
   .action-btn-sec:active { background: var(--surface2); color: var(--text); }
+  .reset-btn { display: block; width: 100%; margin-top: 1.5rem; background: transparent; border: none; color: var(--danger); opacity: 0.6; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; padding: 0.75rem; }
+  .reset-btn:active { opacity: 1; }
   .wear-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; }
-  .wear-card-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warning); }
+  .wear-card-header { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warning); }
   .wear-item { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
   .wear-item:last-child { border-bottom: none; }
   .wear-item.needs-status { background: rgba(255,77,77,0.06); border-left: 3px solid var(--danger); }
@@ -98,14 +110,21 @@
   .modal-title { font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem; letter-spacing: 0.06em; text-transform: uppercase; }
   .modal-btn { width: 100%; padding: 1rem; border: none; border-radius: var(--radius-lg); font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
   .modal-btn-danger { background: var(--danger-dim); color: var(--danger); border: 1px solid var(--danger); }
+  .modal-btn-accent { background: var(--accent); color: #111; }
   .modal-btn-cancel { background: var(--surface2); color: var(--muted); border: none; }
-  .toast { position: fixed; bottom: calc(var(--tab-h) + 1rem); left: 50%; transform: translateX(-50%) translateY(120px); background: #1c1c20; border: 1px solid var(--border2); color: var(--text); padding: 0.875rem 1.5rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; transition: transform 0.3s; z-index: 999; box-shadow: 0 4px 24px rgba(0,0,0,0.6); max-width: 88vw; text-align: center; line-height: 1.4; }
-  .toast.show { transform: translateX(-50%) translateY(0); }
+  .modal-list { list-style: none; margin: 0.75rem 0 0.25rem; padding: 0; max-height: 35vh; overflow-y: auto; }
+  .modal-list li { padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text); }
+  .modal-list li:last-child { border-bottom: none; }
+  .send-overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 400; overflow-y: auto; }
+  .send-overlay.open { display: block; }
+  .toast { position: fixed; bottom: calc(var(--tab-h) + 1rem); left: 50%; transform: translateX(-50%) translateY(120px); background: #1c1c20; border: 1px solid var(--border2); color: var(--text); padding: 0.875rem 1.5rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; transition: transform 0.3s, visibility 0.3s; z-index: 999; box-shadow: 0 4px 24px rgba(0,0,0,0.6); max-width: 88vw; text-align: center; line-height: 1.4; pointer-events: none; visibility: hidden; }
+  .toast.show { transform: translateX(-50%) translateY(0); visibility: visible; }
   .toast.toast-error { border-color: var(--danger); color: var(--danger); background: #1a0e0e; }
-  .success-screen { display: flex; flex-direction: column; align-items: center; padding: 3rem 1rem; text-align: center; gap: 1.25rem; }
+  .success-screen { display: flex; flex-direction: column; align-items: center; padding: 3rem 1rem; text-align: center; gap: 1.25rem; max-width: 600px; margin: 0 auto; }
   .success-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
   .success-title { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
   .success-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+  .success-screen .action-btn, .success-screen .action-btn-sec { max-width: 320px; }
   .gels-row { padding: 0.875rem 1.25rem; border-top: 1px solid var(--border); }
   .gels-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 0.6rem; }
   .gels-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -132,16 +151,17 @@
   </div>
   <div class="header-sub">
     <span class="header-title">Utrustningschecklista — Filmteamet</span>
+    <span class="header-version">v3</span>
   </div>
 </header>
 
-<div class="modal-overlay" id="delete-modal" onclick="if(event.target===this)this.classList.remove('open')">
+<div class="modal-overlay" id="confirm-modal" onclick="if(event.target===this)closeConfirm()">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" style="color:var(--danger)">Ta bort utrustning</div>
-    <p id="delete-text" style="color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:0.5rem;"></p>
-    <button class="modal-btn modal-btn-danger" onclick="doDelete()">Ta bort</button>
-    <button class="modal-btn modal-btn-cancel" onclick="document.getElementById('delete-modal').classList.remove('open')">Avbryt</button>
+    <div class="modal-title" id="confirm-title"></div>
+    <div id="confirm-body" style="color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:0.5rem;"></div>
+    <button class="modal-btn modal-btn-danger" id="confirm-btn" onclick="runConfirm()"></button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeConfirm()">Avbryt</button>
   </div>
 </div>
 
@@ -149,10 +169,12 @@
   <div class="modal-sheet" style="border-radius:var(--radius-lg);">
     <div class="modal-handle"></div>
     <div class="modal-title" style="color:var(--warning)">Glöm inte BTS-content!</div>
-    <p style="color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:1.25rem;">Filma bakom kulisserna under inspelningen. BTS-content är kritiskt för bolagets marknadsföring.</p>
+    <p style="color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:1.25rem;">Filma bakom kulisserna under inspelningen. BTS-content är avgörande för bolagets marknadsföring.</p>
     <button class="modal-btn" style="background:var(--accent);color:#111;" onclick="document.getElementById('bts-modal').classList.remove('open')">Förstått, jag filmar BTS</button>
   </div>
 </div>
+
+<div class="send-overlay" id="send-overlay"></div>
 
 <div class="main">
   <div class="phase-panel active" id="panel-utresa">
@@ -170,16 +192,17 @@
         <input type="date" id="trip-date">
       </div>
     </div>
-    <div id="locked-banner" style="display:none" class="locked-banner">🔒 <span id="locked-text"></span></div>
+    <div id="locked-banner" style="display:none" class="locked-banner">🔒 <span class="locked-info" id="locked-text"></span><button class="banner-btn" onclick="unlockUtresa()">Ändra</button></div>
     <div id="checklist-utresa"></div>
     <div id="utresa-actions">
       <button class="action-btn-sec" onclick="selectAllUtresa()">Välj all utrustning</button>
       <button class="action-btn" onclick="lockUtresa()">Bekräfta och lås utresa</button>
     </div>
+    <button class="reset-btn" onclick="askReset()">Rensa allt och börja om</button>
   </div>
 
   <div class="phase-panel" id="panel-hemresa">
-    <div id="locked-banner-hemresa" class="locked-banner" style="display:none">🔒 <span id="locked-text-hemresa"></span></div>
+    <div id="locked-banner-hemresa" class="locked-banner" style="display:none">🔒 <span class="locked-info" id="locked-text-hemresa"></span><button class="banner-btn" onclick="unlockHemresa()">Ändra</button></div>
     <div id="checklist-hemresa"></div>
     <div id="hemresa-actions">
       <button class="action-btn-sec" onclick="selectAllHemresa()">Välj alla returnerade</button>
@@ -190,6 +213,7 @@
   <div class="phase-panel" id="panel-kontor">
     <div id="wear-checks"></div>
     <div id="kontor-actions">
+      <button class="action-btn-sec" id="rest-ok-btn" onclick="askRestOk()">Markera resterande som OK</button>
       <button class="action-btn" onclick="submitKontor()">Slutför och skicka</button>
     </div>
   </div>
@@ -278,6 +302,7 @@ const ITEM_NAMES = {
 
 const ICONS = { "DJI-kamera":"🎥","Dronare":"🚁","Ljus":"💡","Backdrop":"🎭","Mikrofon":"🎙️","Stillbildskamera":"📷","Ovrigt":"🎒" };
 const STORE_KEY = 'xft_v2';
+const FORM_URL = 'https://formspree.io/f/xeedpwrz';
 const GELS = [
   { name:"Rod",    display:"Röd",    color:"#e03535" },
   { name:"Gron",   display:"Grön",   color:"#35e375" },
@@ -289,13 +314,32 @@ const GELS = [
 ];
 
 function freshState() {
-  return { utresa:{locked:false,filmer:'',customer:'',date:'',taken:[]}, hemresa:{locked:false,returned:[]}, kontor:{wear:{}}, openGroups:{}, gels:[] };
+  return { utresa:{locked:false,filmer:'',customer:'',date:'',taken:[]}, hemresa:{locked:false,returned:[]}, kontor:{wear:{}}, openGroups:{}, gels:[], btsShown:false };
 }
-function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || freshState(); } catch(e) { return freshState(); } }
+function load() {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(STORE_KEY)); } catch(e) {}
+  const f = freshState();
+  if (!s || typeof s !== 'object') return f;
+  s.utresa = Object.assign(f.utresa, s.utresa);
+  s.hemresa = Object.assign(f.hemresa, s.hemresa);
+  s.kontor = Object.assign(f.kontor, s.kontor);
+  if (!Array.isArray(s.utresa.taken)) s.utresa.taken = [];
+  if (!Array.isArray(s.hemresa.returned)) s.hemresa.returned = [];
+  if (!s.kontor.wear || typeof s.kontor.wear !== 'object') s.kontor.wear = {};
+  if (!s.openGroups || typeof s.openGroups !== 'object') s.openGroups = {};
+  if (!Array.isArray(s.gels)) s.gels = [];
+  return s;
+}
 function save(s) { localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
 
+function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function itemName(item) { return ITEM_NAMES[item.id] || item.name; }
 function groupDisplay(g) { return DISPLAY_NAMES[g] || g; }
+function serialSuffix(item) { return item.serial ? ' (SN: ' + item.serial + ')' : ''; }
+function takenItems(s) { return EQUIPMENT.filter(e => s.utresa.taken.includes(e.id)); }
+function returnedItems(s) { return EQUIPMENT.filter(e => s.utresa.taken.includes(e.id) && s.hemresa.returned.includes(e.id)); }
+function missingItems(s) { return EQUIPMENT.filter(e => s.utresa.taken.includes(e.id) && !s.hemresa.returned.includes(e.id)); }
 
 function toast(msg, isError) {
   const t = document.getElementById('toast');
@@ -305,6 +349,24 @@ function toast(msg, isError) {
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), isError ? 3500 : 2400);
 }
+
+// Generisk bekräftelsedialog
+let confirmFn = null;
+function openConfirm(title, bodyHtml, btnLabel, style, fn) {
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-title').style.color = style === 'accent' ? 'var(--text)' : 'var(--danger)';
+  document.getElementById('confirm-body').innerHTML = bodyHtml;
+  const btn = document.getElementById('confirm-btn');
+  btn.textContent = btnLabel;
+  btn.className = 'modal-btn ' + (style === 'accent' ? 'modal-btn-accent' : 'modal-btn-danger');
+  confirmFn = fn;
+  document.getElementById('confirm-modal').classList.add('open');
+}
+function runConfirm() { const fn = confirmFn; closeConfirm(); if (fn) fn(); }
+function closeConfirm() { confirmFn = null; document.getElementById('confirm-modal').classList.remove('open'); }
+
+function showOverlay(html) { const o = document.getElementById('send-overlay'); o.innerHTML = html; o.classList.add('open'); }
+function closeOverlay() { document.getElementById('send-overlay').classList.remove('open'); }
 
 function switchTab(tab) {
   document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
@@ -329,7 +391,6 @@ function render() {
 
 function renderUtresa() {
   const s = load();
-  if (!s.openGroups) s.openGroups = {};
   document.getElementById('session-form').style.display = s.utresa.locked ? 'none' : 'block';
   document.getElementById('utresa-actions').style.display = s.utresa.locked ? 'none' : 'block';
   const banner = document.getElementById('locked-banner');
@@ -370,7 +431,6 @@ function renderUtresa() {
         html += '</div>';
       });
       if (gname === 'Ljus') {
-        if (!s.gels) s.gels = [];
         html += '<div class="gels-row"><div class="gels-label">Gels</div><div class="gels-chips">';
         GELS.forEach(function(gel) {
           const sel = s.gels.includes(gel.name);
@@ -386,20 +446,20 @@ function renderUtresa() {
   });
   document.getElementById('checklist-utresa').innerHTML = html;
   document.querySelectorAll('[data-type="utresa-open"]').forEach(el => el.addEventListener('click', function(e) { if (!e.target.closest('[data-type="utresa-all"]')) toggleGroupOpen(decodeURIComponent(this.dataset.group)); }));
-  document.querySelectorAll('[data-type="utresa-all"]').forEach(el => el.addEventListener('click', function(e) { e.stopPropagation(); if (!s.utresa.locked) toggleGroupAll(decodeURIComponent(this.dataset.group)); }));
-  document.querySelectorAll('[data-type="utresa-item"]').forEach(el => el.addEventListener('click', function() { if (!s.utresa.locked) toggleItem(parseInt(this.dataset.id)); }));
-  document.querySelectorAll('[data-type="gel-chip"]').forEach(el => el.addEventListener('click', function() { if (!s.utresa.locked) toggleGel(this.dataset.gel); }));
+  document.querySelectorAll('[data-type="utresa-all"]').forEach(el => el.addEventListener('click', function(e) { e.stopPropagation(); toggleGroupAll(decodeURIComponent(this.dataset.group)); }));
+  document.querySelectorAll('[data-type="utresa-item"]').forEach(el => el.addEventListener('click', function() { toggleItem(parseInt(this.dataset.id)); }));
+  document.querySelectorAll('[data-type="gel-chip"]').forEach(el => el.addEventListener('click', function() { toggleGel(this.dataset.gel); }));
 }
 
 function renderHemresa() {
   const s = load();
-  if (!s.openGroups) s.openGroups = {};
+  const hemBanner = document.getElementById('locked-banner-hemresa');
   if (!s.utresa.locked) {
+    hemBanner.style.display = 'none';
     document.getElementById('checklist-hemresa').innerHTML = '<p style="color:var(--muted);padding:1rem;font-size:0.85rem;">Lås utresan först.</p>';
     document.getElementById('hemresa-actions').style.display = 'none';
     return;
   }
-  const hemBanner = document.getElementById('locked-banner-hemresa');
   if (s.hemresa.locked) {
     hemBanner.style.display = 'flex';
     document.getElementById('locked-text-hemresa').textContent = 'Hemresa bekräftad';
@@ -408,9 +468,11 @@ function renderHemresa() {
     hemBanner.style.display = 'none';
     document.getElementById('hemresa-actions').style.display = 'block';
   }
-  const takenItems = EQUIPMENT.filter(e => s.utresa.taken.includes(e.id));
-  const g = groups(takenItems);
-  let html = '';
+  const tItems = takenItems(s);
+  const ret = s.hemresa.returned;
+  const pct = tItems.length ? Math.round(ret.length / tItems.length * 100) : 0;
+  const g = groups(tItems);
+  let html = '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
   const bts = s.hemresa.bts || { status:null, reason:'' };
   html += '<div class="group-card" style="margin-bottom:1rem;border-color:rgba(251,191,36,0.3);">';
   html += '<div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);">';
@@ -420,13 +482,12 @@ function renderHemresa() {
     html += '<button class="wear-opt ok' + (bts.status==='ja'?' sel':'') + '" data-bts="ja" style="padding:0.875rem;">Filmad</button>';
     html += '<button class="wear-opt skadad' + (bts.status==='nej'?' sel':'') + '" data-bts="nej" style="padding:0.875rem;">Ej filmad</button>';
     html += '</div>';
-    if (bts.status === 'nej') html += '<textarea id="bts-reason" class="wear-comment show" rows="2" placeholder="Varför filmades inte BTS?" style="margin-top:0.75rem;">' + (bts.reason||'') + '</textarea>';
+    if (bts.status === 'nej') html += '<textarea id="bts-reason" class="wear-comment show" rows="2" placeholder="Varför filmades inte BTS?" style="margin-top:0.75rem;">' + esc(bts.reason||'') + '</textarea>';
   } else {
-    html += bts.status === 'ja' ? '<span style="color:var(--success);">Filmad</span>' : '<span style="color:var(--danger);">Ej filmad' + (bts.reason?' — '+bts.reason:'') + '</span>';
+    html += bts.status === 'ja' ? '<span style="color:var(--success);">Filmad</span>' : '<span style="color:var(--danger);">Ej filmad' + (bts.reason?' — '+esc(bts.reason):'') + '</span>';
   }
   html += '</div></div>';
   Object.entries(g).forEach(function([gname, items]) {
-    const ret = s.hemresa.returned;
     const checked = items.filter(i => ret.includes(i.id)).length;
     const all = checked === items.length, some = checked > 0 && !all;
     const open = s.openGroups['h_' + gname] !== false;
@@ -453,15 +514,16 @@ function renderHemresa() {
   });
   document.getElementById('checklist-hemresa').innerHTML = html;
   document.querySelectorAll('[data-type="hem-open"]').forEach(el => el.addEventListener('click', function(e) { if (!e.target.closest('[data-type="hem-all"]')) toggleHemGroupOpen(decodeURIComponent(this.dataset.group)); }));
-  document.querySelectorAll('[data-type="hem-all"]').forEach(el => el.addEventListener('click', function(e) { e.stopPropagation(); if (!s.hemresa.locked) toggleHemGroupAll(decodeURIComponent(this.dataset.group)); }));
-  document.querySelectorAll('[data-type="hem-item"]').forEach(el => el.addEventListener('click', function() { if (!s.hemresa.locked) toggleHemItem(parseInt(this.dataset.id)); }));
+  document.querySelectorAll('[data-type="hem-all"]').forEach(el => el.addEventListener('click', function(e) { e.stopPropagation(); toggleHemGroupAll(decodeURIComponent(this.dataset.group)); }));
+  document.querySelectorAll('[data-type="hem-item"]').forEach(el => el.addEventListener('click', function() { toggleHemItem(parseInt(this.dataset.id)); }));
   document.querySelectorAll('[data-bts]').forEach(btn => btn.addEventListener('click', function() { setBts(this.dataset.bts); }));
   const btsReasonEl = document.getElementById('bts-reason');
-  if (btsReasonEl) btsReasonEl.addEventListener('change', function() { const s2=load(); s2.hemresa.bts=s2.hemresa.bts||{}; s2.hemresa.bts.reason=this.value; save(s2); });
+  if (btsReasonEl) btsReasonEl.addEventListener('input', function() { const s2 = load(); s2.hemresa.bts = s2.hemresa.bts || { status:'nej', reason:'' }; s2.hemresa.bts.reason = this.value; save(s2); });
 }
 
 function setBts(status) {
   const s = load();
+  if (s.hemresa.locked) return;
   if (!s.hemresa.bts) s.hemresa.bts = { status:null, reason:'' };
   s.hemresa.bts.status = status;
   if (status === 'ja') s.hemresa.bts.reason = '';
@@ -470,14 +532,17 @@ function setBts(status) {
 
 function renderKontor() {
   const s = load();
-  if (!s.utresa.locked) {
-    document.getElementById('wear-checks').innerHTML = '<p style="color:var(--muted);padding:1rem;font-size:0.85rem;">Lås utresan och hemresan först.</p>';
-    document.getElementById('kontor-actions').style.display = 'none';
+  const wearDiv = document.getElementById('wear-checks');
+  const actions = document.getElementById('kontor-actions');
+  if (!s.utresa.locked || !s.hemresa.locked) {
+    wearDiv.innerHTML = '<p style="color:var(--muted);padding:1rem;font-size:0.85rem;">' + (!s.utresa.locked ? 'Lås utresan först.' : 'Bekräfta hemresan först.') + '</p>';
+    actions.style.display = 'none';
     return;
   }
-  document.getElementById('kontor-actions').style.display = 'block';
-  const takenItems = EQUIPMENT.filter(e => s.utresa.taken.includes(e.id));
-  const g = groups(takenItems);
+  actions.style.display = 'block';
+  const returned = returnedItems(s);
+  const missing = missingItems(s);
+  const g = groups(returned);
   const bts = s.hemresa.bts || {};
   const btsDriveChecked = s.kontor.btsDrive || false;
   const fileName = s.utresa.date + ' - ' + s.utresa.customer;
@@ -492,13 +557,24 @@ function renderKontor() {
     if (btsDriveChecked) {
       html += '<div style="margin-top:0.5rem;background:var(--surface2);border-radius:var(--radius);padding:0.75rem 1rem;font-size:0.82rem;color:var(--muted);line-height:1.6;">';
       html += 'Döp filen till:<br><div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">';
-      html += '<span style="color:var(--text);font-weight:600;">' + fileName + '</span>';
+      html += '<span style="color:var(--text);font-weight:600;">' + esc(fileName) + '</span>';
       html += '<button onclick="copyBtsName()" style="border:1px solid var(--border2);background:var(--surface);color:var(--muted);border-radius:6px;padding:0.3rem 0.65rem;font-size:0.72rem;cursor:pointer;">Kopiera</button>';
       html += '</div></div>';
     }
     html += '</div></div>';
   }
-  html += '<div class="wear-card"><div class="wear-card-header">Kontrollera slitage och skador</div>';
+  if (missing.length) {
+    html += '<div class="group-card" style="margin-bottom:1rem;border-color:rgba(255,77,77,0.35);">';
+    html += '<div style="padding:1rem 1.25rem;">';
+    html += '<div style="font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--danger);font-weight:600;margin-bottom:0.6rem;">Saknas vid hemkomst — ' + missing.length + ' st</div>';
+    missing.forEach(function(item) {
+      html += '<div style="display:flex;align-items:center;gap:0.6rem;padding:0.35rem 0;font-size:0.9rem;"><span class="phase-badge badge-missing">saknas</span><span>' + itemName(item) + (item.serial ? ' <span style="color:var(--muted);font-size:0.7rem;">SN: ' + item.serial + '</span>' : '') + '</span></div>';
+    });
+    html += '<div style="margin-top:0.6rem;font-size:0.78rem;color:var(--muted);line-height:1.5;">Detta rapporteras som saknat. Om något ändå har kommit hem: gå till Hemresa, tryck på Ändra och bocka av det.</div>';
+    html += '</div></div>';
+  }
+  const done = returned.filter(e => s.kontor.wear[e.id] && s.kontor.wear[e.id].status).length;
+  html += '<div class="wear-card"><div class="wear-card-header"><span>Kontrollera slitage och skador</span><span style="color:var(--muted);">' + done + '/' + returned.length + '</span></div>';
   Object.entries(g).forEach(function([gname, items]) {
     html += '<div style="padding:0.75rem 1.25rem 0.25rem;border-top:1px solid var(--border);"><span style="font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);font-weight:600;">' + (ICONS[gname]||'📦') + ' ' + groupDisplay(gname) + '</span></div>';
     items.forEach(function(item) {
@@ -512,32 +588,102 @@ function renderKontor() {
       html += '<button class="wear-opt slitage' + (w.status==='slitage'?' sel':'') + '" data-id="' + item.id + '" data-status="slitage">Slitage</button>';
       html += '<button class="wear-opt skadad' + (w.status==='skadad'?' sel':'') + '" data-id="' + item.id + '" data-status="skadad">Skadad</button>';
       html += '</div>';
-      html += '<textarea class="wear-comment' + (show?' show':'') + '" rows="2" id="wc-' + item.id + '" onchange="setWearComment(' + item.id + ',this.value)" placeholder="Beskriv skadan...">' + (w.comment||'') + '</textarea>';
+      html += '<textarea class="wear-comment' + (show?' show':'') + '" rows="2" id="wc-' + item.id + '" oninput="setWearComment(' + item.id + ',this.value)" placeholder="Beskriv skadan...">' + esc(w.comment||'') + '</textarea>';
       html += '</div>';
     });
   });
   html += '</div>';
-  document.getElementById('wear-checks').innerHTML = html;
-  document.querySelectorAll('.wear-opt').forEach(btn => btn.addEventListener('click', function() { setWear(parseInt(this.dataset.id), this.dataset.status); }));
+  wearDiv.innerHTML = html;
+  document.querySelectorAll('.wear-opt[data-status]').forEach(btn => btn.addEventListener('click', function() { setWear(parseInt(this.dataset.id), this.dataset.status); }));
   const btsDriveRow = document.querySelector('[data-type="bts-drive"]');
-  if (btsDriveRow) btsDriveRow.addEventListener('click', function() { const s2=load(); s2.kontor.btsDrive=!s2.kontor.btsDrive; save(s2); renderKontor(); });
+  if (btsDriveRow) btsDriveRow.addEventListener('click', function() { const s2 = load(); s2.kontor.btsDrive = !s2.kontor.btsDrive; save(s2); renderKontor(); });
+  const restBtn = document.getElementById('rest-ok-btn');
+  const rest = returned.length - done;
+  restBtn.style.display = rest > 0 ? 'block' : 'none';
+  restBtn.textContent = 'Markera resterande som OK (' + rest + ')';
 }
 
 function copyBtsName() {
   const s = load();
   const name = s.utresa.date + ' - ' + s.utresa.customer;
-  navigator.clipboard.writeText(name).then(() => toast('Kopierat: ' + name));
+  navigator.clipboard.writeText(name)
+    .then(() => toast('Kopierat: ' + name))
+    .catch(() => toast('Kunde inte kopiera — skriv av namnet manuellt', true));
+}
+
+function askRestOk() {
+  const s = load();
+  const rest = returnedItems(s).filter(e => !s.kontor.wear[e.id] || !s.kontor.wear[e.id].status);
+  if (!rest.length) return;
+  openConfirm(
+    'Markera resterande som OK',
+    'De ' + rest.length + ' saker som ännu saknar status markeras som OK. Gör det bara om du har kontrollerat dem.',
+    'Markera ' + rest.length + ' som OK', 'accent',
+    function() {
+      const s2 = load();
+      rest.forEach(e => { if (!s2.kontor.wear[e.id]) s2.kontor.wear[e.id] = { status:null, comment:'' }; s2.kontor.wear[e.id].status = 'ok'; });
+      save(s2); renderKontor();
+      toast(rest.length + ' saker markerades som OK');
+    }
+  );
+}
+
+function takenSection(s) {
+  let out = '--- MEDTAGEN UTRUSTNING (' + s.utresa.taken.length + ' st) ---\n\n';
+  Object.entries(groups(takenItems(s))).forEach(function([gname, items]) {
+    out += '[' + groupDisplay(gname).toUpperCase() + ']\n';
+    items.forEach(e => { out += '  * ' + itemName(e) + serialSuffix(e) + '\n'; });
+    if (gname === 'Ljus' && s.gels.length > 0) {
+      const gelDisplays = s.gels.map(n => { const gl = GELS.find(x => x.name === n); return gl ? gl.display : n; });
+      out += '  * Gels: ' + gelDisplays.join(', ') + '\n';
+    }
+    out += '\n';
+  });
+  return out;
+}
+
+function buildForm(subject, s, body) {
+  const fd = new FormData();
+  fd.append('_subject', subject);
+  fd.append('Filmare', s.utresa.filmer);
+  fd.append('Kund', s.utresa.customer);
+  fd.append('Datum', s.utresa.date);
+  fd.append('Rapport', body);
+  return fd;
+}
+
+// Mejlar en utresanmälan när utresan låses, så att teamet har en logg över vad som är ute i fält
+// redan innan uppdraget är klart. Skickas på nytt bara om innehållet har ändrats.
+function mailUtresa(s) {
+  const sig = JSON.stringify([s.utresa.date, s.utresa.customer, s.utresa.filmer, s.utresa.taken.slice().sort((a,b)=>a-b), s.gels.slice().sort()]);
+  if (s.utresaMailed === sig) return;
+  let body = '=== UTRESA — UTRUSTNING UTE I FÄLT ===\n';
+  body += 'Kund:     ' + s.utresa.customer + '\n';
+  body += 'Datum:    ' + s.utresa.date + '\n';
+  body += 'Filmare:  ' + s.utresa.filmer + '\n';
+  body += 'Låst:     ' + new Date().toLocaleString('sv-SE') + '\n\n';
+  body += takenSection(s);
+  body += 'Fullständig rapport skickas efter hemkomst och kontroll.\n';
+  fetch(FORM_URL, { method:'POST', body:buildForm('Utresa - ' + s.utresa.customer + ' - ' + s.utresa.date, s, body), headers:{ 'Accept':'application/json' } })
+    .then(r => {
+      if (!r.ok) throw new Error('server');
+      const s2 = load();
+      if (s2.utresa.locked) { s2.utresaMailed = sig; save(s2); }
+      toast('Utresa låst — anmäld till filmteamet@xft.se');
+    })
+    .catch(() => toast('Utresa låst. Anmälan kunde inte mejlas nu — allt kommer med i slutrapporten.', true));
 }
 
 function submitKontor() {
   const s = load();
-  const takenItems = EQUIPMENT.filter(e => s.utresa.taken.includes(e.id));
+  if (!s.utresa.locked || !s.hemresa.locked) { toast('Bekräfta hemresan först', true); return; }
+  const returned = returnedItems(s);
+  const missing = missingItems(s);
 
-  // Hitta allt som saknar status
-  const unchecked = takenItems.filter(e => !s.kontor.wear[e.id] || !s.kontor.wear[e.id].status);
+  // Allt som kom tillbaka måste ha en status
+  const unchecked = returned.filter(e => !s.kontor.wear[e.id] || !s.kontor.wear[e.id].status);
   if (unchecked.length > 0) {
-    toast(unchecked.length + ' sak' + (unchecked.length > 1 ? 'er' : '') + ' saknar status — scrolla ner och markera alla', true);
-    // Scrolla till och markera den första okontrollerade saken
+    toast(unchecked.length === 1 ? '1 sak saknar status — den är markerad med rött' : unchecked.length + ' saker saknar status — den första är markerad med rött', true);
     const firstEl = document.getElementById('wi-' + unchecked[0].id);
     if (firstEl) {
       firstEl.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -549,78 +695,139 @@ function submitKontor() {
   }
 
   const bts = s.hemresa.bts || {};
-  if (bts.status === 'ja' && !s.kontor.btsDrive) { toast('Bekräfta Google Drive-uppladdning av BTS', true); return; }
+  if (bts.status === 'ja' && !s.kontor.btsDrive) { toast('Bekräfta att BTS-materialet ligger på Google Drive', true); return; }
 
-  const missing = s.utresa.taken.filter(id => !s.hemresa.returned.includes(id)).map(id => { const e = EQUIPMENT.find(x=>x.id===id); return e ? itemName(e) : null; }).filter(Boolean);
-  const damaged = Object.entries(s.kontor.wear).filter(([,w]) => w && w.status && w.status !== 'ok').map(([id,w]) => { const eq=EQUIPMENT.find(e=>e.id==id); return {name:eq?itemName(eq):'Okänd',group:eq?groupDisplay(eq.group):'Okänd',status:w.status||'',comment:w.comment||''}; });
+  const damaged = returned
+    .filter(e => { const w = s.kontor.wear[e.id]; return w && w.status && w.status !== 'ok'; })
+    .map(e => ({ name:itemName(e), group:groupDisplay(e.group), serial:e.serial, status:s.kontor.wear[e.id].status, comment:s.kontor.wear[e.id].comment || '' }));
+  const slit = damaged.filter(d => d.status === 'slitage').length;
+  const skad = damaged.filter(d => d.status === 'skadad').length;
+  const okCount = returned.length - damaged.length;
+  const avvik = missing.length > 0 || damaged.length > 0;
 
-  const takenByGroup = {};
-  s.utresa.taken.forEach(id => { const e=EQUIPMENT.find(x=>x.id===id); if (e) { if (!takenByGroup[e.group]) takenByGroup[e.group]=[]; takenByGroup[e.group].push(e); } });
+  const statusParts = [];
+  if (missing.length) statusParts.push(missing.length + ' saknas');
+  if (slit) statusParts.push(slit + ' med slitage');
+  if (skad) statusParts.push(skad + (skad > 1 ? ' skadade' : ' skadad'));
+  const statusLine = avvik ? 'AVVIKELSER (' + statusParts.join(', ') + ')' : 'KOMPLETT (all utrustning tillbaka, inga anmärkningar)';
+
+  const fileName = s.utresa.date + ' - ' + s.utresa.customer;
 
   let body = '=== UTRUSTNINGSRAPPORT ===\n';
+  body += 'Status:   ' + statusLine + '\n';
   body += 'Kund:     ' + s.utresa.customer + '\n';
   body += 'Datum:    ' + s.utresa.date + '\n';
-  body += 'Filmare:  ' + s.utresa.filmer + '\n\n';
-  body += '--- MEDTAGEN UTRUSTNING (' + s.utresa.taken.length + ' st) ---\n\n';
-  Object.entries(takenByGroup).forEach(function([gname, items]) {
-    body += '[' + groupDisplay(gname).toUpperCase() + ']\n';
-    items.forEach(e => { body += '  * ' + itemName(e) + '\n'; });
-    if (gname === 'Ljus' && s.gels && s.gels.length > 0) {
-      const gelDisplays = s.gels.map(n => { const g=GELS.find(x=>x.name===n); return g?g.display:n; });
-      body += '  * Gels: ' + gelDisplays.join(', ') + '\n';
-    }
+  body += 'Filmare:  ' + s.utresa.filmer + '\n';
+  body += 'Skickad:  ' + new Date().toLocaleString('sv-SE') + '\n\n';
+  body += takenSection(s);
+  if (missing.length) {
+    body += '--- SAKNAS VID HEMKOMST (' + missing.length + ' st) ---\n';
+    missing.forEach(e => { body += '  * ' + itemName(e) + ' (' + groupDisplay(e.group) + ')' + serialSuffix(e) + '\n'; });
     body += '\n';
-  });
-  if (missing.length) { body += '--- SAKNAS VID HEMKOMST ---\n'; missing.forEach(n => { body += '  * ' + n + '\n'; }); body += '\n'; }
-  if (damaged.length) { body += '--- SKADOR / SLITAGE ---\n'; damaged.forEach(w => { body += '  * [' + (w.status||'').toUpperCase() + '] ' + w.name + ' (' + w.group + ')'; if (w.comment) body += ' - ' + w.comment; body += '\n'; }); }
-  body += '\n--- BTS-CONTENT ---\n';
-  if (bts.status === 'ja') body += '  Filmad och overfört till Google Drive\n';
-  else if (bts.status === 'nej') { body += '  Ej filmad'; if (bts.reason) body += ' - Anledning: ' + bts.reason; body += '\n'; }
+  }
+  if (damaged.length) {
+    body += '--- SLITAGE / SKADOR (' + damaged.length + ' st) ---\n';
+    damaged.forEach(w => {
+      body += '  * [' + w.status.toUpperCase() + '] ' + w.name + ' (' + w.group + ')' + (w.serial ? ' (SN: ' + w.serial + ')' : '');
+      if (w.comment) body += ' — ' + w.comment;
+      body += '\n';
+    });
+    body += '\n';
+  }
+  body += '--- KONTROLL ---\n';
+  body += '  Kontrollerade vid hemkomst: ' + returned.length + ' st (' + okCount + ' OK' + (slit ? ', ' + slit + ' slitage' : '') + (skad ? ', ' + skad + (skad > 1 ? ' skadade' : ' skadad') : '') + ')\n\n';
+  body += '--- BTS-CONTENT ---\n';
+  if (bts.status === 'ja') body += '  BTS filmades och ligger på Google Drive (fil: ' + fileName + ')\n';
+  else if (bts.status === 'nej') body += '  BTS filmades inte. Anledning: ' + (bts.reason || 'ej angiven') + '\n';
   else body += '  Ej registrerat\n';
 
-  document.getElementById('panel-kontor').innerHTML = '<div class="success-screen"><div class="success-icon" style="font-size:1.5rem;">⏳</div><div class="success-title" style="color:var(--muted);">Skickar...</div></div>';
-
-  const fd = new FormData();
-  fd.append('_subject', 'Utrustningsrapport - ' + s.utresa.customer + ' - ' + s.utresa.date);
-  fd.append('Filmare', s.utresa.filmer);
-  fd.append('Kund', s.utresa.customer);
-  fd.append('Datum', s.utresa.date);
-  fd.append('Rapport', body);
-
-  fetch('https://formspree.io/f/xeedpwrz', { method:'POST', body:fd, headers:{'Accept':'application/json'} })
-    .then(r => {
-      if (r.ok) {
-        document.getElementById('panel-kontor').innerHTML = '<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">Rapport skickad!</div><div class="success-sub">Skickad till filmteamet@xft.se</div><button class="action-btn" style="width:100%;margin-top:1rem;" onclick="newSession()">+ Nytt uppdrag</button></div>';
-        localStorage.removeItem(STORE_KEY);
-      } else { showErr(); }
-    }).catch(showErr);
+  sendReport(s, body, avvik);
 }
 
-function showErr() {
-  document.getElementById('panel-kontor').innerHTML = '<div class="success-screen"><div class="success-icon" style="border-color:var(--danger);background:var(--danger-dim);font-size:1.5rem;">!</div><div class="success-title" style="color:var(--danger);">Ingen uppkoppling</div><div class="success-sub">Kontrollera internet och forsök igen.</div><button class="action-btn" style="width:100%;margin-top:1rem;" onclick="switchTab(\'kontor\')">Försök igen</button></div>';
+function sendReport(s, body, avvik) {
+  showOverlay('<div class="success-screen"><div class="success-icon" style="font-size:1.5rem;">⏳</div><div class="success-title" style="color:var(--muted);">Skickar rapport…</div><div class="success-sub">Stäng inte sidan.</div></div>');
+  const fd = buildForm('Utrustningsrapport - ' + s.utresa.customer + ' - ' + s.utresa.date + (avvik ? ' - AVVIKELSER' : ''), s, body);
+  fetch(FORM_URL, { method:'POST', body:fd, headers:{ 'Accept':'application/json' } })
+    .then(r => {
+      if (r.ok) {
+        localStorage.removeItem(STORE_KEY);
+        showOverlay('<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">Rapport skickad!</div><div class="success-sub">Skickad till filmteamet@xft.se</div><button class="action-btn" onclick="newSession()">+ Nytt uppdrag</button></div>');
+      } else {
+        showSendError('Servern tog inte emot rapporten. Vänta en stund och försök igen — allt är kvar på den här enheten.');
+      }
+    })
+    .catch(() => showSendError('Ingen uppkoppling. Kontrollera internet och försök igen — allt är kvar på den här enheten.'));
+}
+
+function showSendError(msg) {
+  showOverlay('<div class="success-screen"><div class="success-icon" style="border-color:var(--danger);background:var(--danger-dim);font-size:1.5rem;">!</div><div class="success-title" style="color:var(--danger);">Kunde inte skicka</div><div class="success-sub">' + msg + '</div><button class="action-btn" onclick="closeOverlay();submitKontor()">Försök igen</button><button class="action-btn-sec" onclick="closeOverlay()">Tillbaka</button></div>');
 }
 
 function newSession() { localStorage.removeItem(STORE_KEY); location.reload(); }
 
-function selectAllUtresa() { const s=load(); s.utresa.taken=EQUIPMENT.map(e=>e.id); save(s); renderUtresa(); }
+function askReset() {
+  openConfirm(
+    'Rensa allt och börja om?',
+    'Hela det pågående uppdraget raderas från den här enheten och ingen rapport skickas. Detta går inte att ångra.',
+    'Rensa allt', 'danger', newSession
+  );
+}
+
+function selectAllUtresa() { const s = load(); if (s.utresa.locked) return; s.utresa.taken = EQUIPMENT.map(e => e.id); save(s); renderUtresa(); }
 
 function lockUtresa() {
   const s = load();
   const filmer = document.getElementById('filmer-name').value.trim();
   const customer = document.getElementById('customer-name').value.trim();
   const date = document.getElementById('trip-date').value;
+  if (!filmer) { toast('Fyll i ditt namn', true); return; }
   if (!customer) { toast('Fyll i kundnamn', true); return; }
   if (!date) { toast('Välj datum', true); return; }
   if (!s.utresa.taken.length) { toast('Välj minst en sak', true); return; }
-  s.utresa.filmer = filmer || 'Okänd';
+  s.utresa.filmer = filmer;
   s.utresa.customer = customer;
   s.utresa.date = date;
   s.utresa.locked = true;
+  // Rensa referenser till saker som inte längre är medtagna (efter upplåsning och ändring)
+  s.hemresa.returned = s.hemresa.returned.filter(id => s.utresa.taken.includes(id));
+  Object.keys(s.kontor.wear).forEach(id => { if (!s.utresa.taken.includes(parseInt(id))) delete s.kontor.wear[id]; });
+  const bts = s.hemresa.bts || {};
+  if (!bts.status && !s.btsShown) {
+    s.btsShown = true;
+    document.getElementById('bts-modal').classList.add('open');
+  }
   save(s); render();
-  document.getElementById('bts-modal').classList.add('open');
+  mailUtresa(s);
 }
 
-function selectAllHemresa() { const s=load(); s.hemresa.returned=s.utresa.taken.slice(); save(s); renderHemresa(); }
+function unlockUtresa() {
+  const s = load();
+  if (s.hemresa.locked) {
+    openConfirm(
+      'Lås upp utresan?',
+      'Hemresans bekräftelse tas också bort. Det du redan har bockat i finns kvar, så du kan ändra och sedan låsa igen.',
+      'Lås upp', 'accent', doUnlockUtresa
+    );
+  } else {
+    doUnlockUtresa();
+  }
+}
+function doUnlockUtresa() {
+  const s = load();
+  s.utresa.locked = false;
+  s.hemresa.locked = false;
+  save(s); render();
+  toast('Utresan är upplåst — ändra och lås igen');
+}
+
+function unlockHemresa() {
+  const s = load();
+  s.hemresa.locked = false;
+  save(s); render();
+  toast('Hemresan är upplåst — ändra och bekräfta igen');
+}
+
+function selectAllHemresa() { const s = load(); if (s.hemresa.locked) return; s.hemresa.returned = s.utresa.taken.slice(); save(s); renderHemresa(); }
 
 function lockHemresa() {
   const s = load();
@@ -631,38 +838,58 @@ function lockHemresa() {
     const reason = reasonEl ? reasonEl.value.trim() : (bts.reason || '');
     if (!reason) { toast('Ange varför BTS inte filmades', true); return; }
     s.hemresa.bts.reason = reason;
+    save(s);
   }
+  const missing = missingItems(s);
+  if (missing.length) {
+    const list = '<ul class="modal-list">' + missing.map(e => '<li>' + esc(itemName(e)) + ' <span style="color:var(--muted)">(' + esc(groupDisplay(e.group)) + ')</span></li>').join('') + '</ul>';
+    openConfirm(
+      missing.length === 1 ? '1 sak är inte avbockad' : missing.length + ' saker är inte avbockade',
+      'Följande är inte avbockat som returnerat och rapporteras som saknat. Har du något av detta med dig? Välj Avbryt och bocka av det först.' + list,
+      missing.length === 1 ? 'Den saknas — bekräfta hemresan' : 'De saknas — bekräfta hemresan', 'danger', doLockHemresa
+    );
+    return;
+  }
+  doLockHemresa();
+}
+function doLockHemresa() {
+  const s = load();
   s.hemresa.locked = true;
-  save(s); toast('Hemresa bekräftad!'); render();
+  save(s);
+  toast('Hemresa bekräftad!');
+  switchTab('kontor');
 }
 
-function doDelete() {}
+function toggleItem(id) { const s = load(); if (s.utresa.locked) return; const i = s.utresa.taken.indexOf(id); if (i === -1) s.utresa.taken.push(id); else s.utresa.taken.splice(i,1); save(s); renderUtresa(); }
+function toggleGel(name) { const s = load(); if (s.utresa.locked) return; const i = s.gels.indexOf(name); if (i === -1) s.gels.push(name); else s.gels.splice(i,1); save(s); renderUtresa(); }
+function toggleGroupAll(gname) { const s = load(); if (s.utresa.locked) return; const items = EQUIPMENT.filter(e => e.group === gname); const allC = items.every(e => s.utresa.taken.includes(e.id)); items.forEach(item => { if (allC) { s.utresa.taken = s.utresa.taken.filter(id => id !== item.id); } else { if (!s.utresa.taken.includes(item.id)) s.utresa.taken.push(item.id); } }); save(s); renderUtresa(); }
+function toggleGroupOpen(gname) { const s = load(); s.openGroups[gname] = s.openGroups[gname] === false ? true : false; save(s); renderUtresa(); }
+function toggleHemItem(id) { const s = load(); if (s.hemresa.locked) return; const i = s.hemresa.returned.indexOf(id); if (i === -1) s.hemresa.returned.push(id); else s.hemresa.returned.splice(i,1); save(s); renderHemresa(); }
+function toggleHemGroupAll(gname) { const s = load(); if (s.hemresa.locked) return; const items = EQUIPMENT.filter(e => s.utresa.taken.includes(e.id) && e.group === gname); const allC = items.every(e => s.hemresa.returned.includes(e.id)); items.forEach(item => { if (allC) { s.hemresa.returned = s.hemresa.returned.filter(id => id !== item.id); } else { if (!s.hemresa.returned.includes(item.id)) s.hemresa.returned.push(item.id); } }); save(s); renderHemresa(); }
+function toggleHemGroupOpen(gname) { const s = load(); s.openGroups['h_' + gname] = s.openGroups['h_' + gname] === false ? true : false; save(s); renderHemresa(); }
+function setWear(id, status) { const s = load(); if (!s.kontor.wear[id]) s.kontor.wear[id] = { status:null, comment:'' }; s.kontor.wear[id].status = status; save(s); renderKontor(); }
+function setWearComment(id, val) { const s = load(); if (!s.kontor.wear[id]) s.kontor.wear[id] = { status:null, comment:'' }; s.kontor.wear[id].comment = val; save(s); }
 
-function toggleItem(id) { const s=load(); if(s.utresa.locked)return; const i=s.utresa.taken.indexOf(id); if(i===-1)s.utresa.taken.push(id); else s.utresa.taken.splice(i,1); save(s); renderUtresa(); }
-function toggleGel(name) { const s=load(); if(s.utresa.locked)return; if(!s.gels)s.gels=[]; const i=s.gels.indexOf(name); if(i===-1)s.gels.push(name); else s.gels.splice(i,1); save(s); renderUtresa(); }
-function toggleGroupAll(gname) { const s=load(); if(s.utresa.locked)return; const items=EQUIPMENT.filter(e=>e.group===gname); const allC=items.every(e=>s.utresa.taken.includes(e.id)); items.forEach(item=>{if(allC){s.utresa.taken=s.utresa.taken.filter(id=>id!==item.id);}else{if(!s.utresa.taken.includes(item.id))s.utresa.taken.push(item.id);}}); save(s); renderUtresa(); }
-function toggleGroupOpen(gname) { const s=load(); if(!s.openGroups)s.openGroups={}; s.openGroups[gname]=s.openGroups[gname]===false?true:false; save(s); renderUtresa(); }
-function toggleHemItem(id) { const s=load(); if(s.hemresa.locked)return; const i=s.hemresa.returned.indexOf(id); if(i===-1)s.hemresa.returned.push(id); else s.hemresa.returned.splice(i,1); save(s); renderHemresa(); }
-function toggleHemGroupAll(gname) { const s=load(); if(s.hemresa.locked)return; const items=EQUIPMENT.filter(e=>s.utresa.taken.includes(e.id)&&e.group===gname); const allC=items.every(e=>s.hemresa.returned.includes(e.id)); items.forEach(item=>{if(allC){s.hemresa.returned=s.hemresa.returned.filter(id=>id!==item.id);}else{if(!s.hemresa.returned.includes(item.id))s.hemresa.returned.push(item.id);}}); save(s); renderHemresa(); }
-function toggleHemGroupOpen(gname) { const s=load(); if(!s.openGroups)s.openGroups={}; s.openGroups['h_'+gname]=s.openGroups['h_'+gname]===false?true:false; save(s); renderHemresa(); }
-function setWear(id, status) { const s=load(); if(!s.kontor.wear[id])s.kontor.wear[id]={status:null,comment:''}; s.kontor.wear[id].status=status; save(s); renderKontor(); }
-function setWearComment(id, val) { const s=load(); if(!s.kontor.wear[id])s.kontor.wear[id]={status:null,comment:''}; s.kontor.wear[id].comment=val; save(s); }
+// Namn, kund och datum sparas löpande så att inget försvinner om sidan laddas om
+function bindDraftFields() {
+  [['filmer-name','filmer'], ['customer-name','customer'], ['trip-date','date']].forEach(function([id, key]) {
+    const el = document.getElementById(id);
+    const store = function() { const s = load(); if (s.utresa.locked) return; s.utresa[key] = el.value; save(s); };
+    el.addEventListener('input', store);
+    el.addEventListener('change', store);
+  });
+}
 
-// ── START: säker uppstart som aldrig landar på fel flik ──
-(function() {
-  const _s = load();
-  // En giltig pågående session kräver att utresa är låst OCH har kundnamn
-  const validSession = _s.utresa && _s.utresa.locked && _s.utresa.customer;
-  if (validSession) {
-    if (_s.hemresa && _s.hemresa.locked) {
-      switchTab('kontor');
-    } else {
-      switchTab('hemresa');
-    }
+// ── START ──
+// Pågående arbete får aldrig raderas vid sidladdning — allt återställs från localStorage,
+// och appen öppnar på den flik där användaren är i flödet.
+(function init() {
+  bindDraftFields();
+  const s = load();
+  if (!s.utresa.date) document.getElementById('trip-date').valueAsDate = new Date();
+  if (s.utresa.locked) {
+    switchTab(s.hemresa.locked ? 'kontor' : 'hemresa');
   } else {
-    // Rensa eventuell skräpdata från halvfärdiga sessioner
-    localStorage.removeItem(STORE_KEY);
-    document.getElementById('trip-date').valueAsDate = new Date();
     render();
   }
 })();
