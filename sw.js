@@ -27,8 +27,10 @@ self.addEventListener('fetch', e => {
   // Endast GET inom samma origin hanteras — rapportutskick till Formspree rörs aldrig.
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   if (req.mode === 'navigate') {
+    // no-cache tvingar webbläsaren att fråga servern om sidan ändrats, så att en ny
+    // version alltid slår igenom direkt i stället för att ligga kvar i webbläsarens cache.
     e.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'no-cache' })
         .then(res => {
           const copy = res.clone();
           caches.open(CACHE).then(c => c.put('./index.html', copy));
