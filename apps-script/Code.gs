@@ -9,6 +9,7 @@
 //                  och slutrapporten mejlas till MAIL_TO
 // Adminvyn (admin.html) hämtar allt via GET med nyckeln nedan.
 
+const SKRIPT_VERSION = '3.4'; // syns i adminvyns självtest, så att du ser om rätt kod är utplacerad
 const ADMIN_KEY = 'BYT-MIG-till-en-egen-lang-nyckel'; // hitta på en egen innan utplacering
 const MAIL_TO = 'filmteamet@xft.se';
 const TZ = 'Europe/Stockholm';
@@ -78,6 +79,7 @@ function doGet(e) {
     const p = (e && e.parameter) || {};
     if (ADMIN_KEY.indexOf('BYT-MIG') === 0) return json({ ok: false, error: 'ADMIN_KEY är inte utbytt i Code.gs — sätt en egen nyckel först.' });
     if (String(p.key || '') !== ADMIN_KEY) return json({ ok: false, error: 'Fel nyckel.' });
+    if (String(p.test || '') === '1') return json(sjalvtest());
     if (!SpreadsheetApp.getActiveSpreadsheet()) {
       return json({ ok: false, error: 'Skriptet är inte kopplat till något kalkylark. Skapa skriptet inifrån arket via Tillägg → Apps Script och distribuera på nytt.' });
     }
@@ -106,6 +108,36 @@ function skrivAvvikelser(payload, p, nu) {
     const typ = sak.status === 'skadad' ? 'Skadad' : 'Slitage';
     blad.appendRow([nu, p.datum || '', p.kund || '', p.filmare || '', sak.name || '', sak.group || '', sak.serial || '', typ, sak.comment || '', '']);
   });
+}
+
+// Självtest som adminvyn anropar: kontrollerar de tre saker som kan fattas efter en
+// utplacering — kopplingen till arket, skrivbehörigheten och mejlbehörigheten.
+// Testraden skrivs och raderas direkt, så inget skräp blir kvar i loggen.
+function sjalvtest() {
+  const svar = { ok: true, sjalvtest: true, version: SKRIPT_VERSION, kalkylark: '', skrivning: '', mejl: '' };
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    svar.kalkylark = ss
+      ? 'OK — kopplat till "' + ss.getName() + '"'
+      : 'FEL — skriptet är inte kopplat till något kalkylark. Skapa det inifrån arket via Tillägg → Apps Script.';
+  } catch (fel) {
+    svar.kalkylark = 'FEL — ' + fel;
+  }
+  try {
+    const blad = hamtaBlad(LOGG_BLAD, LOGG_RUBRIKER);
+    blad.appendRow(['SJÄLVTEST', '', '', '', '', '', '', 'Testrad som raderas direkt', '']);
+    SpreadsheetApp.flush();
+    blad.deleteRow(blad.getLastRow());
+    svar.skrivning = 'OK — skriptet kan skriva i arket';
+  } catch (fel) {
+    svar.skrivning = 'FEL — ' + fel;
+  }
+  try {
+    svar.mejl = 'OK — ' + MailApp.getRemainingDailyQuota() + ' mejl kvar att skicka i dag';
+  } catch (fel) {
+    svar.mejl = 'FEL — behörigheten att skicka mejl saknas. Kör funktionen doGet i Apps Script och godkänn behörigheterna. (' + fel + ')';
+  }
+  return svar;
 }
 
 function hamtaBlad(namn, rubriker) {

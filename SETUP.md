@@ -47,7 +47,9 @@ Så länge `BACKEND_URL` är tom fortsätter allt via Formspree precis som tidig
 
 ## Om något inte fungerar
 
-Checklistan visar Google-skriptets eget felmeddelande på skärmen när sändningen misslyckas, och du kommer alltid vidare: **Skicka som mejl i stället** mejlar rapporten via reservvägen (Formspree), och **Kopiera rapporten** lägger hela texten i urklipp så att du kan mejla den för hand. Inget arbete går förlorat.
+**Börja alltid med knappen "Testa anslutningen" i adminvyn.** Den kontrollerar de tre saker som brukar fattas efter en utplacering — kopplingen till kalkylarket, skrivbehörigheten och mejlbehörigheten — och visar grönt eller rött för var och en. Den visar också vilken skriptversion som faktiskt är utplacerad, så att du ser om koden i Apps Script behöver uppdateras.
+
+Checklistan visar dessutom Google-skriptets eget felmeddelande på skärmen när sändningen misslyckas, och du kommer alltid vidare: **Skicka som mejl i stället** mejlar rapporten via reservvägen (Formspree), och **Kopiera rapporten** lägger hela texten i urklipp så att du kan mejla den för hand. Inget arbete går förlorat.
 
 Vanliga meddelanden och vad de betyder:
 

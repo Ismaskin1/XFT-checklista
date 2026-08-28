@@ -73,6 +73,12 @@
   .search { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.6rem 0.9rem; color: var(--text); font-size: 0.85rem; outline: none; margin-bottom: 0.75rem; }
   .search:focus { border-color: var(--accent); }
   .hint { font-size: 0.75rem; color: var(--muted); line-height: 1.5; margin-top: 0.75rem; }
+  .test-rad { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.7rem 0; border-top: 1px solid var(--border); }
+  .test-rad:first-child { border-top: none; padding-top: 0; }
+  .test-ikon { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+  .test-ok .test-ikon { background: var(--success-dim); color: var(--success); }
+  .test-fel .test-ikon { background: var(--danger-dim); color: var(--danger); }
+  .test-fel .row-name { color: var(--danger); }
   #app { display: none; }
   .loading { color: var(--muted); font-size: 0.85rem; padding: 2rem 0; text-align: center; }
 </style>
@@ -90,6 +96,7 @@
     </div>
     <div class="head-actions" id="head-actions" style="display:none;">
       <span class="updated" id="updated"></span>
+      <button class="btn-sec" onclick="korSjalvtest()">Testa anslutningen</button>
       <button class="btn-sec" onclick="bytAnslutning()">Byt anslutning</button>
       <button class="btn-main" onclick="loadData()">Uppdatera</button>
     </div>
@@ -111,6 +118,14 @@
       <input type="password" id="cfg-key" placeholder="Nyckeln från Code.gs" autocomplete="off">
     </div>
     <button class="btn-main" onclick="sparaAnslutning()">Anslut</button>
+  </div>
+
+  <div class="section-card" id="sjalvtest-kort" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;margin-bottom:0.9rem;">
+      <span style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:700;">Test av anslutningen</span>
+      <button class="btn-sec" onclick="document.getElementById('sjalvtest-kort').style.display='none'">Stäng</button>
+    </div>
+    <div id="sjalvtest-rader"></div>
   </div>
 
   <div id="app">
@@ -195,6 +210,46 @@ function loadData() {
     .catch(() => {
       document.getElementById('loading').style.display = 'none';
       visaFel('Kunde inte hämta data. Kontrollera uppkopplingen och att webbappens adress stämmer.');
+    });
+}
+
+// Kontrollerar de tre saker som brukar fattas efter en utplacering: kopplingen till
+// arket, skrivbehörigheten och mejlbehörigheten.
+function korSjalvtest() {
+  const c = cfg();
+  if (!c) return;
+  const kort = document.getElementById('sjalvtest-kort');
+  const rader = document.getElementById('sjalvtest-rader');
+  kort.style.display = 'block';
+  rader.innerHTML = '<div class="empty">Testar…</div>';
+  doljFel();
+  fetch(c.url + '?key=' + encodeURIComponent(c.key) + '&test=1')
+    .then(r => r.json())
+    .then(j => {
+      if (!j || j.ok === false) {
+        rader.innerHTML = '<div class="test-rad test-fel"><span class="test-ikon">✗</span><div><div class="row-name">Skriptet svarade med ett fel</div><div class="row-meta">' + esc(j && j.error ? j.error : 'okänt fel') + '</div></div></div>';
+        return;
+      }
+      if (!j.sjalvtest) {
+        rader.innerHTML = '<div class="test-rad test-fel"><span class="test-ikon">✗</span><div><div class="row-name">Gammal kod är utplacerad</div><div class="row-meta">Skriptet känner inte igen självtestet. Uppdatera Code.gs i Apps Script och distribuera en ny version.</div></div></div>';
+        return;
+      }
+      const punkter = [
+        ['Kopplingen till kalkylarket', j.kalkylark],
+        ['Skriva i arket', j.skrivning],
+        ['Skicka mejl', j.mejl]
+      ];
+      let html = '';
+      punkter.forEach(function([rubrik, text]) {
+        const ok = String(text).indexOf('OK') === 0;
+        html += '<div class="test-rad ' + (ok ? 'test-ok' : 'test-fel') + '"><span class="test-ikon">' + (ok ? '✓' : '✗') + '</span>';
+        html += '<div><div class="row-name">' + esc(rubrik) + '</div><div class="row-meta">' + esc(text) + '</div></div></div>';
+      });
+      html += '<div class="hint">Utplacerad skriptversion: ' + esc(j.version || 'okänd') + '</div>';
+      rader.innerHTML = html;
+    })
+    .catch(() => {
+      rader.innerHTML = '<div class="test-rad test-fel"><span class="test-ikon">✗</span><div><div class="row-name">Ingen kontakt med skriptet</div><div class="row-meta">Kontrollera webbappens adress och att den är distribuerad med åtkomst för alla.</div></div></div>';
     });
 }
 
