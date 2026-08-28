@@ -55,7 +55,7 @@ Vanliga meddelanden och vad de betyder:
 
 | Meddelande på skärmen | Orsak | Åtgärd |
 |---|---|---|
-| `You do not have permission to call MailApp.sendEmail` | Behörigheten att skicka mejl godkändes aldrig | Öppna Apps Script, klicka **Kör** på funktionen `doGet` och godkänn behörigheterna. Distribuera sedan en ny version. |
+| `You do not have permission to call MailApp.sendEmail` | Behörigheten att skicka mejl godkändes aldrig | Öppna Apps Script, välj funktionen `doGet` i rullgardinsmenyn, klicka **Kör** och godkänn behörigheterna. Distribuera sedan en ny version. **Kör aldrig `doPost` för hand** — det skapar en tom rad i loggen. |
 | `Skriptet är inte kopplat till något kalkylark` | Skriptet skapades fristående på script.google.com | Skapa skriptet inifrån arket via **Tillägg → Apps Script**, klistra in koden och distribuera på nytt |
 | `Google-skriptet svarade med något oväntat` | Webbappen är inte publik | Kontrollera i **Distribuera → Hantera distributioner** att **Vem har åtkomst** står på **Alla** |
 | `Fel nyckel` i adminvyn | Nyckeln i adminvyn stämmer inte med `ADMIN_KEY` i `Code.gs` | Tryck **Byt anslutning** i adminvyn och skriv in rätt nyckel |

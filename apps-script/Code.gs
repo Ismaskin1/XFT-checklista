@@ -9,7 +9,7 @@
 //                  och slutrapporten mejlas till MAIL_TO
 // Adminvyn (admin.html) hämtar allt via GET med nyckeln nedan.
 
-const SKRIPT_VERSION = '3.4'; // syns i adminvyns självtest, så att du ser om rätt kod är utplacerad
+const SKRIPT_VERSION = '3.5'; // syns i adminvyns självtest, så att du ser om rätt kod är utplacerad
 const ADMIN_KEY = 'BYT-MIG-till-en-egen-lang-nyckel'; // hitta på en egen innan utplacering
 const MAIL_TO = 'filmteamet@xft.se';
 const TZ = 'Europe/Stockholm';
@@ -27,6 +27,11 @@ function doPost(e) {
       return json({ ok: false, error: 'Skriptet är inte kopplat till något kalkylark. Skapa skriptet inifrån arket via Tillägg → Apps Script och distribuera på nytt.' });
     }
     const p = (e && e.parameter) || {};
+    // Skyddar loggen mot tomma anrop: så uppstår en skräprad när doPost körs för hand
+    // i Apps Script-editorn, eller om någon råkar anropa webbadressen utan data.
+    if (!p.kund || !p.datum) {
+      return json({ ok: false, error: 'Anropet saknade kund och datum, så ingen rad skrevs. Kör inte doPost för hand i editorn — checklistan skickar med uppgifterna själv.' });
+    }
     const typ = p.type === 'utresa' ? 'Utresa' : 'Rapport';
     const tripId = String(p.tripId || '');
     const logg = hamtaBlad(LOGG_BLAD, LOGG_RUBRIKER);
